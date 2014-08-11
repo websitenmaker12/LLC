@@ -47,11 +47,7 @@ public class LLC {
 		this.isRunning = true;
 		while(this.isRunning) {
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-			GL11.glLoadIdentity();
 		}
-		
-		if(Display.isCreated()) Display.destroy();
-		System.exit(0);
 	}
 	
 }
