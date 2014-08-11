@@ -10,7 +10,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/slick-util.jar"/>
-	<classpathentry kind="lib" path="K:/LLC/LLC Files/LLC/lib/gson-2.2.4.jar">
+	<classpathentry kind="lib" path="lib/gson-2.2.4.jar" >
 		<attributes>
 			<attribute name="javadoc_location" value="https://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/"/>
 		</attributes>
