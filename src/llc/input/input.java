@@ -1,5 +1,5 @@
 package llc.input;
 
-public class Input {
+public class input {
 	
 }
