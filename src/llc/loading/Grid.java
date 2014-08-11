@@ -26,7 +26,11 @@ public class Grid {
 	 * @param y the y-value
 	 * @return the cell
 	 */
-	public Cell cellAt(int x, int y) {
+	public Cell getCellAt(int x, int y) {
 		return cells[x][y];
+	}
+	
+	public void setCellAt(Cell c, int x, int y) {
+		cells[x][y] = c;
 	}
 }
