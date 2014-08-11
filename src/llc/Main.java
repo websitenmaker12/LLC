@@ -11,6 +11,7 @@ import org.lwjgl.opengl.PixelFormat;
 public class Main {
 
 	public static void main(String[] args) {
+<<<<<<< HEAD
 		try {
 			//Display.setDisplayMode(new DisplayMode(640, 480));
 			//Display.setResizable(false);
@@ -26,6 +27,10 @@ public class Main {
 		
 		if(Display.isCreated()) Display.destroy();
 		System.exit(0);
+=======
+		System.out.println("Hello world");
+		System.out.println("Test");
+>>>>>>> origin/master
 	}
 
 }
