@@ -1,54 +1,36 @@
 package llc.loading;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 import com.google.gson.Gson;
 
 public class GameLoader {
 	
-	private File safePath;
 	private final Gson gson;
 	
-	public GameLoader(File path) {
+	public GameLoader() {
 		gson = new Gson();
-		String homeDir = System.getProperty("user.home"); //Home of the user data on the hard drive
-		
-		homeDir += "/LLC/saves";
-		
-		safePath = new File(homeDir);
 	}
 	
-	/**
-	 * @deprecated Save games path should not be changeable
-	 * @param directory the directory where the files should be saved!
-	 * @throws NullPointerException if <code>directory == null</code>
-	 * @throws IllegalStateException if <code>!directory.isDirectory()</code>
-	 */
-	@Deprecated
-	public void setSafePath(File directory) {
-		if (directory == null) {
-			throw new NullPointerException("Directory cannot be null!");
-		}
-		if (!directory.isDirectory()) {
-			throw new IllegalStateException("File \"directory\" must be a directory!");
-		}
-	}
-	
-	public void saveToFile(GameState f) {
+	public void saveToFile(GameState f, String fileName) {
 		System.out.println(gson.toJson(f));
-		
-		SimpleDateFormat d = new SimpleDateFormat();
-		d.applyLocalizedPattern("dd-MM-yyyy");
-		
-		File saveTo = new File(safePath, d.format(f.getCreationDate()));
+
+		File saveTo = new File(fileName);
 		
 		try {
 			if (!saveTo.exists()) {
 				saveTo.createNewFile();
 			}
+			String stateString = gson.toJson(f);
+			
+			PrintWriter writer = new PrintWriter(saveTo, "UTF-8");
+			System.out.println("[Debug]" + stateString);
+			writer.println(stateString);
+			writer.close();
 		}
 		catch (Exception e) {
 			System.err.println("Ein Fehler ist bem Speichern aufgetreten: Stacktrace:");
@@ -56,14 +38,25 @@ public class GameLoader {
 		}
 	}
 	
-	/**
-	 * Gets a list of all saved games, the name is based on the filename... If a savegame file is named <code>myGame 1.saveGame</code>, the name will be called <code>myGame 1</code>
-	 * @return a List of Saved Grids
-	 */
-	public List<String> getSavedGrids() {
-		
-		List<String> allGames = new ArrayList<String>();
-		
-		return allGames;
+	public void loadFromFile(String pathName) {
+		File f = new File(pathName);
+		if (!f.exists()) {
+			throw new IllegalStateException("The save-file to load does not exist!");
+		}
+		try {
+			BufferedReader in = new BufferedReader(new FileReader(f));
+			
+			String line = null;
+			
+			do {
+				line = in.readLine();
+			}
+			while (line != null);
+			
+			in.close();
+		} 
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
