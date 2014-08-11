@@ -3,7 +3,6 @@ package llc.loading;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -44,6 +43,17 @@ public class GameLoader {
 		SimpleDateFormat d = new SimpleDateFormat();
 		d.applyLocalizedPattern("dd-MM-yyyy");
 		
+		File saveTo = new File(safePath, d.format(f.getCreationDate()));
+		
+		try {
+			if (!saveTo.exists()) {
+				saveTo.createNewFile();
+			}
+		}
+		catch (Exception e) {
+			System.err.println("Ein Fehler ist bem Speichern aufgetreten: Stacktrace:");
+			e.printStackTrace(System.err);
+		}
 	}
 	
 	/**

@@ -2,16 +2,18 @@ package llc.loading;
 
 import java.util.List;
 
+import llc.entity.Entity;
+
 /**
  * Represents a loaded Grid
  */
 public class Grid {
 	
 	private String mapName;
-	private List entities;
+	private List<Entity> entities;
 	private boolean changedIngame = false;
 	
-	public Grid(String mapName, List entities) {
+	public Grid(String mapName, List<Entity> entities) {
 		this.mapName = mapName;
 		this.entities = entities;
 	}
@@ -20,7 +22,7 @@ public class Grid {
 	 * Gets the list of entities in this world
 	 * @return The entities, inside an ArrayList
 	 */
-	public List getEntities() {
+	public List<Entity> getEntities() {
 		return entities;
 	}
 	/**
