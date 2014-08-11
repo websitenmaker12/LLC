@@ -1,42 +1,32 @@
 package llc.loading;
 
-import java.util.List;
-
-import llc.entity.Entity;
+import llc.logic.Cell;
 
 /**
  * Represents a loaded Grid
  */
 public class Grid {
 	
-	private String mapName;
-	private List<Entity> entities;
-	private boolean changedIngame = false;
+	private Cell[][] cells;
 	
-	public Grid(String mapName, List<Entity> entities) {
-		this.mapName = mapName;
-		this.entities = entities;
+	public Grid(int height, int width) {
+		cells = new Cell[height][width];
 	}
 	
 	/**
-	 * Gets the list of entities in this world
-	 * @return The entities, inside an ArrayList
+	 * Gets all the cells in this grid
+	 * @return all cells
 	 */
-	public List<Entity> getEntities() {
-		return entities;
+	public Cell[][] getCells() {
+		return cells;
 	}
 	/**
-	 * Gets the map-name of this world.
-	 * @return
+	 * Gets the cell at the given coordinates
+	 * @param x the x-value
+	 * @param y the y-value
+	 * @return the cell
 	 */
-	public String getMapName() {
-		return mapName;
-	}
-	/**
-	 * Gets if this savegame was changed in the game-session and should be saved
-	 * @return true if it was changed
-	 */
-	public boolean wasChangedInGame() {
-		return changedIngame;
+	public Cell cellAt(int x, int y) {
+		return cells[x][y];
 	}
 }
