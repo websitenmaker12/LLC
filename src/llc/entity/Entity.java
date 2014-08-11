@@ -11,19 +11,19 @@ public abstract class Entity {
 		this.maxHealth = 100;
 	}
 
+	/***
+	 * Gets the entities team as an integer
+	 * @return
+	 */
 	public int getTeam() {
 		return team;
 	}
 
 	/***
-	 * 
+	 * Sets the entities team
 	 * @param team
 	 */
 	public void setTeam(int team) {
 		this.team = team;
-	}
-	
-	public void Attack(int attackingTeam, int damage) {
-		
 	}
 }
