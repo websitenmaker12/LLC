@@ -1,5 +1,5 @@
 package llc.entity;
 
-public class EntityWorker extends EntityMoveable {
+public class EntityWorker extends MoveableEntity {
 
 }
