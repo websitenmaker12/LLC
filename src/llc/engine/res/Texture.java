@@ -19,10 +19,16 @@ public class Texture {
 		this.path = path;
 	}
 	
+	/**
+	 * Binds this Texture to OpenGL
+	 */
 	public void bind() {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.textureID);
 	}
 	
+	/**
+	 * Loads the Texture. Don't call manually!
+	 */
 	public void load() {
 		try {
 			BufferedImage image = ImageIO.read(new File(this.path));
@@ -60,6 +66,9 @@ public class Texture {
 		}
 	}
 	
+	/**
+	 * Deletes the Texture
+	 */
 	public void dispose() {
 		GL11.glDeleteTextures(this.textureID);
 	}

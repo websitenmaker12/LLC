@@ -1,7 +1,6 @@
 package llc.engine;
 
 import llc.logic.GameState;
-import llc.util.RenderUtil;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
