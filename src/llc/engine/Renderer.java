@@ -1,12 +1,12 @@
 package llc.engine;
 
-import llc.logic.Cell;
-import llc.logic.CellType;
+import llc.engine.res.Texture;
 import llc.engine.res.TextureLoader;
-import llc.entity.EntityBuilding;
 import llc.entity.EntityBuildingBase;
 import llc.entity.EntityWarrior;
 import llc.entity.EntityWorker;
+import llc.logic.Cell;
+import llc.logic.CellType;
 import llc.logic.GameState;
 
 import org.lwjgl.opengl.GL11;
@@ -14,6 +14,12 @@ import org.lwjgl.util.glu.GLU;
 
 public class Renderer {
 
+
+	private Texture warriorTexture;
+	private Texture workerTexture;
+	private Texture baseTexture;
+	private Texture solidTexture;
+	private Texture walkableTexture;
 	private TextureLoader loader;
 	public Renderer(TextureLoader textureLoader) {
 		GL11.glClearColor(0F, 0F, 0F, 1F);
@@ -23,6 +29,12 @@ public class Renderer {
 	
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glDepthFunc(GL11.GL_LEQUAL);
+		
+		warriorTexture = new Texture("/res/texture/warrior");
+		workerTexture = new Texture("/res/texture/worker");
+		baseTexture = new Texture("/res/texture/base");
+		solidTexture = new Texture("/res/texture/water");
+		walkableTexture = new Texture("/res/texture/grass");
 		
 		loader = textureLoader;
 	}
@@ -57,11 +69,11 @@ public class Renderer {
 					//Render terrain texture
 					if (cells[y][x].getType() == CellType.SOLID)
 					{
-						loader.getTexture("SOLID").bind();
+						solidTexture.bind();
 					}
 					if (cells[y][x].getType() == CellType.WALKABLE)
 					{
-						loader.getTexture("WALKABLE").bind();
+						walkableTexture.bind();
 					}
 					
 				}
@@ -70,15 +82,15 @@ public class Renderer {
 					//Render entity texture
 					if (cells[y][x].getEntity() instanceof EntityWarrior)
 					{
-						loader.getTexture("WARRIOR").bind();
+						warriorTexture.bind();
 					}
 					if (cells[y][x].getEntity() instanceof EntityWorker)
 					{
-						loader.getTexture("WORKER").bind();
+						workerTexture.bind();
 					}
 					if (cells[y][x].getEntity() instanceof EntityBuildingBase)
 					{
-						loader.getTexture("BASE").bind();
+						baseTexture.bind();
 					}
 				}
 				GL11.glBegin(GL11.GL_TRIANGLES);
