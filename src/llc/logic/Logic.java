@@ -23,7 +23,14 @@ public class Logic {
 	private void clickCell(int x, int y) {
 		Cell clickedCell = gameState.getGrid().getCellAt(x, y);
 		if (clickedCell.containsEntity()) {
-			selectEntity(clickedCell.getEntity());
+			Entity clickedEntity = clickedCell.getEntity();
+			
+			
+			
+			
+			if (clickedEntity instanceof EntityMovable) {
+				selectEntity(clickedCell.getEntity());
+			}
 		} else {
 			unSelect();
 		}
@@ -40,14 +47,15 @@ public class Logic {
 	}
 
 	private void attackCell(EntityMovable entity, int startX, int startY, int destX, int destY) {
-		
+		moveSelectedEntity(entity, startX, startY, destX, destY);
+		//TODO
 	}
 
 	private void moveSelectedEntity(EntityMovable entity, int startX, int startY, int destX, int destY) {
 
 	}
 
-	/**
-	 * TODO implement the event triggers from {@link Input.class}
+	/*
+	 * TODO implement the event triggers from input.class
 	 */
 }
