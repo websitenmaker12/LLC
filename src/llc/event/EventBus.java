@@ -9,7 +9,7 @@ import java.util.Map;
 @SuppressWarnings("rawtypes")
 public class EventBus {
 
-	public static EventBus bus = new EventBus();
+	public static EventBus global = new EventBus();
 	
 	private Map<Class, List<Method>> eventHandlers;
 	
@@ -41,7 +41,7 @@ public class EventBus {
 		if(this.eventHandlers.containsKey(event.getClass())) {
 			for(Method method : this.eventHandlers.get(event.getClass())) {
 				try {
-					method.invoke(event);
+					method.invoke(null, event);
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
