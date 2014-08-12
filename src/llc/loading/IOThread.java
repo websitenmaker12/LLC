@@ -6,6 +6,7 @@ import java.util.List;
 public class IOThread extends Thread{
 
 	private List<Runnable> tasks = new ArrayList<Runnable>();
+	private boolean running = true;
 	
 	@Override
 	public void run() {
@@ -20,9 +21,16 @@ public class IOThread extends Thread{
 			}
 			tasks.remove(0);
 		}
+		if (running) {
+			run();
+		}
 	}
 	
 	public void add(Runnable r) {
 		tasks.add(r);
+	}
+	
+	public void noMoreRuns() {
+		running = false;
 	}
 }

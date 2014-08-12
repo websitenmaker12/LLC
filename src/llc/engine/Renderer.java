@@ -1,7 +1,6 @@
 package llc.engine;
 
 import llc.engine.res.Texture;
-import llc.engine.res.TextureLoader;
 import llc.entity.EntityBuildingBase;
 import llc.entity.EntityWarrior;
 import llc.entity.EntityWorker;
@@ -15,13 +14,15 @@ import org.lwjgl.util.glu.GLU;
 public class Renderer {
 
 
+
 	private Texture warriorTexture;
 	private Texture workerTexture;
 	private Texture baseTexture;
 	private Texture solidTexture;
 	private Texture walkableTexture;
-	private TextureLoader loader;
-	public Renderer(TextureLoader textureLoader) {
+
+	public Renderer() {
+
 		GL11.glClearColor(0F, 0F, 0F, 1F);
 		
 		GL11.glEnable(GL11.GL_BLEND);
@@ -29,6 +30,7 @@ public class Renderer {
 	
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glDepthFunc(GL11.GL_LEQUAL);
+
 		
 		warriorTexture = new Texture("/res/texture/warrior");
 		workerTexture = new Texture("/res/texture/worker");
@@ -36,7 +38,6 @@ public class Renderer {
 		solidTexture = new Texture("/res/texture/water");
 		walkableTexture = new Texture("/res/texture/grass");
 		
-		loader = textureLoader;
 	}
 	
 	/**
