@@ -11,6 +11,15 @@ public class Cell {
 	private Entity entity;
 	private CellType type;
 	
+	public final int x,y;
+	
+	public Cell(int x, int y, CellType type) {
+		this.x = x;
+		this.y = y;
+		this.type = type;
+	}
+	
+	
 	/**
 	 * Returns true if there is an entity on the cell and false if the cell is empty.
 	 * @return If there is an entity on the cell.
