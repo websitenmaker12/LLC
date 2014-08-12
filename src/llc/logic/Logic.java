@@ -1,14 +1,14 @@
 package llc.logic;
 
 import llc.entity.Entity;
-import llc.entity.EntityMoveable;
+import llc.entity.EntityMovable;
 import llc.loading.GameState;
 import llc.loading.Grid;
 
 public class Logic {
 
 	private GameState gameState;
-	private EntityMoveable selectedEntity;
+	private EntityMovable selectedEntity;
 
 	public Logic(Grid grid) {
 		this.setGameState(new GameState(grid));
@@ -32,8 +32,8 @@ public class Logic {
 	}
 
 	private void selectEntity(Entity toSelect) {
-		if (toSelect instanceof EntityMoveable) {
-			this.selectedEntity = (EntityMoveable) toSelect;
+		if (toSelect instanceof EntityMovable) {
+			this.selectedEntity = (EntityMovable) toSelect;
 		}
 	}
 
