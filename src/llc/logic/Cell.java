@@ -19,7 +19,6 @@ public class Cell {
 		this.type = type;
 	}
 	
-	
 	/**
 	 * Returns true if there is an entity on the cell and false if the cell is empty.
 	 * @return If there is an entity on the cell.
