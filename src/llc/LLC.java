@@ -2,9 +2,9 @@ package llc;
 
 import llc.engine.Camera;
 import llc.engine.Profiler;
-import llc.util.RenderUtil;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
@@ -21,6 +21,8 @@ public class LLC {
 	
 	public int width = 0;
 	public int height = 0;
+	private int mouseX = 0;
+	private int mouseY = 0;
 	
 	public LLC() {
 		instance = this;
@@ -36,36 +38,38 @@ public class LLC {
 		this.beginLoop();
 	}
 	
-	public void initDisplay() throws LWJGLException {
+	private void initDisplay() throws LWJGLException {
 		Display.setDisplayMode(new DisplayMode(640, 480));
-		Display.setResizable(false);
 		Display.setTitle("LLC - " + VERSION);
 		Display.create();
 	}
 	
-	public void initOpenGL() {
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glLoadIdentity();
-		GL11.glOrtho(0, Display.getWidth(), Display.getHeight(), 0, -1, 1);
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glLoadIdentity();
+	private void initOpenGL() {
+		this.handleDisplayResize();
 		
 		GL11.glClearColor(0F, 0F, 0F, 1F);
+		
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	}
 	
-	public void beginLoop() {
+	private void beginLoop() {
 		this.isRunning = true;
 		while(this.isRunning) {
+			this.handleDisplayResize();
 			if(Display.isCloseRequested()) this.isRunning = false;
+			
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 			GL11.glLoadIdentity();
 			
 			this.profiler.start("Input updates");
-			// TODO implement
+			
+			this.mouseX = Mouse.getX();
+			this.mouseY = this.height - Mouse.getY();
+			
 			this.profiler.endStart("Render updates");
 			GL11.glLoadIdentity();
 			this.camera.transformMatrix();
-			RenderUtil.drawQuad(0, 0, 100, 100);
 			this.profiler.end();
 			
 			Display.update();
@@ -74,6 +78,19 @@ public class LLC {
 		
 		if(Display.isCreated()) Display.destroy();
 		System.out.println(0);
+	}
+	
+	private void handleDisplayResize() {
+		if(this.width != Display.getWidth() || this.height != Display.getHeight()) {
+			this.width = Display.getWidth();
+			this.height = Display.getHeight();
+			
+			GL11.glMatrixMode(GL11.GL_PROJECTION);
+			GL11.glLoadIdentity();
+			GL11.glOrtho(0, Display.getWidth(), Display.getHeight(), 0, -1, 1);
+			GL11.glMatrixMode(GL11.GL_MODELVIEW);
+			GL11.glLoadIdentity();
+		}
 	}
 	
 }
