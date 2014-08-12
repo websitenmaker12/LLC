@@ -56,6 +56,8 @@ public class LLC {
 	
 	private void beginLoop() {
 		this.isRunning = true;
+		boolean firstClick = true; // assume no click in this frame jet
+		
 		while(this.isRunning) {
 			this.handleDisplayResize();
 			if(Display.isCloseRequested()) this.isRunning = false;
@@ -65,8 +67,17 @@ public class LLC {
 			this.mouseX = Mouse.getX();
 			this.mouseY = this.height - Mouse.getY();
 			this.input.mousePos(this.mouseX, this.mouseY);
+<<<<<<< HEAD
 			if(Mouse.isButtonDown(0)) this.input.mouseClick(this.mouseX, this.mouseY, this.lastButtonState);
 			this.lastButtonState = Mouse.isButtonDown(0);
+=======
+			
+			if(Mouse.isButtonDown(0)  && firstClick == true) 
+				{
+				this.input.mouseClick(this.mouseX, this.mouseY); 
+				firstClick = false;
+				}
+>>>>>>> origin/master
 			
 			this.profiler.endStart("Render updates");
 			this.renderer.render(this.camera, this.logic.getGameState());
