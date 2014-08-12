@@ -14,7 +14,11 @@ public class input {
 		
 	}
 	
-	interface 
+	interface logicEvents
+	{
+		public void scrollEvent(String border);
+		public void cellClickedEvent();
+	}
 	
 	
 	
