@@ -7,6 +7,7 @@ package llc.entity;
 public abstract class EntityMovable extends Entity {
 
 	private float moveSpeed = 1;
+	private int moveRange = 4;
 
 	/**
 	 * Gets the {@link EntityMoveable} move speed.
@@ -22,5 +23,21 @@ public abstract class EntityMovable extends Entity {
 	 */
 	public void setMoveSpeed(float moveSpeed) {
 		this.moveSpeed = moveSpeed;
+	}
+	
+	/**
+	 * Gets the {@link EntityMoveable} move range.
+	 * @return Move range
+	 */
+	public float getMoveRange() {
+		return moveRange;
+	}
+
+	/**
+	 * Sets the {@link EntityMoveable} move range.
+	 * @param moveRange The move range (Standard is 4)
+	 */
+	public void setMoveRange(int moveRange) {
+		this.moveRange = moveRange;
 	}
 }
