@@ -23,7 +23,7 @@ public class Logic {
 	private void clickCell(int x, int y) {
 		Cell clickedCell = gameState.getGrid().getCellAt(x, y);
 		if (clickedCell.containsEntity()) {
-			selectEntity(selectedEntity);
+			selectEntity(clickedCell.getEntity());
 		} else {
 			unSelect();
 		}
@@ -39,11 +39,11 @@ public class Logic {
 		this.selectedEntity = null;
 	}
 
-	private void attackCell(int x, int y) {
-
+	private void attackCell(EntityMovable entity, int startX, int startY, int destX, int destY) {
+		
 	}
 
-	private void moveSelectedEntity(int x, int y) {
+	private void moveSelectedEntity(EntityMovable entity, int startX, int startY, int destX, int destY) {
 
 	}
 
