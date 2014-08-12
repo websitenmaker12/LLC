@@ -2,8 +2,6 @@ package llc.logic;
 
 import llc.entity.Entity;
 import llc.entity.EntityMovable;
-import llc.loading.GameState;
-import llc.loading.Grid;
 
 public class Logic {
 

@@ -1,6 +1,5 @@
-package llc.loading;
+package llc.logic;
 
-import llc.logic.Cell;
 
 /**
  * Represents a loaded Grid

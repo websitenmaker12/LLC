@@ -1,6 +1,6 @@
 package llc.engine;
 
-import llc.loading.GameState;
+import llc.logic.GameState;
 
 import org.lwjgl.opengl.GL11;
 

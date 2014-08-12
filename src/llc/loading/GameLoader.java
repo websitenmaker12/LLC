@@ -10,6 +10,8 @@ import java.io.PrintWriter;
 import javax.imageio.ImageIO;
 
 import llc.entity.Entity;
+import llc.logic.GameState;
+import llc.logic.Grid;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
