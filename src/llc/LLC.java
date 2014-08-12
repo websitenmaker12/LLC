@@ -87,7 +87,7 @@ public class LLC {
 			this.width = Display.getWidth();
 			this.height = Display.getHeight();
 			
-			this.renderer.handleDisplayResize();
+			this.renderer.handleDisplayResize(this.width, this.height);
 		}
 	}
 	

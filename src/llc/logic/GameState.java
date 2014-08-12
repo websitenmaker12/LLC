@@ -1,4 +1,4 @@
-package llc.loading;
+package llc.logic;
 
 public class GameState {
 
