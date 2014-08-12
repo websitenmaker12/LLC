@@ -6,8 +6,8 @@ public class Camera {
 
 	public final float pixelsPerCell = 100;
 	
-	public Vector3f pos;
-	public Vector3f viewDir;
+	public Vector3f pos; // zelle in der mitte des screen
+	public Vector3f viewDir; 
 	
 	public Camera(Vector3f pos, Vector3f viewDir) {
 		this.pos = pos;
