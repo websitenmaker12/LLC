@@ -20,6 +20,7 @@ public class Texture {
 	
 	public Texture(String path) {
 		this.path = path;
+		this.load();
 	}
 	
 	/**

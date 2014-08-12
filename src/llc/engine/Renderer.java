@@ -1,12 +1,10 @@
 package llc.engine;
 
-import llc.logic.Cell;
-import llc.logic.CellType;
-import llc.engine.res.TextureLoader;
-import llc.entity.EntityBuilding;
 import llc.entity.EntityBuildingBase;
 import llc.entity.EntityWarrior;
 import llc.entity.EntityWorker;
+import llc.logic.Cell;
+import llc.logic.CellType;
 import llc.logic.GameState;
 
 import org.lwjgl.opengl.GL11;
@@ -14,8 +12,7 @@ import org.lwjgl.util.glu.GLU;
 
 public class Renderer {
 
-	private TextureLoader loader;
-	public Renderer(TextureLoader textureLoader) {
+	public Renderer() {
 		GL11.glClearColor(0F, 0F, 0F, 1F);
 		
 		GL11.glEnable(GL11.GL_BLEND);
@@ -23,8 +20,6 @@ public class Renderer {
 	
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glDepthFunc(GL11.GL_LEQUAL);
-		
-		loader = textureLoader;
 	}
 	
 	/**
