@@ -3,6 +3,7 @@ package llc;
 import llc.engine.Camera;
 import llc.engine.Profiler;
 import llc.engine.Renderer;
+import llc.engine.res.TextureLoader;
 import llc.input.input;
 import llc.loading.GameLoader;
 import llc.logic.Logic;
@@ -24,6 +25,7 @@ public class LLC {
 	private Renderer renderer;
 	private GameLoader gameLoader;
 	private Logic logic;
+	private TextureLoader textureLoader;
 	
 	public int width = 0;
 	public int height = 0;
@@ -37,6 +39,8 @@ public class LLC {
 		
 		this.gameLoader = new GameLoader();
 		this.logic = new Logic(this.gameLoader.loadMap("res/maps/areas/map-1_areas.png"));
+		
+		this.textureLoader = new TextureLoader();
 	}
 	
 	/**
@@ -46,7 +50,9 @@ public class LLC {
 		this.profiler.start("Setup Display");
 		this.initDisplay();
 		this.profiler.endStart("Setup OpenGL");
-		this.renderer = new Renderer();
+		this.renderer = new Renderer(this.textureLoader);
+		this.profiler.endStart("Loading Textures");
+		this.textureLoader.loadTextures();
 		this.profiler.end();
 		this.beginLoop();
 	}

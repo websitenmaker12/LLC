@@ -1,5 +1,6 @@
 package llc.engine;
 
+import llc.engine.res.TextureLoader;
 import llc.logic.GameState;
 
 import org.lwjgl.opengl.GL11;
@@ -7,7 +8,7 @@ import org.lwjgl.util.glu.GLU;
 
 public class Renderer {
 
-	public Renderer() {
+	public Renderer(TextureLoader textureLoader) {
 		GL11.glClearColor(0F, 0F, 0F, 1F);
 		
 		GL11.glEnable(GL11.GL_BLEND);
