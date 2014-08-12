@@ -4,6 +4,7 @@ import llc.engine.Camera;
 import llc.engine.Profiler;
 import llc.engine.Renderer;
 import llc.input.input;
+import llc.loading.GameLoader;
 import llc.logic.Logic;
 
 import org.lwjgl.LWJGLException;
@@ -21,17 +22,21 @@ public class LLC {
 	private Camera camera;
 	private input input;
 	private Renderer renderer;
+	private GameLoader gameLoader;
 	private Logic logic;
 	
 	public int width = 0;
 	public int height = 0;
 	private int mouseX = 0;
 	private int mouseY = 0;
+	private boolean lastButtonState = false;
 	
 	public LLC() {
 		this.camera = new Camera(new Vector3f(0, 0, 0), new Vector3f(0, 0, -1));
 		this.input = new input();
-		this.logic = new Logic();
+		
+		this.gameLoader = new GameLoader();
+		this.logic = new Logic(this.gameLoader.loadMap("res/maps/areas/map-1_areas.png"));
 	}
 	
 	public void startGame() throws LWJGLException {
@@ -60,7 +65,8 @@ public class LLC {
 			this.mouseX = Mouse.getX();
 			this.mouseY = this.height - Mouse.getY();
 			this.input.mousePos(this.mouseX, this.mouseY);
-			if(Mouse.isButtonDown(0)) this.input.mouseClick(this.mouseX, this.mouseY);
+			if(Mouse.isButtonDown(0)) this.input.mouseClick(this.mouseX, this.mouseY, this.lastButtonState);
+			this.lastButtonState = Mouse.isButtonDown(0);
 			
 			this.profiler.endStart("Render updates");
 			this.renderer.render(this.camera, this.logic.getGameState());
