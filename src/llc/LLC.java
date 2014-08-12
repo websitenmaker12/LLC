@@ -3,6 +3,7 @@ package llc;
 import llc.engine.Camera;
 import llc.engine.Profiler;
 import llc.engine.Renderer;
+import llc.engine.res.TextureLoader;
 import llc.input.input;
 import llc.loading.GameLoader;
 import llc.logic.Logic;
@@ -24,6 +25,7 @@ public class LLC {
 	private Renderer renderer;
 	private GameLoader gameLoader;
 	private Logic logic;
+	private TextureLoader textureLoader;
 	
 	public int width = 0;
 	public int height = 0;
@@ -33,21 +35,31 @@ public class LLC {
 	
 	public LLC() {
 		this.camera = new Camera(new Vector3f(0, 0, 0), new Vector3f(0, 0, -1));
-		this.input = new input(this);
+		this.input = new input();
 		
 		this.gameLoader = new GameLoader();
 		this.logic = new Logic(this.gameLoader.loadMap("res/maps/areas/map-1_areas.png"));
+		
+		this.textureLoader = new TextureLoader();
 	}
 	
+	/**
+	 * Setups the Display and OpenGL. Finally starts the Main-Loop
+	 */
 	public void startGame() throws LWJGLException {
 		this.profiler.start("Setup Display");
 		this.initDisplay();
 		this.profiler.endStart("Setup OpenGL");
-		this.renderer = new Renderer();
+		this.renderer = new Renderer(this.textureLoader);
+		this.profiler.endStart("Loading Textures");
+		this.textureLoader.loadTextures();
 		this.profiler.end();
 		this.beginLoop();
 	}
 	
+	/**
+	 * Setups the Display
+	 */
 	private void initDisplay() throws LWJGLException {
 		Display.setDisplayMode(new DisplayMode(640, 480));
 		Display.setResizable(true);
@@ -55,6 +67,9 @@ public class LLC {
 		Display.create();
 	}
 	
+	/**
+	 * Enters the Main-Loop
+	 */
 	private void beginLoop() {
 		this.isRunning = true;
 		
@@ -82,6 +97,9 @@ public class LLC {
 		System.out.println(0);
 	}
 	
+	/**
+	 * Handles a Display-Resize-Event
+	 */
 	private void handleDisplayResize() {
 		if(this.width != Display.getWidth() || this.height != Display.getHeight()) {
 			this.width = Display.getWidth();

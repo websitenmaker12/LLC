@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 public class Texture {
 
@@ -18,10 +19,16 @@ public class Texture {
 		this.path = path;
 	}
 	
+	/**
+	 * Binds this Texture to OpenGL
+	 */
 	public void bind() {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.textureID);
 	}
 	
+	/**
+	 * Loads the Texture. Don't call manually!
+	 */
 	public void load() {
 		try {
 			BufferedImage image = ImageIO.read(new File(this.path));
@@ -43,8 +50,27 @@ public class Texture {
 			}
 			
 			buffer.flip();
+			
+			this.textureID = GL11.glGenTextures();
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.textureID);
+			
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+			
+			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 		} catch(Exception e) {
+			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Deletes the Texture
+	 */
+	public void dispose() {
+		GL11.glDeleteTextures(this.textureID);
 	}
 	
 }
