@@ -1,5 +1,7 @@
 package llc.input;
 
+import java.util.*;
+
 public class input {
 //Testcommit 
 	public void mouseClick(int x, int y)
@@ -11,6 +13,8 @@ public class input {
 	{
 		
 	}
+	
+	interface 
 	
 	
 	
