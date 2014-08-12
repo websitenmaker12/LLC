@@ -2,6 +2,7 @@ package llc;
 
 import llc.engine.Camera;
 import llc.engine.Profiler;
+import llc.input.input;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
@@ -18,6 +19,7 @@ public class LLC {
 	
 	private Profiler profiler = new Profiler();
 	private Camera camera;
+	private input input;
 	
 	public int width = 0;
 	public int height = 0;
@@ -27,6 +29,7 @@ public class LLC {
 	public LLC() {
 		instance = this;
 		this.camera = new Camera(0, 0);
+		this.input = new input();
 	}
 	
 	public void startGame() throws LWJGLException {
@@ -66,6 +69,8 @@ public class LLC {
 			
 			this.mouseX = Mouse.getX();
 			this.mouseY = this.height - Mouse.getY();
+			this.input.mousePos(this.mouseX, this.mouseY);
+			if(Mouse.isButtonDown(0)) this.input.mouseClick(this.mouseX, this.mouseY);
 			
 			this.profiler.endStart("Render updates");
 			GL11.glLoadIdentity();
