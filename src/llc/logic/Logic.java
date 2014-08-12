@@ -1,5 +1,8 @@
 package llc.logic;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import llc.entity.Entity;
 import llc.entity.EntityMovable;
 
@@ -7,11 +10,16 @@ public class Logic {
 
 	private GameState gameState;
 	private EntityMovable selectedEntity;
-
+	
+	private Player player1;
+	private Player player2;
+	
 	public Logic(Grid grid) {
 		this.setGameState(new GameState(grid));
+		player1 = new Player(this);
+		player2 = new Player(this);
 	}
-
+	
 	public GameState getGameState() {
 		return gameState;
 	}
