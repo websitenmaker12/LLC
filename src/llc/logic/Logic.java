@@ -26,9 +26,8 @@ public class Logic {
 	private void clickCell(int x, int y) {
 		Cell clickedCell = gameState.getGrid().getCellAt(x, y);
 		if (selectedEntity != null) {
-			
-		} else if (clickedCell.containsEntity() && clickedCell.getEntity().getTeam() == ) {
-			
+		} else if (clickedCell.containsEntity() && clickedCell.getEntity().getPlayer() == gameState.getActivePlayer()) {
+			selectEntity(clickedCell.getEntity());
 		}
 	}
 
