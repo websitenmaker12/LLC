@@ -3,9 +3,8 @@ package llc.logic;
 import llc.entity.Entity;
 
 /**
- * 
+ * The cell class. Contains the entity and can be solid or walkable.
  * @author MaxiHoeve14
- *
  */
 public class Cell {
 	

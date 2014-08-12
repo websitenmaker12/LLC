@@ -1,6 +1,7 @@
 package llc.entity;
 
 /**
+ * Base class for moveable entities.
  * @author MaxiHoeve14
  */
 public abstract class EntityMoveable extends Entity {
