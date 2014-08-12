@@ -4,7 +4,7 @@ import llc.logic.Player;
 
 /**
  * The entity base class.
- * Contains team and health.
+ * Contains player and health.
  * @author MaxiHoeve14
  */
 public abstract class Entity {
