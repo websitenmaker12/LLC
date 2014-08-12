@@ -2,6 +2,11 @@ package llc.logic;
 
 import llc.entity.Entity;
 
+/**
+ * 
+ * @author MaxiHoeve14
+ *
+ */
 public class Cell {
 	
 	private Entity entity;

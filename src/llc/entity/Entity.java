@@ -1,5 +1,10 @@
 package llc.entity;
 
+/**
+ * The entity base class.
+ * Contains team and health.
+ * @author MaxiHoeve14
+ */
 public abstract class Entity {
 	
 	public int health;
