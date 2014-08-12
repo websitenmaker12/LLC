@@ -2,24 +2,26 @@ package llc;
 
 import llc.engine.Camera;
 import llc.engine.Profiler;
+import llc.engine.Renderer;
 import llc.input.input;
+import llc.logic.Logic;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
 
 public class LLC {
 
-	public static LLC instance;
-	
 	public static final String VERSION = "0.1 INDEV";
 	private boolean isRunning = false;
 	
 	private Profiler profiler = new Profiler();
 	private Camera camera;
 	private input input;
+	private Renderer renderer;
+	private Logic logic;
 	
 	public int width = 0;
 	public int height = 0;
@@ -27,16 +29,16 @@ public class LLC {
 	private int mouseY = 0;
 	
 	public LLC() {
-		instance = this;
-		this.camera = new Camera(0, 0);
+		this.camera = new Camera(new Vector3f(0, 0, 0), new Vector3f(0, 0, -1));
 		this.input = new input();
+		this.logic = new Logic();
 	}
 	
 	public void startGame() throws LWJGLException {
 		this.profiler.start("Setup Display");
 		this.initDisplay();
 		this.profiler.endStart("Setup OpenGL");
-		this.initOpenGL();
+		this.renderer = new Renderer();
 		this.profiler.end();
 		this.beginLoop();
 	}
@@ -47,15 +49,6 @@ public class LLC {
 		Display.create();
 	}
 	
-	private void initOpenGL() {
-		this.handleDisplayResize();
-		
-		GL11.glClearColor(0F, 0F, 0F, 1F);
-		
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-	}
-	
 	private void beginLoop() {
 		this.isRunning = true;
 		boolean firstClick = true; // assume no click in this frame jet
@@ -63,10 +56,7 @@ public class LLC {
 		while(this.isRunning) {
 			this.handleDisplayResize();
 			if(Display.isCloseRequested()) this.isRunning = false;
-			
-			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-			GL11.glLoadIdentity();
-			
+
 			this.profiler.start("Input updates");
 			
 			this.mouseX = Mouse.getX();
@@ -80,8 +70,7 @@ public class LLC {
 				}
 			
 			this.profiler.endStart("Render updates");
-			GL11.glLoadIdentity();
-			this.camera.transformMatrix();
+			this.renderer.render(this.camera, this.logic.getGameState());
 			this.profiler.end();
 			
 			Display.update();
@@ -97,11 +86,7 @@ public class LLC {
 			this.width = Display.getWidth();
 			this.height = Display.getHeight();
 			
-			GL11.glMatrixMode(GL11.GL_PROJECTION);
-			GL11.glLoadIdentity();
-			GL11.glOrtho(0, Display.getWidth(), Display.getHeight(), 0, -1, 1);
-			GL11.glMatrixMode(GL11.GL_MODELVIEW);
-			GL11.glLoadIdentity();
+			this.renderer.handleDisplayResize();
 		}
 	}
 	
