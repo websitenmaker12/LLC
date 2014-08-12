@@ -18,4 +18,8 @@ public class Logic {
 	public void setGameState(GameState gameState) {
 		this.gameState = gameState;
 	}
+	
+	/**
+	 * TODO implement the event triggers from {@link Input.class}
+	 */
 }
