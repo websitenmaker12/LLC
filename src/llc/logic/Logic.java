@@ -22,14 +22,17 @@ public class Logic {
 		this.gameState = gameState;
 	}
 
-	// Determines whether the click selects or attacks a cell.
 	private void clickCell(int x, int y) {
-
+		Cell clickedCell = gameState.getGrid().getCellAt(x, y);
+		if (clickedCell.containsEntity()) {
+			selectEntity(selectedEntity);
+		} else {
+			unSelect();
+		}
 	}
 
-	private void selectEntity(int x, int y) {
-		Entity toSelect = gameState.getGrid().getCellAt(x, y).getEntity();
-		if (toSelect != null && toSelect instanceof EntityMoveable) {
+	private void selectEntity(Entity toSelect) {
+		if (toSelect instanceof EntityMoveable) {
 			this.selectedEntity = (EntityMoveable) toSelect;
 		}
 	}
@@ -45,7 +48,7 @@ public class Logic {
 	private void moveSelectedEntity(int x, int y) {
 
 	}
-	
+
 	/**
 	 * TODO implement the event triggers from {@link Input.class}
 	 */
