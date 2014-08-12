@@ -1,5 +1,8 @@
 package llc.engine;
 
+import llc.entity.EntityBuildingBase;
+import llc.entity.EntityWarrior;
+import llc.entity.EntityWorker;
 import llc.logic.Cell;
 import llc.logic.CellType;
 import llc.logic.GameState;
@@ -60,15 +63,18 @@ public class Renderer {
 				else
 				{
 					//Render entity texture
-					//No Entity texture loaded at the moment
-//					if (cells[y][x].getEntity(). == CellType.SOLID)
-//					{
-//						loader.getTexture("SOLID").bind();
-//					}
-//					if (cells[y][x].getEntity() == CellType.WALKABLE)
-//					{
-//						loader.getTexture("WALKABLE").bind();
-//					}
+					if (cells[y][x].getEntity() instanceof EntityWarrior)
+					{
+						loader.getTexture("WARRIOR").bind();
+					}
+					if (cells[y][x].getEntity() instanceof EntityWorker)
+					{
+						loader.getTexture("WORKER").bind();
+					}
+					if (cells[y][x].getEntity() instanceof EntityBuildingBase)
+					{
+						loader.getTexture("BASE").bind();
+					}
 				}
 				GL11.glBegin(GL11.GL_TRIANGLES);
 				GL11.glTexCoord2d(0, 0); GL11.glVertex2d(x, y);
