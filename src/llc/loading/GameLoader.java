@@ -1,5 +1,6 @@
 package llc.loading;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,6 +11,8 @@ import java.io.PrintWriter;
 import javax.imageio.ImageIO;
 
 import llc.entity.Entity;
+import llc.logic.Cell;
+import llc.logic.CellType;
 import llc.logic.GameState;
 import llc.logic.Grid;
 
@@ -41,8 +44,6 @@ public class GameLoader {
 			}
 			
 			PrintWriter writer = new PrintWriter(saveTo, "UTF-8");
-			//TODO Remove this when it works 100%!
-			System.out.println(stateString);
 			writer.print(stateString);
 			writer.close();
 		}
@@ -75,7 +76,7 @@ public class GameLoader {
 			
 			in.close();
 			
-			System.out.println(content);
+			//System.out.println(content);
 			try {
 				GameState loaded = gson.fromJson(content, GameState.class);
 				return loaded;
@@ -91,7 +92,29 @@ public class GameLoader {
 		return null;
 	}
 	public Grid getGridFromImage(BufferedImage i) {
-		return null;
+		int height, width;
+		height = i.getHeight();
+		width = i.getWidth();
+		
+		Grid g = new Grid(height, width);
+		
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				g.setCellAt(getCellByColorAndLocation(x, y, new Color(i.getRGB(x, y))), x, y);
+			}
+		}
+		return g;
+	}
+	public Cell getCellByColorAndLocation(int x, int y, Color c) {
+		CellType type = null;
+		
+		if (c.getBlue() == 0 && c.getGreen() == 0 && c.getRed() == 0) {
+			type = CellType.SOLID;
+		}
+		else if (c.getBlue() == 255 && c.getGreen() == 255 && c.getRed() == 255) {
+			type = CellType.WALKABLE;
+		}
+		return new Cell(x, y, type);
 	}
 	public Grid loadMap(String fileName) {
 		File f = new File(fileName);
