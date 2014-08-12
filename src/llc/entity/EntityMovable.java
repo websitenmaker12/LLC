@@ -1,10 +1,10 @@
 package llc.entity;
 
 /**
- * Base class for moveable entities.
+ * Base class for movable entities.
  * @author MaxiHoeve14
  */
-public abstract class EntityMoveable extends Entity {
+public abstract class EntityMovable extends Entity {
 
 	private float moveSpeed = 1;
 
