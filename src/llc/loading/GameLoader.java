@@ -7,15 +7,19 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.imageio.ImageIO;
+
+import llc.entity.Entity;
+
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.GsonBuilder;
 
 public class GameLoader {
 	
 	private final Gson gson;
 	
 	public GameLoader() {
-		gson = new Gson();
+		gson = new GsonBuilder().registerTypeAdapter(Entity.class, new EntityInstanceCreator()).create();
 	}
 	
 	public void saveToFile(GameState f, String fileName) {
@@ -35,7 +39,7 @@ public class GameLoader {
 			
 			PrintWriter writer = new PrintWriter(saveTo, "UTF-8");
 			//TODO Remove this when it works 100%!
-			System.out.println("[Debug]" + stateString);
+			System.out.println(stateString);
 			writer.print(stateString);
 			writer.close();
 		}
@@ -58,9 +62,13 @@ public class GameLoader {
 			
 			do {
 				line = in.readLine();
+				if (line == null) {
+					continue;
+				}
 				content += line;
 			}
 			while (line != null);
+			
 			
 			in.close();
 			
@@ -69,7 +77,7 @@ public class GameLoader {
 				GameState loaded = gson.fromJson(content, GameState.class);
 				return loaded;
 			}
-			catch (JsonSyntaxException e) {
+			catch (Exception e) {
 				System.err.println("Unable to load savegame... Corrupted?");
 				e.printStackTrace(System.err);
 			}
@@ -81,5 +89,16 @@ public class GameLoader {
 	}
 	public Grid getGridFromImage(BufferedImage i) {
 		return null;
+	}
+	public Grid loadMap(String fileName) {
+		File f = new File(fileName);
+		BufferedImage i;
+		try {
+			i = ImageIO.read(f);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return getGridFromImage(i);
 	}
 }
