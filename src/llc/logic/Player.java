@@ -24,13 +24,6 @@ public class Player {
 	}
 	
 	/**
-	 * Is triggered when the players base is destroyed and tha game is over.
-	 */
-	public void onPlayerDeath() {
-		
-	}
-
-	/**
 	 * Gets the players minerals.
 	 * @return Amount of minerals
 	 */
