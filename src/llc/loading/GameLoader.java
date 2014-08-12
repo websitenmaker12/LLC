@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 public class GameLoader {
 	
@@ -17,17 +18,22 @@ public class GameLoader {
 	}
 	
 	public void saveToFile(GameState f, String fileName) {
-		System.out.println(gson.toJson(f));
-
+		
+		String stateString = gson.toJson(f);
+		
+		if (fileName == null) {
+			System.out.println(stateString);
+			return;
+		}
 		File saveTo = new File(fileName);
 		
 		try {
 			if (!saveTo.exists()) {
 				saveTo.createNewFile();
 			}
-			String stateString = gson.toJson(f);
 			
 			PrintWriter writer = new PrintWriter(saveTo, "UTF-8");
+			//TODO Remove this when it works 100%!
 			System.out.println("[Debug]" + stateString);
 			writer.println(stateString);
 			writer.close();
@@ -38,7 +44,7 @@ public class GameLoader {
 		}
 	}
 	
-	public void loadFromFile(String pathName) {
+	public GameState loadFromFile(String pathName) {
 		File f = new File(pathName);
 		if (!f.exists()) {
 			throw new IllegalStateException("The save-file to load does not exist!");
@@ -47,16 +53,28 @@ public class GameLoader {
 			BufferedReader in = new BufferedReader(new FileReader(f));
 			
 			String line = null;
+			String content = "";
 			
 			do {
 				line = in.readLine();
+				content += line;
 			}
 			while (line != null);
 			
 			in.close();
+			
+			try {
+				GameState loaded = gson.fromJson(content, GameState.class);
+				return loaded;
+			}
+			catch (JsonSyntaxException e) {
+				System.err.println("Unable to load savegame... Corrupted?");
+				e.printStackTrace(System.err);
+			}
 		} 
 		catch (IOException e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 }

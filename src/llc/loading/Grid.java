@@ -7,6 +7,10 @@ import llc.logic.Cell;
  */
 public class Grid {
 	
+	/**
+	 * Two dimensional array of cells. The first index represents the y-axis, the second one the x-axis
+	 * Starts at 0!
+	 */
 	private Cell[][] cells;
 	
 	public Grid(int height, int width) {
@@ -27,10 +31,10 @@ public class Grid {
 	 * @return the cell
 	 */
 	public Cell getCellAt(int x, int y) {
-		return cells[x][y];
+		return cells[y][x];
 	}
 	
 	public void setCellAt(Cell c, int x, int y) {
-		cells[x][y] = c;
+		cells[y][x] = c;
 	}
 }
