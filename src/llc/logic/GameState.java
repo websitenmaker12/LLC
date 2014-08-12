@@ -7,6 +7,8 @@ public class GameState {
 	private Player player1;
 	private Player player2;
 	
+	private Player activePlayer;
+	
 	public GameState(Grid grid) {
 		this.grid = grid;
 		
