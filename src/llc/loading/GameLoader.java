@@ -19,7 +19,8 @@ public class GameLoader {
 	private final Gson gson;
 	
 	public GameLoader() {
-		gson = new GsonBuilder().registerTypeAdapter(Entity.class, new EntityInstanceCreator()).create();
+		EntityInstanceCreator creator = new EntityInstanceCreator();
+		gson = new GsonBuilder().registerTypeAdapter(Entity.class, creator).create();
 	}
 	
 	public void saveToFile(GameState f, String fileName) {
