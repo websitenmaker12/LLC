@@ -1,5 +1,7 @@
 package llc.entity;
 
+import llc.logic.Player;
+
 /**
  * The entity base class.
  * Contains team and health.
@@ -8,27 +10,37 @@ package llc.entity;
 public abstract class Entity {
 	
 	public int health;
-	public final int maxHealth;
+	public int maxHealth;
 	
-	private int team;
+	private Player player;
 	
+	/**
+	 * Creates a new entity with the amount of 100 health
+	 */
 	public Entity() {
 		this.maxHealth = 100;
 	}
 
-	/***
-	 * Gets the entities team as an integer
-	 * @return
+	/**
+	 * Creates a new entity with given amount of health
+	 * @param health The amount of health
 	 */
-	public int getTeam() {
-		return team;
+	public Entity(int health) {
+		this.health = health;
+	}
+	
+	/**
+	 * Gets the player the entity belongs to.
+	 */
+	public Player getPlayer() {
+		return player;
 	}
 
-	/***
-	 * Sets the entities team
-	 * @param team
+	/**
+	 * Sets the player the entity belongs to.
+	 * @param player The player
 	 */
-	public void setTeam(int team) {
-		this.team = team;
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 }

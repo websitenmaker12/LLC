@@ -11,13 +11,8 @@ public class Logic {
 	private GameState gameState;
 	private EntityMovable selectedEntity;
 	
-	private Player player1;
-	private Player player2;
-	
 	public Logic(Grid grid) {
 		this.setGameState(new GameState(grid));
-		player1 = new Player(this);
-		player2 = new Player(this);
 	}
 	
 	public GameState getGameState() {
@@ -30,17 +25,10 @@ public class Logic {
 
 	private void clickCell(int x, int y) {
 		Cell clickedCell = gameState.getGrid().getCellAt(x, y);
-		if (clickedCell.containsEntity()) {
-			Entity clickedEntity = clickedCell.getEntity();
+		if (selectedEntity != null) {
 			
+		} else if (clickedCell.containsEntity() && clickedCell.getEntity().getTeam() == ) {
 			
-			
-			
-			if (clickedEntity instanceof EntityMovable) {
-				selectEntity(clickedCell.getEntity());
-			}
-		} else {
-			unSelect();
 		}
 	}
 
@@ -60,7 +48,7 @@ public class Logic {
 	}
 
 	private void moveSelectedEntity(EntityMovable entity, int startX, int startY, int destX, int destY) {
-
+		//TODO
 	}
 
 	/*
