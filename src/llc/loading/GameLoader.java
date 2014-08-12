@@ -108,6 +108,9 @@ public class GameLoader {
 		}
 		return null;
 	}
+	public GameState createNewGame(String map) {
+		return null;
+	}
 	public Grid getGridFromImage(BufferedImage i) {
 		int height, width;
 		height = i.getHeight();
@@ -120,9 +123,9 @@ public class GameLoader {
 			for (int x = 0; x < width; x++) {
 				co = new Color(i.getRGB(x, y));
 				if (co.getRed() == 255 && co.getBlue() == 0 && co.getGreen() == 0) {
-					//A Townhall!
 					c = new Cell(x, x, CellType.WALKABLE);
-					c.setEntity(new EntityBuildingBase());
+					Entity en = new EntityBuildingBase();
+					en.setPlayer(null);
 				}
 				else {
 					c = getCellByColorAndLocation(x, y, co);
