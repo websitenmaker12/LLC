@@ -1,5 +1,6 @@
 package llc.loading;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -35,7 +36,7 @@ public class GameLoader {
 			PrintWriter writer = new PrintWriter(saveTo, "UTF-8");
 			//TODO Remove this when it works 100%!
 			System.out.println("[Debug]" + stateString);
-			writer.println(stateString);
+			writer.print(stateString);
 			writer.close();
 		}
 		catch (Exception e) {
@@ -63,6 +64,7 @@ public class GameLoader {
 			
 			in.close();
 			
+			System.out.println(content);
 			try {
 				GameState loaded = gson.fromJson(content, GameState.class);
 				return loaded;
@@ -75,6 +77,9 @@ public class GameLoader {
 		catch (IOException e) {
 			e.printStackTrace();
 		}
+		return null;
+	}
+	public Grid getGridFromImage(BufferedImage i) {
 		return null;
 	}
 }
