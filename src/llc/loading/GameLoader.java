@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import javax.imageio.ImageIO;
 
 import llc.entity.Entity;
+import llc.entity.EntityBuildingBase;
 import llc.logic.Cell;
 import llc.logic.CellType;
 import llc.logic.GameState;
@@ -19,17 +20,33 @@ import llc.logic.Grid;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+/**
+ * A IO-Util to load and save Gamestates
+ * @author simolus3
+ */
 public class GameLoader {
 	
 	private final Gson gson;
 	
+	/**
+	 * Creates a new GameLoader, make sure to only do this once!(Performance...)
+	 */
 	public GameLoader() {
 		EntityInstanceCreator creator = new EntityInstanceCreator();
 		gson = new GsonBuilder().registerTypeAdapter(Entity.class, creator).create();
 	}
 	
+	/**
+	 * Saves the given GameState into the given path
+	 * @param f The GameState
+	 * @param fileName The location of the file!
+	 * @throws IllegalArgumentException if gamestate is null!
+	 */
 	public void saveToFile(GameState f, String fileName) {
 		
+		if (f == null) {
+			throw new IllegalArgumentException("The GameState cannot be null!");
+		}
 		String stateString = gson.toJson(f);
 		
 		if (fileName == null) {
@@ -97,10 +114,20 @@ public class GameLoader {
 		width = i.getWidth();
 		
 		Grid g = new Grid(height, width);
-		
+		Color co;
+		Cell c;
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				g.setCellAt(getCellByColorAndLocation(x, y, new Color(i.getRGB(x, y))), x, y);
+				co = new Color(i.getRGB(x, y));
+				if (co.getRed() == 255 && co.getBlue() == 0 && co.getGreen() == 0) {
+					//A Townhall!
+					c = new Cell(x, x, CellType.WALKABLE);
+					c.setEntity(new EntityBuildingBase());
+				}
+				else {
+					c = getCellByColorAndLocation(x, y, co);
+				}
+				g.setCellAt(c, x, y);
 			}
 		}
 		return g;
@@ -113,6 +140,9 @@ public class GameLoader {
 		}
 		else if (c.getBlue() == 255 && c.getGreen() == 255 && c.getRed() == 255) {
 			type = CellType.WALKABLE;
+		}
+		else {
+			return null;
 		}
 		return new Cell(x, y, type);
 	}
