@@ -10,8 +10,8 @@ public class GameState {
 	public GameState(Grid grid) {
 		this.grid = grid;
 		
-		player1 = new Player();
-		player2 = new Player();
+		player1 = new Player(100);
+		player2 = new Player(100);
 	}
 	
 	public Grid getGrid() {
