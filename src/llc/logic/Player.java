@@ -8,24 +8,18 @@ public class Player {
 	
 	private int minerals;
 	
-	private Logic logic;
-	
 	/**
 	 * Initializes the player with 0 minerals.
-	 * @param logic The game logic class used in calculations
 	 */
-	public Player(Logic logic) {
-		this.logic = logic;
+	public Player() {
 		this.minerals = 0;
 	}
 	
 	/**
 	 * Initializes the player with given minerals.
-	 * @param logic The game logic class used in calculations
 	 * @param startMinerals The amount of minerals that is given to the player at the beginning of a game.
 	 */
-	public Player(Logic logic, int startMinerals) {
-		this.logic = logic;
+	public Player(int startMinerals) {
 		this.minerals = startMinerals;
 	}
 	

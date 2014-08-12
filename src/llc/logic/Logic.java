@@ -16,8 +16,8 @@ public class Logic {
 	
 	public Logic(Grid grid) {
 		this.setGameState(new GameState(grid));
-		player1 = new Player(this);
-		player2 = new Player(this);
+		player1 = new Player();
+		player2 = new Player();
 	}
 	
 	public GameState getGameState() {
