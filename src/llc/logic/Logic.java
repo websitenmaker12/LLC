@@ -11,13 +11,8 @@ public class Logic {
 	private GameState gameState;
 	private EntityMovable selectedEntity;
 	
-	private Player player1;
-	private Player player2;
-	
 	public Logic(Grid grid) {
 		this.setGameState(new GameState(grid));
-		player1 = new Player();
-		player2 = new Player();
 	}
 	
 	public GameState getGameState() {
