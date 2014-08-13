@@ -1,6 +1,8 @@
 package llc.input;
 
 import java.util.*;
+
+import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import llc.LLC;
@@ -22,21 +24,44 @@ public class Input
 	}
 	public void mouseClick(int x, int y)
 	{		
+		int width = LLC_ref.width;
+		int height = LLC_ref.height;
 		
-		Vector3f clickPos = new Vector3f(x, y, 1) ;
+		// calculate dimensions of image plane
+		float fovy = 45f;    // TODO: see gluPerspective in Renderer and refactor to constant
+		float aspect = 1.3f; // TODO: see gluPerspective in Renderer and refactor to constant
+		float znear = 0.1f;  // TODO: see gluPerspective in Renderer and refactor to constant
 		
-		clickPos.x = x;
-		clickPos.y = y;
-		clickPos.z = 1; // z of projection-plane is 1 ?
+		float ymax = znear * (float)Math.tan(fovy * Math.PI / 360.0);
+		float ymin = -ymax;
+		float xmax = ymax * aspect;
+		float xmin = -xmax;
 		
-		float t = (- Cam.pos.z)/ (clickPos.z - Cam.pos.z); // z of the grid is 0
+		float planeWidth = (xmax - xmin);
+		float planeHeight = (ymax - ymin);
 		
-		int cell_x = (int) ((int) Cam.pos.x + t * (clickPos.x - Cam.pos.x));
-		int cell_y = (int) ((int) Cam.pos.y + t * (clickPos.y - Cam.pos.y));
+		// transform window coordinates into world coordinates
+		float wx = (x / (float)width ) * planeWidth + xmin;
+		float wy = (y / (float)height) * planeHeight + ymin;
 		
+		// determine x and y vector of camera transformed image plane
+		Vector3f xVec = (Vector3f)Vector3f.cross(Cam.viewDir, Cam.up, null).normalise(null).scale(wx);
+		Vector3f yVec = (Vector3f)Vector3f.cross(xVec, Cam.viewDir, null).normalise(null).scale(wy);
+		
+		// determine the position the user clicked on the image plane in world coordinates
+		Vector3f clickPos = Vector3f.add(Vector3f.add(Vector3f.add(Cam.pos, (Vector3f)Cam.viewDir.scale(znear), null), xVec, null), yVec, null);
+
+		Vector3f rayDir = Vector3f.sub(clickPos, Cam.pos, null);
+
+		float t = (0 - Cam.pos.z) / rayDir.z; // z of the grid is 0
+		
+		Vector3f intersection = Vector3f.add(Cam.pos, (Vector3f)rayDir.scale(t), null);
+		
+		int cell_x = (int) intersection.x;
+		int cell_y = (int) intersection.y;
+		
+		System.out.println("clicked " + cell_x + " " + cell_y);
 		FireCellClickedEvent(cell_x, cell_y);
-		
-		
 	}
 	
 	public void mousePos(int x, int y)
@@ -51,6 +76,7 @@ public class Input
 		if (y < scrollFrameBorder) FireScrollEvent(Direction.up);
 		if (y > h - scrollFrameBorder) FireScrollEvent(Direction.down);
 
+		// TODO: fire cell hovered
 	}
 	
 	// ------------- Interface for the Listener -------------
@@ -58,6 +84,7 @@ public class Input
 	{
 		public void onScroll(Direction d);
 		public void onCellClicked(int cell_x, int cell_y);
+		// TODO: add cell hovered event
 	}
 	
 	public enum Direction

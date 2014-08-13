@@ -38,7 +38,7 @@ public class LLC {
 	
 	public LLC() {
 
-		this.camera = new Camera(new Vector3f(4, -2, 10), new Vector3f(0, 0.5f, -1), new Vector3f(0, 0, 1));
+		this.camera = new Camera(new Vector3f(4, 4, 10), new Vector3f(0, 1.5f, -1), new Vector3f(0, 0, 1));
 		this.input = new Input(this, this.camera);
 		
 		this.gameLoader = new GameLoader();
@@ -50,11 +50,12 @@ public class LLC {
 			public void onScroll(Input.Direction d) {
 				camera.scroll(d);
 				float yOffset = camera.pos.z * (camera.viewDir.y / camera.viewDir.z);
+				float xOffset = camera.pos.z * (camera.viewDir.x / camera.viewDir.z);
 				Cell[][] cells = logic.getGameState().getGrid().getCells();
-				if (camera.pos.x < 0)	camera.pos.x = 0;
+				if (camera.pos.x < 0 + xOffset)	camera.pos.x = 0;
 				if (camera.pos.y < 0 + yOffset)	camera.pos.y = 0 + yOffset;
 				if (camera.pos.y > cells.length + yOffset)	camera.pos.y = cells.length + yOffset;
-				if (camera.pos.x > cells[0].length) camera.pos.x = cells[0].length;
+				if (camera.pos.x > cells[0].length + xOffset) camera.pos.x = cells[0].length + xOffset;
 			}
 
 			@Override
