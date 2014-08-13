@@ -35,11 +35,11 @@ public class LLC {
 	
 	public LLC() {
 
-		this.camera = new Camera(new Vector3f(0, -2, 10), new Vector3f(0, 0.5f, -1));
+		this.camera = new Camera(new Vector3f(4, -2, 10), new Vector3f(0, 0.5f, -1));
 		this.input = new input(this);
 		
 		this.gameLoader = new GameLoader();
-		this.logic = new Logic(this.gameLoader.loadMap("res/maps/areas/map-1_areas.png"));
+		this.logic = new Logic(this.gameLoader.createNewGame("res/maps/areas/map-1_areas.png"));
 	}
 	
 	/**

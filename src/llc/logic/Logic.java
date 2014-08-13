@@ -9,8 +9,8 @@ public class Logic {
 	private GameState gameState;
 	private EntityMovable selectedEntity;
 
-	public Logic(Grid grid) {
-		this.setGameState(new GameState(grid));
+	public Logic(GameState state) {
+		this.setGameState(state);
 	}
 
 	public GameState getGameState() {

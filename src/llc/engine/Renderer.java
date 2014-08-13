@@ -81,6 +81,8 @@ public class Renderer
 		GL11.glColor3f(0, 0, 1);
 		GL11.glVertex3f(0, 0, 0);
 		GL11.glVertex3f(0, 0, 10);
+		
+		GL11.glColor3f(1, 1, 1);
 		GL11.glEnd();
 		
 		// Render grid
