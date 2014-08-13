@@ -34,7 +34,7 @@ public class Input
 		int cell_x = (int) ((int) Cam.pos.x + t * (clickPos.x - Cam.pos.x));
 		int cell_y = (int) ((int) Cam.pos.y + t * (clickPos.y - Cam.pos.y));
 		
-		cellClickedEvent(cell_x, cell_y);
+		FireCellClickedEvent(cell_x, cell_y);
 		
 		
 	}
@@ -45,11 +45,11 @@ public class Input
 		int h = LLC_ref.height;
 		int w = LLC_ref.width;
 		
-		if (x < scrollFrameBorder) ThrowScrollEvent("left");
-		if(x > w - scrollFrameBorder) ThrowScrollEvent("right");
+		if (x < scrollFrameBorder) FireScrollEvent("left");
+		if(x > w - scrollFrameBorder) FireScrollEvent("right");
 
-		if (y < scrollFrameBorder) ThrowScrollEvent("up");
-		if (y > h - scrollFrameBorder) ThrowScrollEvent("down");
+		if (y < scrollFrameBorder) FireScrollEvent("up");
+		if (y > h - scrollFrameBorder) FireScrollEvent("down");
 
 	}
 	
@@ -58,7 +58,7 @@ public class Input
 	interface logicListener
 	{
 		public void scrollEvent(String border);
-		public void cellClickedEvent(int cell_x, int cell_y);
+		public void FireCellClickedEvent(int cell_x, int cell_y);
 	}
 	
 	// -------------------------------------------------------
@@ -67,16 +67,16 @@ public class Input
 	
 	
 	// ------------ Function to add yourself as Listener
-    public void addThrowListener(logicListener toAdd){ listeners.add(toAdd); }
+    public void addFireListener(logicListener toAdd){ listeners.add(toAdd); }
 
-    public void ThrowScrollEvent(String border) 
+    public void FireScrollEvent(String border) 
     {
         for (logicListener hl : listeners) hl.scrollEvent(border);
     }
     
-    public void cellClickedEvent(int cell_x, int cell_y) 
+    public void FireCellClickedEvent(int cell_x, int cell_y) 
     {
-        for (logicListener hl : listeners) hl.cellClickedEvent(cell_x,cell_y);
+        for (logicListener hl : listeners) hl.FireCellClickedEvent(cell_x,cell_y);
     }
 	
 	
