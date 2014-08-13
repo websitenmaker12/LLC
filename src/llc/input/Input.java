@@ -25,44 +25,56 @@ public class Input
 	
 	private Vector2f rayCast(int x, int y)
 	{
+		//System.out.println("pos: " + x + " " + y);
+		
 		float windowWidth = LLC_ref.width;
 		float windowHeight = LLC_ref.height;
+		y = LLC_ref.height - y;
 		float near = 0.1F;
 		float fovy = 45;
 		float aspect = windowWidth / windowHeight;
 		
-		float yMax = (float) (Math.tan(Math.toRadians(fovy)) * near);
+		float worldHeight = (float) (Math.tan(Math.toRadians(fovy / 2.0f)) * near) * 2.0f;
+		float worldWidth = worldHeight * aspect;
+
+//		float xWorld = (x / windowWidth) * worldWidth + xMin;
+//		float yWorld = (y / windowHeight) * worldHeight + yMin;
 		
-		float yMin = -yMax;
+		Vector3f xImagePlanePixelDeltaVector =  Vector3f.cross(Cam.viewDir, Cam.up, null);
+		Vector3f yImagePlanePixelDeltaVector =  Vector3f.cross(xImagePlanePixelDeltaVector, Cam.viewDir, null);
 		
-		float xMax = yMax * aspect;
-		float xMin = - xMax;
+		xImagePlanePixelDeltaVector.normalise().scale(worldWidth / (windowWidth - 1));
+		yImagePlanePixelDeltaVector.normalise().scale(worldHeight / (windowHeight - 1));
 		
-		float worldWidth = xMax - xMin;
-		float worldHeight = worldWidth / aspect;
+		//System.out.println("x delta length: " + xImagePlanePixelDeltaVector.length());
+		//System.out.println("y delta length: " + yImagePlanePixelDeltaVector.length());
 		
-		float xWorld = x/windowWidth * worldWidth + xMin;
-		float yWorld = y/windowHeight * worldHeight + yMin;
+		xImagePlanePixelDeltaVector.scale(x - windowWidth / 2.0f);
+		yImagePlanePixelDeltaVector.scale(y - windowHeight / 2.0f);
 		
-		Vector3f xImagePlaneVector =  Vector3f.cross(Cam.viewDir, Cam.up, null);
-		Vector3f yImagePlaneVector =  Vector3f.cross(xImagePlaneVector, Cam.viewDir, null);
-		
-		xImagePlaneVector.normalise().scale(xWorld);
-		yImagePlaneVector.normalise().scale(yWorld);
+		//System.out.println("x delta " + xImagePlanePixelDeltaVector);
+		//System.out.println("y delta " + yImagePlanePixelDeltaVector);
 		
 		Vector3f nearVector = (Vector3f) new Vector3f(Cam.viewDir).normalise().scale(near);
-		Vector3f ImagePlaneMousePos = Vector3f.add(Vector3f.add(Vector3f.add(Cam.pos, nearVector, null),xImagePlaneVector, null),yImagePlaneVector, null);
+		Vector3f imagePlaneMousePos = new Vector3f(
+				Cam.pos.x + nearVector.x + xImagePlanePixelDeltaVector.x + yImagePlanePixelDeltaVector.x,
+				Cam.pos.y + nearVector.y + xImagePlanePixelDeltaVector.y + yImagePlanePixelDeltaVector.y,
+				Cam.pos.z + nearVector.z + xImagePlanePixelDeltaVector.z + yImagePlanePixelDeltaVector.z
+				);
 		
-		Vector3f rayDirection = Vector3f.sub(ImagePlaneMousePos, Cam.pos, null);
+		//System.out.println("image plane: " + imagePlaneMousePos);
 		
+		Vector3f rayDirection = (Vector3f) Vector3f.sub(imagePlaneMousePos, Cam.pos, null).normalise();
+		//System.out.println("ray: " + rayDirection);
 		float t = (0 - Cam.pos.z) / rayDirection.z; // z of the grid is 0
 		
 		Vector3f intersection = Vector3f.add(Cam.pos, (Vector3f)rayDirection.scale(t), null);
+		//System.out.println("Intersect: " + intersection);
 		
 		int cell_x = (int) intersection.x;
 		int cell_y = (int) intersection.y;
 		
-		System.out.println("clicked " + cell_x + " " + cell_y);
+		//System.out.println("clicked " + cell_x + " " + cell_y);
 		
 		Vector2f cellPos = new Vector2f(cell_x, cell_y);
 		return cellPos;
