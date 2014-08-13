@@ -49,13 +49,17 @@ public class Input
 		Vector3f yVec = (Vector3f)Vector3f.cross(xVec, Cam.viewDir, null).normalise(null).scale(wy);
 		
 		// determine the position the user clicked on the image plane in world coordinates
-		Vector3f clickPos = Vector3f.add(Vector3f.add(Vector3f.add(Cam.pos, (Vector3f)Cam.viewDir.scale(znear), null), xVec, null), yVec, null);
+		Vector3f nearVec = new Vector3f(Cam.viewDir);
+		nearVec.scale(znear);
+		Vector3f clickPos = Vector3f.add(Vector3f.add(Vector3f.add(Cam.pos, nearVec, null), xVec, null), yVec, null);
 
+		
 		Vector3f rayDir = Vector3f.sub(clickPos, Cam.pos, null);
 
 		float t = (0 - Cam.pos.z) / rayDir.z; // z of the grid is 0
 		
-		Vector3f intersection = Vector3f.add(Cam.pos, (Vector3f)rayDir.scale(t), null);
+		rayDir.scale(t);
+		Vector3f intersection = Vector3f.add(Cam.pos, rayDir, null);
 		
 		int cell_x = (int) intersection.x;
 		int cell_y = (int) intersection.y;
