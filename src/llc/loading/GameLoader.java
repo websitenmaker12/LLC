@@ -26,14 +26,11 @@ import com.google.gson.GsonBuilder;
  */
 public class GameLoader {
 	
-	private final Gson gson;
-	
 	/**
 	 * Creates a new GameLoader, make sure to only do this once!(Performance...)
 	 */
 	public GameLoader() {
-		EntityInstanceCreator creator = new EntityInstanceCreator();
-		gson = new GsonBuilder().registerTypeAdapter(Entity.class, creator).create();
+		
 	}
 	
 	/**
@@ -43,7 +40,8 @@ public class GameLoader {
 	 * @throws IllegalArgumentException if gamestate is null!
 	 */
 	public void saveToFile(GameState f, String fileName) {
-		
+		EntityInstanceCreator creator = new EntityInstanceCreator(f);
+		Gson gson = new GsonBuilder().registerTypeAdapter(Entity.class, creator).create();
 		if (f == null) {
 			throw new IllegalArgumentException("The GameState cannot be null!");
 		}
@@ -71,6 +69,8 @@ public class GameLoader {
 	}
 	
 	public GameState loadFromFile(String pathName) {
+		EntityInstanceCreator creator = new EntityInstanceCreator(null);
+		Gson gson = new GsonBuilder().registerTypeAdapter(Entity.class, creator).create();
 		File f = new File(pathName);
 		if (!f.exists()) {
 			throw new IllegalStateException("The save-file to load does not exist!");
@@ -96,6 +96,7 @@ public class GameLoader {
 			//System.out.println(content);
 			try {
 				GameState loaded = gson.fromJson(content, GameState.class);
+				
 				return loaded;
 			}
 			catch (Exception e) {
@@ -109,8 +110,57 @@ public class GameLoader {
 		return null;
 	}
 	public GameState createNewGame(String map) {
-		return null;
+		GameState state = null;
+		try {
+			BufferedImage img = ImageIO.read(new File(map));
+			int height, width;
+			height = img.getHeight();
+			width = img.getWidth();
+			Grid g = new Grid(height, width);
+			state = new GameState(g);
+			Color c;
+			Cell cell;
+			
+			for (int y = 0; y < height; y++) {
+				for (int x = 0; x < width; x++) {
+					c = new Color(img.getRGB(x, y));
+					if (c.equals(Color.BLACK)) {
+						cell = new Cell(x, y, CellType.SOLID);
+					}
+					else if (c.equals(Color.WHITE)) {
+						cell = new Cell(x, y, CellType.WALKABLE);
+					}
+					else if (c.equals(Color.GREEN)) {
+						cell = new Cell(x, y, CellType.WALKABLE);
+						Entity townHall1 = new EntityBuildingBase();
+						townHall1.setPlayer(state.getPlayer1());
+						cell.setEntity(townHall1);
+						state.setTownHall1Cell(cell);
+					}
+					else if (c.equals(Color.RED)) {
+						cell = new Cell(x, y, CellType.WALKABLE);
+						Entity townHall2 = new EntityBuildingBase();
+						townHall2.setPlayer(state.getPlayer2());
+						cell.setEntity(townHall2);
+						state.setTownHall2Cell(cell);
+					}
+					else {
+						//Unknown
+						cell = new Cell(x, y, CellType.SOLID);
+					}
+					g.setCellAt(cell, x, y);
+				}
+			}
+		}
+		catch (Exception e) {
+			System.err.println("Konnte neues Spiel nicht laden ;(");
+		}
+		return state;
 	}
+	/**
+	 * @deprecated Use createNewGame or loadFromFile instead!
+	 */
+	@Deprecated
 	public Grid getGridFromImage(BufferedImage i) {
 		int height, width;
 		height = i.getHeight();
@@ -145,10 +195,14 @@ public class GameLoader {
 			type = CellType.WALKABLE;
 		}
 		else {
-			return null;
+			throw new IllegalArgumentException("Unknown Cell Color!");
 		}
 		return new Cell(x, y, type);
 	}
+	/**
+	 * @deprecated Use createNewGame or loadFromFile instead!
+	 */
+	@Deprecated
 	public Grid loadMap(String fileName) {
 		File f = new File(fileName);
 		BufferedImage i;
