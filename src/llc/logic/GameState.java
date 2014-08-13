@@ -74,4 +74,12 @@ public class GameState {
 	public void setTownHall2Cell(Cell townHall2) {
 		this.townHall2 = townHall2;
 	}
+	public Cell getActivePlayerTownHallLocation() {
+		if (activePlayer == 1) {
+			return townHall1;
+		}
+		else {
+			return townHall2;
+		}
+	}
 }
