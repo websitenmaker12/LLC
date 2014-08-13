@@ -1,5 +1,7 @@
 package llc.engine.gui;
 
+import llc.engine.GUIRenderer;
+
 public abstract class GUIElement {
 	
 	public float posX;
@@ -23,6 +25,6 @@ public abstract class GUIElement {
 	/**
 	 * Is called for render updates
 	 */
-	public abstract void render(int x, int y);
+	public abstract void render(GUIRenderer renderer, int x, int y);
 	
 }
