@@ -42,8 +42,13 @@ public class GUIButton extends GUIElement {
 
 	@Override
 	public void render(GUIRenderer renderer, int x, int y) {
-		RenderUtil.drawQuad(this.posX, this.posY, this.width, this.height);
+		RenderUtil.drawTexturedQuad(this.posX, this.posY, this.width, this.height);
+		
 		TextureImpl.bindNone();
+		if(this.isClicked) buttonDown.bind();
+		else if(this.isHover) buttonHover.bind();
+		else button.bind();
+		
 		renderer.arial.drawString(this.posX + this.width / 2 - renderer.arial.getWidth(this.text) / 2,
 				this.posY + this.height / 2 - renderer.arial.getHeight() / 2, this.text, Color.black);
 	}
