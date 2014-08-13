@@ -4,8 +4,7 @@ public class GameState {
 
 	private Grid grid;
 	
-	private Player player1;
-	private Player player2;
+	private Player player1, player2;
 	
 	private int activePlayer = 1;
 	
