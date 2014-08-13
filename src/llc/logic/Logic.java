@@ -5,6 +5,10 @@ import llc.entity.EntityBuildingBase;
 import llc.entity.EntityMovable;
 import llc.entity.IAttacking;
 
+/**
+ * Logic class
+ * @author PetaByteBoy
+ */
 public class Logic {
 
 	private GameState gameState;
@@ -40,7 +44,7 @@ public class Logic {
 	public void clickCell(int clickX, int clickY) {
 		Cell clickedCell = gameState.getGrid().getCellAt(clickX, clickY);
 		if (clickedCell.containsEntity()) {
-			if (clickedCell.getEntity().getPlayer() == gameState.getActivePlayer()) {
+			if (clickedCell.getEntity().getPlayer() == gameState.activePlayer) {
 				// select
 				selectEntity(clickedCell.getEntity());
 			} else if (selectedEntity instanceof IAttacking) {

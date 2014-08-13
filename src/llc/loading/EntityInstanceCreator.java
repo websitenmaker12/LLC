@@ -39,15 +39,7 @@ public class EntityInstanceCreator implements JsonDeserializer<Entity>, JsonSeri
 		}
 		
 		en.health = object.get("health").getAsInt();
-		
-		if (object.get("player") != null) {
-			if (object.get("player").getAsInt() == 1) {
-				en.setPlayer(state.getPlayer1());
-			}
-			if (object.get("player").getAsInt() == 2) {
-				en.setPlayer(state.getPlayer2());
-			}
-		}
+		en.setPlayer(object.get("player").getAsInt());
 		return en;
 	}
 
@@ -66,16 +58,6 @@ public class EntityInstanceCreator implements JsonDeserializer<Entity>, JsonSeri
 		}
 		else if (entity instanceof EntityBuildingBase) {
 			e.getAsJsonObject().addProperty("type", "base");
-		}
-		if (entity.getPlayer() != null) {
-			if (entity.getPlayer().equals(state.getPlayer1())) {
-				e.getAsJsonObject().remove("player");
-				e.getAsJsonObject().addProperty("player", 1);
-			}
-			if (entity.getPlayer().equals(state.getPlayer2())) {
-				e.getAsJsonObject().remove("player");
-				e.getAsJsonObject().addProperty("player", 2);
-			}
 		}
 		//System.out.println(e);
 		return e;

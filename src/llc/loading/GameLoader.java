@@ -134,14 +134,14 @@ public class GameLoader {
 					else if (c.equals(Color.GREEN)) {
 						cell = new Cell(x, y, CellType.WALKABLE);
 						Entity townHall1 = new EntityBuildingBase();
-						townHall1.setPlayer(state.getPlayer1());
+						townHall1.setPlayer(1);
 						cell.setEntity(townHall1);
 //						state.setTownHall1Cell(cell);
 					}
 					else if (c.equals(Color.RED)) {
 						cell = new Cell(x, y, CellType.WALKABLE);
 						Entity townHall2 = new EntityBuildingBase();
-						townHall2.setPlayer(state.getPlayer2());
+						townHall2.setPlayer(2);
 						cell.setEntity(townHall2);
 //						state.setTownHall2Cell(cell);
 					}
@@ -177,7 +177,7 @@ public class GameLoader {
 				if (co.getRed() == 255 && co.getBlue() == 0 && co.getGreen() == 0) {
 					c = new Cell(x, x, CellType.WALKABLE);
 					Entity en = new EntityBuildingBase();
-					en.setPlayer(null);
+					c.setEntity(en);
 				}
 				else {
 					c = getCellByColorAndLocation(x, y, co);
