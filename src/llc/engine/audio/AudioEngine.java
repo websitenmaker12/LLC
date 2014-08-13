@@ -1,5 +1,8 @@
 package llc.engine.audio;
 
+import org.lwjgl.LWJGLException;
+import org.lwjgl.openal.AL;
+
 import llc.engine.res.Sound;
 
 /**
@@ -16,8 +19,10 @@ public class AudioEngine {
 	
 	/**
 	 * Init function: Creates AL and loads sounds.
+	 * @throws LWJGLException 
 	 */
-	public void initAudioEngine() {
+	public void initAudioEngine() throws LWJGLException {
+		AL.create();
 		loadSounds();
 	}
 	
