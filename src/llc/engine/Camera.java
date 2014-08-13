@@ -20,10 +20,10 @@ public class Camera {
 
 	public void scroll(Input.Direction d) {
 		switch(d){
-		case right: pos.x += 0.5; break;
-		case down: pos.y -= 0.5; break;
-		case left: pos.x -= 0.5; break;
-		case up: pos.y += 0.5; break;
+		case right: pos.x += 0.4; break;
+		case down: pos.y -= 0.4; break;
+		case left: pos.x -= 0.4; break;
+		case up: pos.y += 0.4; break;
 		}
 		
 	}
