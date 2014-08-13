@@ -4,8 +4,8 @@ import llc.engine.Camera;
 import llc.engine.GUIRenderer;
 import llc.engine.Profiler;
 import llc.engine.Renderer;
-import llc.input.input;
-import llc.input.input.Direction;
+import llc.input.Input;
+import llc.input.Input.Direction;
 import llc.loading.GameLoader;
 import llc.logic.Logic;
 
@@ -13,6 +13,8 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Vector3f;
 
 public class LLC {
@@ -22,7 +24,7 @@ public class LLC {
 	
 	private Profiler profiler = new Profiler();
 	private Camera camera;
-	private input input;
+	private Input input;
 	private Renderer renderer;
 	private GameLoader gameLoader;
 	private Logic logic;
@@ -37,23 +39,23 @@ public class LLC {
 	public LLC() {
 
 		this.camera = new Camera(new Vector3f(4, -2, 10), new Vector3f(0, 0.5f, -1));
-		this.input = new input(this);
+		this.input = new Input(this);
 		
 		this.gameLoader = new GameLoader();
 		this.logic = new Logic(this.gameLoader.createNewGame("res/maps/areas/map-1_areas.png"));
-		this.input.addThrowListener(new input.logicListener(){
+		
+		// add input listener
+		this.input.addFireListener(new Input.logicListener(){
 
 			@Override
-			public void scrollEvent(Direction d) {
+			public void scrollEvent(Input.Direction d) {
 				camera.scroll(d);
 			}
 
 			@Override
-			public void cellClickedEvent(int cell_x, int cell_y) {
+			public void FireCellClickedEvent(int cell_x, int cell_y) {
 				
 			}
-			
-			
 		});
 	}
 	
@@ -102,11 +104,14 @@ public class LLC {
 			this.profiler.endStart("Render game");
 			this.renderer.render(this.camera, this.logic.getGameState());
 			this.profiler.endStart("Render GUI");
-			this.guiRenderer.render(this.mouseX, this.mouseY);
+			this.guiRenderer.render(this.width, this.height, this.mouseX, this.mouseY);
 			this.profiler.end();
 			
 			Display.update();
 			Display.sync(60);
+			
+			int error = GL11.glGetError();
+			if(error != GL11.GL_NO_ERROR) System.out.println("GLError " + error + ": " + GLU.gluErrorString(error));
 		}
 		
 		if(Display.isCreated()) Display.destroy();

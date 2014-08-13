@@ -1,6 +1,6 @@
 package llc.engine;
 
-import llc.input.input.Direction;
+import llc.input.Input;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -16,7 +16,7 @@ public class Camera {
 		this.viewDir = viewDir;
 	}
 
-	public void scroll(Direction d) {
+	public void scroll(Input.Direction d) {
 		switch(d){
 		case right: pos.x += 0.5; break;
 		case down: pos.y -= 0.5; break;
