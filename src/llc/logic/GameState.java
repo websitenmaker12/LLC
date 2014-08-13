@@ -45,7 +45,6 @@ public class GameState {
 		}
 		return player2;
 	}
-
 	public void setActivePlayer(Player active) {
 		if (active.equals(player1)) {
 			activePlayer = 1;
