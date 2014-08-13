@@ -26,9 +26,9 @@ public class GameState {
 	}
 
 	public void setActivePlayer(Player active) {
-		if (player1.equals(activePlayer)) {
+		if (player1.equals(active)) {
 			activePlayer = 1;
-		} else if (player2.equals(activePlayer)) {
+		} else if (player2.equals(active)) {
 			activePlayer = 2;
 		} else {
 			throw new IllegalArgumentException("Given Player argument does not exist");
