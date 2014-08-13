@@ -68,6 +68,27 @@ public class Pathfinder {
 		}
 		if (c.x == width) {
 			//Right
+			if (c.y == 0) {
+				//Bottom-Right corner
+				Cell[] cells = new Cell[2];
+				cells[0] = g.getCellAt(c.x, c.y+1);
+				cells[1] = g.getCellAt(c.x-1, c.y);
+				return cells;
+			}
+			else if (c.y == height) {
+				//Top-Right corner
+				Cell[] cells = new Cell[2];
+				cells[0] = g.getCellAt(c.x-1, c.y);
+				cells[1] = g.getCellAt(c.x, c.y-1);
+				return cells;
+			}
+			else {
+				//Not a corner, but right border
+				Cell[] cells = new Cell[3];
+				cells[0] = g.getCellAt(c.x-1, c.y);
+				cells[1] = g.getCellAt(c.x, c.y+1);
+				cells[2] = g.getCellAt(c.x, c.y-1);
+			}
 		}
 		if (c.y == 0) {
 			//Bottom
