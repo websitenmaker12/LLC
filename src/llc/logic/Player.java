@@ -40,4 +40,12 @@ public class Player {
 	public void setMinerals(int minerals) {
 		this.minerals = minerals;
 	}
+
+	/**
+	 * Adds to the players minerals.
+	 * @param The amount of minerals to add.
+	 */
+	public void addMinerals(int minerals) {
+		this.minerals += minerals;
+	}
 }

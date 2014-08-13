@@ -14,13 +14,13 @@ public class GUIIngame extends GUI {
 	
 	@Override
 	public void onOpen() {
-		this.elements.add(new GUIButton(0, Display.getHeight() - 55, 200, 55, "Buy Warrior") {
+		this.elements.add(new GUIButton(20, Display.getHeight() - 55, 200, 35, "Buy Warrior") {
 			public void onClick(int x, int y) {
 				logic.buyEntity("Warrior");
 			}
 		});
 		
-		this.elements.add(new GUIButton(0, Display.getHeight() - 110, 200, 55, "Buy Worker") {
+		this.elements.add(new GUIButton(20, Display.getHeight() - 110, 200, 35, "Buy Worker") {
 			public void onClick(int x, int y) {
 				logic.buyEntity("Worker");
 			}
