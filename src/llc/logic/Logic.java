@@ -44,7 +44,7 @@ public class Logic {
 	 */
 	public void clickCell(int clickX, int clickY) {
 		
-		if (0 <= clickY && clickY <= gameState.getGrid().getHeigth() && 0 <= clickX && clickX <= gameState.getGrid().getWidth()) {
+		if (0 <= clickY && clickY < gameState.getGrid().getHeigth() && 0 <= clickX && clickX < gameState.getGrid().getWidth()) {
 			Cell clickedCell = gameState.getGrid().getCellAt(clickX, clickY);
 			if (clickedCell.containsEntity()) {
 				if (clickedCell.getEntity().getPlayer() == gameState.activePlayer) {
@@ -85,6 +85,7 @@ public class Logic {
 
 			if (destEntity.health <= 0) {
 				moveSelectedEntity(destX, destY, false);
+				gameState.getActivePlayer().addMinerals(25);
 				// if a base was destroyed, the game is over
 				if (destEntity instanceof EntityBuildingBase) gameState.isGameOver = true;
 			}
@@ -113,12 +114,20 @@ public class Logic {
 	private void countMove() {
 		gameState.moveCount++;
 		if (gameState.moveCount >= 1) {
+			gameState.getActivePlayer().addMinerals(50);
 			gameState.setActivePlayer(gameState.getInActivePlayer());
 			gameState.moveCount = 0;
 		}
 	}
 
-	public void buyEntity(String string) {
-		System.out.println(string);
+	public void buyEntity(Entity entity) {
+		
+		Cell spawnCell = gameState.getGrid().getCellAt(gameState.getActivePlayerTownHallLocation().x + 1, gameState.getActivePlayerTownHallLocation().y);
+		
+		if (!spawnCell.containsEntity() && entity.getCost() > 0) {
+			gameState.getActivePlayer().removeMinerals(entity.getCost());
+			entity.setPlayer(gameState.activePlayer);
+			spawnCell.setEntity(entity);
+		}
 	}
 }

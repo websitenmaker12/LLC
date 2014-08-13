@@ -1,0 +1,9 @@
+# MakeHuman exported MTL
+# www.makehuman.org
+newmtl basic
+Ka 1.0 1.0 1.0
+Kd 1.0 1.0 1.0
+Ks 0.33 0.33 0.52
+illum 5
+Ns 50.0
+map_Kd texture.png
