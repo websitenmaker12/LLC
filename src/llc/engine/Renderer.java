@@ -93,6 +93,7 @@ public class Renderer
 		{
 			for (int x = 0; x < cells[0].length; x++)
 			{
+				if (cells[y][x] == gamestate.hoveredCell()) GL11.glColor3f(1, 0.8f, 0.8f);
 				if (cells[y][x].getEntity() == null){
 					//Render terrain texture
 					if (cells[y][x].getType() == CellType.SOLID)
@@ -129,7 +130,8 @@ public class Renderer
 				GL11.glTexCoord2d(1, 0); GL11.glVertex2d(x + 1, y);
 				GL11.glTexCoord2d(1, 1); GL11.glVertex2d(x + 1, y + 1);
 				GL11.glTexCoord2d(0, 1); GL11.glVertex2d(x, y + 1);
-
+				
+				GL11.glColor3f(1, 1, 1);
 				GL11.glEnd();
 				
 			}
