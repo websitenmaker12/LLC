@@ -42,7 +42,7 @@ public class LLC {
 		this.input = new Input(this, this.camera);
 		this.gameLoader = new GameLoader();
 		this.logic = new Logic(this.gameLoader.createNewGame("res/maps/areas/map-1_areas.png"));
-		this.guiRenderer.openGUI(new GUIIngame());
+		this.guiRenderer.openGUI(new GUIIngame(this.logic));
 		
 		this.input.addFireListener(new Input.LogicListener() {
 
