@@ -17,7 +17,7 @@ public class Shader {
 	
 	private String path;
 	private int shaderType;
-	private int shaderID;
+	private int programID;
 	
 	public Shader(String path, int shaderType) {
 		this.path = path;
@@ -27,12 +27,12 @@ public class Shader {
 	}
 	
 	private void load() {
-		this.shaderID = 0;
+		int shaderID = 0;
 		BufferedReader reader = null;
 		
 		try {
-			this.shaderID = ARBShaderObjects.glCreateShaderObjectARB(this.shaderType);
-			if(this.shaderID == 0) return;
+			shaderID = ARBShaderObjects.glCreateShaderObjectARB(this.shaderType);
+			if(shaderID == 0) return;
 			
 			// Load file
 			StringBuilder builder = new StringBuilder();
@@ -43,14 +43,20 @@ public class Shader {
 			reader.close();
 			
 			// Compile shader
-			ARBShaderObjects.glShaderSourceARB(this.shaderID, builder.toString());
-			ARBShaderObjects.glCompileShaderARB(this.shaderID);
+			ARBShaderObjects.glShaderSourceARB(shaderID, builder.toString());
+			ARBShaderObjects.glCompileShaderARB(shaderID);
 			
-			if(ARBShaderObjects.glGetObjectParameteriARB(this.shaderID, ARBShaderObjects.GL_OBJECT_COMPILE_STATUS_ARB) == GL11.GL_FALSE) {
-				throw new RuntimeException("Error by creating shader: " + this.getLog());
+			if(ARBShaderObjects.glGetObjectParameteriARB(shaderID, ARBShaderObjects.GL_OBJECT_COMPILE_STATUS_ARB) == GL11.GL_FALSE) {
+				throw new RuntimeException("Error by creating shader: " + this.getLog(shaderID));
 			}
+			
+			this.programID = ARBShaderObjects.glCreateProgramObjectARB();
+			if(this.programID == 0) return;
+			
+			ARBShaderObjects.glAttachObjectARB(this.programID, shaderID);
+			ARBShaderObjects.glLinkProgramARB(this.programID);
 		} catch(Exception e) {
-			ARBShaderObjects.glDeleteObjectARB(this.shaderID);
+			ARBShaderObjects.glDeleteObjectARB(shaderID);
 			e.printStackTrace();
 		} finally {
 			try {
@@ -61,13 +67,13 @@ public class Shader {
 		}
 	}
 
-	private String getLog() {
-		if(this.shaderID == 0) return "";
-		return ARBShaderObjects.glGetInfoLogARB(this.shaderID, ARBShaderObjects.glGetObjectParameteriARB(this.shaderID, ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB));
+	private String getLog(int shaderID) {
+		if(shaderID == 0) return "";
+		return ARBShaderObjects.glGetInfoLogARB(shaderID, ARBShaderObjects.glGetObjectParameteriARB(shaderID, ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB));
 	}
 	
 	public void bind() {
-		ARBShaderObjects.glUseProgramObjectARB(this.shaderID);
+		ARBShaderObjects.glUseProgramObjectARB(this.programID);
 	}
 	
 }
