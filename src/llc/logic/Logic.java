@@ -44,7 +44,7 @@ public class Logic {
 	 */
 	public void clickCell(int clickX, int clickY) {
 		
-		if (0 <= clickY && clickY <= gameState.getGrid().getHeigth() && 0 <= clickX && clickX <= gameState.getGrid().getWidth()) {
+		if (0 <= clickY && clickY < gameState.getGrid().getHeigth() && 0 <= clickX && clickX < gameState.getGrid().getWidth()) {
 			Cell clickedCell = gameState.getGrid().getCellAt(clickX, clickY);
 			if (clickedCell.containsEntity()) {
 				if (clickedCell.getEntity().getPlayer() == gameState.activePlayer) {

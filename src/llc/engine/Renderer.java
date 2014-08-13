@@ -1,5 +1,6 @@
 package llc.engine;
 
+import llc.engine.model.ObjModel;
 import llc.engine.res.Texture;
 import llc.entity.EntityBuildingBase;
 import llc.entity.EntityWarrior;
@@ -22,6 +23,8 @@ public class Renderer
 	private Texture solidTexture;
 	private Texture walkableTexture;
 
+	private ObjModel modelBase;
+	
 	public Renderer() 
 	{
 		GL11.glClearColor(0F, 0F, 0F, 1F);
@@ -38,6 +41,15 @@ public class Renderer
 		baseTexture = new Texture("res/entity/building/Base.png");
 		solidTexture = new Texture("res/texture/water.png");
 		walkableTexture = new Texture("res/texture/grass.png");
+<<<<<<< HEAD
+=======
+		
+//		try {
+//			this.modelBase = ObjLoader.loadObj("res/entity/base/base.obj");
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+>>>>>>> origin/master
 	}
 	
 	/**
