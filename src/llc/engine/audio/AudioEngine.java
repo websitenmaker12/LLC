@@ -1,39 +1,59 @@
 package llc.engine.audio;
 
-import java.io.IOException;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.openal.AL;
-import org.lwjgl.openal.AL10;
-import org.lwjgl.util.WaveData;
 
+import llc.engine.res.Sound;
+
+/**
+ * The sound engine. This is used to play sounds... obvious
+ * @author MaxiHoeve14
+ */
 public class AudioEngine {
-	IntBuffer buffer = BufferUtils.createIntBuffer(1);
-	IntBuffer source = BufferUtils.createIntBuffer(1);
 	
-	public static WaveData buttonClick;
+	public static Sound buttonClick;
 	
 	public AudioEngine() {
 		
 	}
 	
-	public void initAudioEngine() {
+	/**
+	 * Init function: Creates AL and loads sounds.
+	 * @throws LWJGLException 
+	 */
+	public void initAudioEngine() throws LWJGLException {
+		AL.create();
 		loadSounds();
 	}
 	
+	/**
+	 * Function that is used to load sounds.
+	 */
 	private void loadSounds() {
-		AL10.alGenBuffers(buffer);
-		//if(AL10.alGetError() != AL10.AL_NO_ERROR)
-		
-		buttonClick = WaveData.create("res/sound/buttonClick.wav");
-		AL10.alBufferData(buffer.get(0), buttonClick.format, buttonClick.data, buttonClick.samplerate);
-		buttonClick.dispose();
+		buttonClick = new Sound("/res/sound/gui_click.wav");
 	}
 	
-	public void playSoundAt(Sounds sound, float x, float z, float playerX, float playerY, float playerZ) {
-		FloatBuffer sourcePos = BufferUtils.createFloatBuffer(3).put(new float[] {x, playerY, z});
-		FloatBuffer listenerPos = BufferUtils.createFloatBuffer(3).put(new float[] {playerX, playerY, playerZ});
+	/**
+	 * This function is used to play a sound at a given spot.
+	 * Note that you also need to give the camera / player position due to some cool AL calculations.
+	 * @param sound The {@link Sounds} to play.
+	 * @param x	The source x position.
+	 * @param y The source y position.
+	 * @param z The source z position.
+	 * @param playerX The player / camera x position.
+	 * @param playerY The player / camera y position.
+	 * @param playerZ The player / camera z position.
+	 */
+	public void playSoundAt(Sounds sound, float x, float y, float z, float playerX, float playerY, float playerZ) {
+		if(sound == Sounds.BUTTONCLICK) buttonClick.playSound(x, y, z, playerX, playerY, playerZ);
+	}
+	
+	/**
+	 * This function is used to play a sound without giving some location. The result is that
+	 * the volume is the same at every location. This is used to play GUI button sounds for example.
+	 * @param sound The {@link Sounds} to play.
+	 */
+	public void playSound(Sounds sound) {
+		if(sound == Sounds.BUTTONCLICK) buttonClick.playSound(0, 0, 0, 0, 0, 0);
 	}
 }

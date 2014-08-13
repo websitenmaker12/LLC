@@ -43,18 +43,21 @@ public class Logic {
 	 * @param clickY The y coord of the clicked cell.
 	 */
 	public void clickCell(int clickX, int clickY) {
-		Cell clickedCell = gameState.getGrid().getCellAt(clickX, clickY);
-		if (clickedCell.containsEntity()) {
-			if (clickedCell.getEntity().getPlayer() == gameState.activePlayer) {
-				// select
-				selectEntity(clickedCell.getEntity());
-			} else if (selectedEntity instanceof IAttacking && selectedEntity.isCellInRange(clickX, clickY)) {
-				// attack
-				attackCell( clickX, clickY);
+		
+		if (0 <= clickY && clickY <= gameState.getGrid().getHeigth() && 0 <= clickX && clickX <= gameState.getGrid().getWidth()) {
+			Cell clickedCell = gameState.getGrid().getCellAt(clickX, clickY);
+			if (clickedCell.containsEntity()) {
+				if (clickedCell.getEntity().getPlayer() == gameState.activePlayer) {
+					// select
+					selectEntity(clickedCell.getEntity());
+				} else if (selectedEntity instanceof IAttacking && selectedEntity.isCellInRange(clickX, clickY)) {
+					// attack
+					attackCell( clickX, clickY);
+				}
+			} else if (clickedCell.getType() == CellType.WALKABLE && selectedEntity != null && selectedEntity.isCellInRange(clickX, clickY)) {
+				//move
+				moveSelectedEntity(clickX, clickY, true);
 			}
-		} else if (clickedCell.getType() == CellType.WALKABLE && selectedEntity.isCellInRange(clickX, clickY)) {
-			//move
-			moveSelectedEntity(clickX, clickY, true);
 		}
 	}
 

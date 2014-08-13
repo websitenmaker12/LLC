@@ -4,8 +4,6 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.util.WaveData;
 
@@ -15,13 +13,11 @@ public class Sound {
 	IntBuffer source = BufferUtils.createIntBuffer(1);
 	public static WaveData data;
 	public Sound(String path) {
-		try {
-			AL.create();
-		} catch (LWJGLException e) {
-			e.printStackTrace();
-		}
 	}
 	
+	/**
+	 * This function is used to load the sound.
+	 */
 	public void loadSound() {
 		AL10.alGenBuffers(buffer);
 		
@@ -30,6 +26,15 @@ public class Sound {
 		data.dispose();
 	}
 	
+	/**
+	 * This function is used to play a sound at a given location.
+	 * @param posX The source x pos.
+	 * @param posY The source y pos.
+	 * @param posZ The source z pos.
+	 * @param lPosX The listener x pos.
+	 * @param lPosY The listener y pos.
+	 * @param lPosZ The listener z pos.
+	 */
 	public void playSound(float posX, float posY, float posZ, float lPosX, float lPosY, float lPosZ) {
 		FloatBuffer sourcePos = BufferUtils.createFloatBuffer(3).put(new float[] { posX, posY, posZ });
 		FloatBuffer listenerPos = BufferUtils.createFloatBuffer(3).put(new float[] { lPosX, lPosY, lPosZ });
@@ -44,6 +49,9 @@ public class Sound {
 		AL10.alSourcePlay(source.get(0));
 	}
 	
+	/**
+	 * This function is used to free the sounds memory.
+	 */
 	public void dispose() {
 		AL10.alDeleteSources(source);
 		AL10.alDeleteBuffers(buffer);

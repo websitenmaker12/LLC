@@ -47,7 +47,7 @@ public class Shader {
 			ARBShaderObjects.glCompileShaderARB(this.shaderID);
 			
 			if(ARBShaderObjects.glGetObjectParameteriARB(this.shaderID, ARBShaderObjects.GL_OBJECT_COMPILE_STATUS_ARB) == GL11.GL_FALSE) {
-				throw new RuntimeException("Error by creating shader: " + this.getLog());
+				throw new RuntimeException("Error by creating shader: " + this.getLog(this.shaderID));
 			}
 		} catch(Exception e) {
 			ARBShaderObjects.glDeleteObjectARB(this.shaderID);
@@ -61,13 +61,13 @@ public class Shader {
 		}
 	}
 
-	private String getLog() {
-		if(this.shaderID == 0) return "";
-		return ARBShaderObjects.glGetInfoLogARB(this.shaderID, ARBShaderObjects.glGetObjectParameteriARB(this.shaderID, ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB));
+	private String getLog(int shaderID) {
+		if(shaderID == 0) return "";
+		return ARBShaderObjects.glGetInfoLogARB(shaderID, ARBShaderObjects.glGetObjectParameteriARB(shaderID, ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB));
 	}
 	
-	public void bind() {
-		ARBShaderObjects.glUseProgramObjectARB(this.shaderID);
+	public int getShaderID() {
+		return this.shaderID;
 	}
 	
 }
