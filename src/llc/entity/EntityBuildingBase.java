@@ -5,4 +5,7 @@ package llc.entity;
  */
 public class EntityBuildingBase extends EntityBuilding {
 	
+	public EntityBuildingBase() {
+		this.maxHealth = 250;
+	}
 }

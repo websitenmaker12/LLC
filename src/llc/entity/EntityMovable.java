@@ -40,4 +40,14 @@ public abstract class EntityMovable extends Entity {
 	public void setMoveRange(int moveRange) {
 		this.moveRange = moveRange;
 	}
+	
+	/**
+	 * Checks if the {@link Cell} is in range of the entity
+	 * @param x X coord
+	 * @param y y coord
+	 * @return If the entity is in range
+	 */
+	public boolean isCellInRange(int x, int y) {
+		return Math.abs((this.getX() - x) + (this.getY() - y)) <= this.moveRange;
+	}
 }

@@ -12,6 +12,9 @@ public abstract class Entity {
 	public int health;
 	public int maxHealth;
 	
+	private float x;
+	private float y;
+	
 	private Player player;
 	
 	/**
@@ -42,5 +45,37 @@ public abstract class Entity {
 	 */
 	public void setPlayer(Player player) {
 		this.player = player;
+	}
+	
+	/**
+	 * Gets the entity x position
+	 * @return X position
+	 */
+	public float getX() {
+		return x;
+	}
+	
+	/**
+	 * Sets the entity x position
+	 * @param x X position
+	 */
+	public void setX(float x) {
+		this.x = x;
+	}
+
+	/**
+	 * Gets the entity y position
+	 * @return Y position
+	 */
+	public float getY() {
+		return y;
+	}
+
+	/**
+	 * Sets the entity y position
+	 * @param y Y position
+	 */
+	public void setY(float y) {
+		this.y = y;
 	}
 }

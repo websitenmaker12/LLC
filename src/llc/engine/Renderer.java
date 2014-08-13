@@ -11,7 +11,8 @@ import llc.logic.GameState;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
-public class Renderer {
+public class Renderer 
+{
 
 
 
@@ -21,7 +22,8 @@ public class Renderer {
 	private Texture solidTexture;
 	private Texture walkableTexture;
 
-	public Renderer() {
+	public Renderer() 
+	{
 
 		GL11.glClearColor(0F, 0F, 0F, 1F);
 		
@@ -32,8 +34,8 @@ public class Renderer {
 		GL11.glDepthFunc(GL11.GL_LEQUAL);
 
 		
-		warriorTexture = new Texture("/res/texture/warrior");
-		workerTexture = new Texture("/res/texture/worker");
+		warriorTexture = new Texture("/res/entity/moveable/warrior");
+		workerTexture = new Texture("/res/entity/moveable/worker");
 		baseTexture = new Texture("/res/texture/base");
 		solidTexture = new Texture("/res/texture/water");
 		walkableTexture = new Texture("/res/texture/grass");
@@ -43,7 +45,8 @@ public class Renderer {
 	/**
 	 * Handles the OpenGL-Part when the Display was resized
 	 */
-	public void handleDisplayResize(int width, int height) {
+	public void handleDisplayResize(int width, int height) 
+	{
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
 		GLU.gluPerspective(45, (float)width / (float)height, 0.1F, 100F);
@@ -54,10 +57,15 @@ public class Renderer {
 	/**
 	 * Is called each Display-Tick to render the game
 	 */
-	public void render(Camera camera, GameState gameState) {
+	public void render(Camera camera, GameState gameState) 
+	{
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		
+		//Apply camera transformation		
 		GL11.glLoadIdentity();
-		GL11.glTranslatef(camera.pos.x, camera.pos.y, camera.pos.z);
+		GLU.gluLookAt(camera.pos.x, camera.pos.y, camera.pos.z,
+				camera.pos.x + camera.viewDir.x, camera.pos.y + camera.viewDir.y, camera.pos.z + camera.viewDir.z,
+				0, 0, 1);
 		// Render grid
 		Cell[][] cells = gameState.getGrid().getCells();
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
