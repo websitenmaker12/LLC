@@ -7,6 +7,7 @@ import llc.entity.IAttacking;
 
 /**
  * Logic class
+ * handles changes to the gamestate
  * @author PetaByteBoy
  */
 public class Logic {
@@ -47,11 +48,11 @@ public class Logic {
 			if (clickedCell.getEntity().getPlayer() == gameState.activePlayer) {
 				// select
 				selectEntity(clickedCell.getEntity());
-			} else if (selectedEntity instanceof IAttacking) {
+			} else if (selectedEntity instanceof IAttacking && selectedEntity.isCellInRange(clickX, clickY)) {
 				// attack
 				attackCell( clickX, clickY);
 			}
-		} else if (clickedCell.getType() == CellType.WALKABLE) {
+		} else if (clickedCell.getType() == CellType.WALKABLE && selectedEntity.isCellInRange(clickX, clickY)) {
 			//move
 			moveSelectedEntity(clickX, clickY, true);
 		}
