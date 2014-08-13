@@ -4,8 +4,7 @@ public class GameState {
 
 	private Grid grid;
 	
-	private Player player1;
-	private Player player2;
+	private Player player1, player2;
 
 	private Player activePlayer;
 	public int moveCount = 0;
@@ -40,12 +39,10 @@ public class GameState {
 	public Player getPlayer2() {
 		return player2;
 	}
-	
-	public Player getInActivePlayer() {
-		if (activePlayer == player1) {
-			return player2;
-		} else {
+	public Player getActivePlayer() {
+		if (activePlayer == 1) {
 			return player1;
 		}
+		return player2;
 	}
 }

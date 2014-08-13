@@ -155,6 +155,7 @@ public class GameLoader {
 		}
 		catch (Exception e) {
 			System.err.println("Konnte neues Spiel nicht laden ;(");
+			e.printStackTrace(System.err);
 		}
 		return state;
 	}

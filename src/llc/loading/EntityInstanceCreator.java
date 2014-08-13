@@ -40,11 +40,13 @@ public class EntityInstanceCreator implements JsonDeserializer<Entity>, JsonSeri
 		
 		en.health = object.get("health").getAsInt();
 		
-		if (object.get("player").getAsInt() == 1) {
-			en.setPlayer(state.getPlayer1());
-		}
-		if (object.get("player").getAsInt() == 2) {
-			en.setPlayer(state.getPlayer2());
+		if (object.get("player") != null) {
+			if (object.get("player").getAsInt() == 1) {
+				en.setPlayer(state.getPlayer1());
+			}
+			if (object.get("player").getAsInt() == 2) {
+				en.setPlayer(state.getPlayer2());
+			}
 		}
 		return en;
 	}
@@ -53,6 +55,8 @@ public class EntityInstanceCreator implements JsonDeserializer<Entity>, JsonSeri
 	public JsonElement serialize(Entity entity, Type type, JsonSerializationContext context) {
 		
 		JsonElement e = context.serialize(entity);
+		
+		//System.out.println(e);
 		
 		if (entity instanceof EntityWarrior) {
 			e.getAsJsonObject().addProperty("type", "warrior");
@@ -63,13 +67,15 @@ public class EntityInstanceCreator implements JsonDeserializer<Entity>, JsonSeri
 		else if (entity instanceof EntityBuildingBase) {
 			e.getAsJsonObject().addProperty("type", "base");
 		}
-		if (entity.getPlayer().equals(state.getPlayer1())) {
-			e.getAsJsonObject().remove("player");
-			e.getAsJsonObject().addProperty("player", 1);
-		}
-		if (entity.getPlayer().equals(state.getPlayer2())) {
-			e.getAsJsonObject().remove("player");
-			e.getAsJsonObject().addProperty("player", 2);
+		if (entity.getPlayer() != null) {
+			if (entity.getPlayer().equals(state.getPlayer1())) {
+				e.getAsJsonObject().remove("player");
+				e.getAsJsonObject().addProperty("player", 1);
+			}
+			if (entity.getPlayer().equals(state.getPlayer2())) {
+				e.getAsJsonObject().remove("player");
+				e.getAsJsonObject().addProperty("player", 2);
+			}
 		}
 		//System.out.println(e);
 		return e;

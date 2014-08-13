@@ -14,14 +14,29 @@ public class Logic {
 		this.setGameState(state);
 	}
 
+	/**
+	 * Gets the current {@link GameState}.
+	 * @return Current {@link GameState}
+	 */
 	public GameState getGameState() {
 		return gameState;
 	}
 
+	/**
+	 * Sets the {@link GameState}
+	 * @param gameState The new gameState
+	 */
 	public void setGameState(GameState gameState) {
 		this.gameState = gameState;
 	}
 
+	/**
+	 * This method is called when a player clicks at a cell on the grid.
+	 * It decides whether the clicked cell contains an entity that can be attacked
+	 * or it contains an entity that can be selected. 
+	 * @param clickX The x coord of the clicked cell.
+	 * @param clickY The y coord of the clicked cell.
+	 */
 	public void clickCell(int clickX, int clickY) {
 		Cell clickedCell = gameState.getGrid().getCellAt(clickX, clickY);
 		if (clickedCell.containsEntity()) {
@@ -38,12 +53,22 @@ public class Logic {
 		}
 	}
 
+	/**
+	 * This method selects a given entity for later work.
+	 * @param toSelect The entity to be selected.
+	 */
 	private void selectEntity(Entity toSelect) {
 		if (toSelect instanceof EntityMovable) {
 			this.selectedEntity = (EntityMovable) toSelect;
 		}
 	}
 
+	/**
+	 * This method is called from clickCell() and attacks the entity at given coords and
+	 * checks if the game is over.
+	 * @param destX The x coord of the cell.
+	 * @param destY The y coord of the cell.
+	 */
 	private void attackCell(int destX, int destY) {
 		Entity destEntity = gameState.getGrid().getCellAt(destX, destY).getEntity();
 		if (destEntity.health > 0) {
@@ -59,6 +84,12 @@ public class Logic {
 		countMove();
 	}
 
+	/**
+	 * This method 
+	 * @param destX
+	 * @param destY
+	 * @param countMove
+	 */
 	private void moveSelectedEntity(int destX, int destY, boolean countMove) {
 		gameState.getGrid().getCellAt(destX, destY).setEntity(selectedEntity);
 		gameState.getGrid().getCellAt((int) selectedEntity.getX(), (int) selectedEntity.getY()).setEntity(null);

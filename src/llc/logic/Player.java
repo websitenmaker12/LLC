@@ -8,6 +8,8 @@ public class Player {
 	
 	private int minerals;
 	
+	public int playerID;
+	
 	/**
 	 * Initializes the player with 0 minerals.
 	 */
