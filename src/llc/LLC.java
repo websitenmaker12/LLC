@@ -33,7 +33,7 @@ public class LLC {
 	
 	public LLC() {
 		this.camera = new Camera(new Vector3f(0, 0, 0), new Vector3f(0, 0, -1));
-		this.input = new input();
+		this.input = new input(this);
 		
 		this.gameLoader = new GameLoader();
 		this.logic = new Logic(this.gameLoader.loadMap("res/maps/areas/map-1_areas.png"));
