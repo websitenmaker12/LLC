@@ -1,6 +1,7 @@
 package llc;
 
 import llc.engine.Camera;
+import llc.engine.GUIRenderer;
 import llc.engine.Profiler;
 import llc.engine.Renderer;
 import llc.input.input;
@@ -24,6 +25,7 @@ public class LLC {
 	private Renderer renderer;
 	private GameLoader gameLoader;
 	private Logic logic;
+	private GUIRenderer guiRenderer;
 	
 	public int width = 0;
 	public int height = 0;
@@ -48,6 +50,8 @@ public class LLC {
 		this.initDisplay();
 		this.profiler.endStart("Setup OpenGL");
 		this.renderer = new Renderer();
+		this.profiler.endStart("Setup GUI Renderer");
+		this.guiRenderer = new GUIRenderer();
 		this.profiler.end();
 		this.beginLoop();
 	}
@@ -80,8 +84,10 @@ public class LLC {
 			if(Mouse.isButtonDown(0) && !this.lastButtonState) this.input.mouseClick(this.mouseX, this.mouseY);
 			this.lastButtonState = Mouse.isButtonDown(0);
 			
-			this.profiler.endStart("Render updates");
+			this.profiler.endStart("Render game");
 			this.renderer.render(this.camera, this.logic.getGameState());
+			this.profiler.endStart("Render GUI");
+			this.guiRenderer.render(this.mouseX, this.mouseY);
 			this.profiler.end();
 			
 			Display.update();
