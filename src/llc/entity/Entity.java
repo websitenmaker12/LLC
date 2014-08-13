@@ -20,14 +20,16 @@ public abstract class Entity {
 	 */
 	public Entity() {
 		this.maxHealth = 100;
+		this.health = maxHealth;
 	}
 
 	/**
 	 * Creates a new entity with given amount of health
-	 * @param health The amount of health
+	 * @param maxHealth The amount of health
 	 */
 	public Entity(int health) {
-		this.health = health;
+		this.maxHealth = maxHealth;
+		this.health = maxHealth;
 	}
 	
 	/**

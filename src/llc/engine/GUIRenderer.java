@@ -3,7 +3,6 @@ package llc.engine;
 import java.awt.Font;
 
 import llc.engine.gui.GUI;
-import llc.engine.gui.GUITest;
 
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.TrueTypeFont;
@@ -12,10 +11,6 @@ public class GUIRenderer {
 
 	private GUI currentGUI;
 	public final TrueTypeFont arial = new TrueTypeFont(new Font("Arial", Font.PLAIN, 24), true);
-	
-	public GUIRenderer() {
-		this.openGUI(new GUITest());
-	}
 	
 	/**
 	 * Renders the current GUI
@@ -56,6 +51,13 @@ public class GUIRenderer {
 			this.currentGUI.onClose();
 			this.currentGUI = null;
 		}
+	}
+	
+	/**
+	 * Gets called when the Display was resized
+	 */
+	public void handleDisplayResize(int width, int height) {
+		if(this.currentGUI != null) this.currentGUI.onOpen();
 	}
 	
 }
