@@ -93,7 +93,7 @@ public class Renderer
 		{
 			for (int x = 0; x < cells[0].length; x++)
 			{
-				if (cells[y][x] == gamestate.hoveredCell()) GL11.glColor3f(1, 0.8f, 0.8f);
+				if (cells[y][x] == gameState.hoveredCell) GL11.glColor3f(1, 0.8f, 0.8f);
 				if (cells[y][x].getEntity() == null){
 					//Render terrain texture
 					if (cells[y][x].getType() == CellType.SOLID)
