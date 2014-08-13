@@ -1,6 +1,8 @@
 package llc.input;
 
 import java.util.*;
+
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import llc.LLC;
@@ -20,6 +22,33 @@ public class Input
 		LLC_ref = reference;
 		Cam = camera;
 	}
+	
+	private Vector2f rayCast(int x, int y)
+	{
+		float windowWidth = LLC_ref.width;
+		float windowHeight = LLC_ref.height;
+		float near = 0.1F;
+		float fovy = 45;
+		float aspect = windowWidth / windowHeight;
+		
+		float yMax = (float) (Math.tan(Math.toRadians(fovy)) * near);
+		
+		float yMin = -yMax;
+		
+		float xMax = yMax * aspect;
+		float xMin = - xMax;
+		
+		float worldWidth = xMax - xMin;
+		float worldHeight = worldWidth / aspect;
+		
+		float xWorld = x/windowWidth * worldWidth + xMin;
+		float yWorld = y/windowHeight * worldHeight + yMin;
+		
+		Vector3f xImagePlaneVector =  Vector3f.cross(Cam.viewDir, Cam.);
+		
+		return null;
+	}
+	
 	public void mouseClick(int x, int y)
 	{		
 		
@@ -44,6 +73,7 @@ public class Input
 	
 		int h = LLC_ref.height;
 		int w = LLC_ref.width;
+		
 		
 		if (x < scrollFrameBorder) FireScrollEvent(Direction.left);
 		if (x > w - scrollFrameBorder) FireScrollEvent(Direction.right);
