@@ -15,10 +15,10 @@ public class Input
  
 	private LLC LLC_ref;
 	
-	public Input(LLC reference)
+	public Input(LLC reference, Camera camera)
 	{
 		LLC_ref = reference;
-		
+		Cam = camera;
 	}
 	public void mouseClick(int x, int y)
 	{		
