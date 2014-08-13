@@ -53,4 +53,11 @@ public class GUIRenderer {
 		}
 	}
 	
+	/**
+	 * Gets called when the Display was resized
+	 */
+	public void handleDisplayResize(int width, int height) {
+		if(this.currentGUI != null) this.currentGUI.onOpen();
+	}
+	
 }
