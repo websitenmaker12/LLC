@@ -1,5 +1,6 @@
 package llc.engine;
 
+import llc.engine.model.ObjModel;
 import llc.engine.res.Texture;
 import llc.entity.EntityBuildingBase;
 import llc.entity.EntityWarrior;
@@ -14,17 +15,16 @@ import org.lwjgl.util.glu.GLU;
 public class Renderer 
 {
 
-
-
 	private Texture warriorTexture;
 	private Texture workerTexture;
 	private Texture baseTexture;
 	private Texture solidTexture;
 	private Texture walkableTexture;
 
+	private ObjModel modelBase;
+	
 	public Renderer() 
 	{
-
 		GL11.glClearColor(0F, 0F, 0F, 1F);
 		
 		GL11.glEnable(GL11.GL_BLEND);
@@ -33,13 +33,17 @@ public class Renderer
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glDepthFunc(GL11.GL_LEQUAL);
 
-		
 		warriorTexture = new Texture("res/entity/moveable/warrior/warrior.png");
 		workerTexture = new Texture("res/entity/moveable/miner/miner.png");
 		baseTexture = new Texture("res/entity/building/Base.png");
 		solidTexture = new Texture("res/texture/water.png");
 		walkableTexture = new Texture("res/texture/grass.png");
 		
+//		try {
+//			this.modelBase = ObjLoader.loadObj("res/entity/base/base.obj");
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	/**
