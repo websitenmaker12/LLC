@@ -1,8 +1,5 @@
 package llc.logic;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import llc.entity.Entity;
 import llc.entity.EntityMovable;
 import llc.entity.IAttacking;
@@ -32,11 +29,11 @@ public class Logic {
 				selectEntity(clickedCell.getEntity());
 			} else if (selectedEntity instanceof IAttacking) {
 				// attack
-				attackCell(selectedEntity, clickX, clickY);
+				attackCell( clickX, clickY);
 			}
-		} else {
-			// unselect
-			unSelect();
+		} else if (clickedCell.getType() == CellType.WALKABLE) {
+			//move
+			moveSelectedEntity(clickX, clickY);
 		}
 	}
 
@@ -46,24 +43,31 @@ public class Logic {
 		}
 	}
 
-	private void unSelect() {
-		this.selectedEntity = null;
-	}
-
-	private void attackCell(EntityMovable entity, int destX, int destY) {
+	private void attackCell(int destX, int destY) {
 		Entity destEntity = gameState.getGrid().getCellAt(destX, destY).getEntity();
 		if (destEntity.health > 0) {
-			destEntity.health -= ((IAttacking)entity).getAttackDamage();
+			destEntity.health -= ((IAttacking) selectedEntity).getAttackDamage();
+
+			if (destEntity.health <= 0) {
+				moveSelectedEntity(destX, destY);
+			}
 		} else {
-			moveSelectedEntity(entity, destX, destY);
+			moveSelectedEntity(destX, destY);
 		}
 	}
 
-	private void moveSelectedEntity(EntityMovable entity, int destX, int destY) {
-		gameState.getGrid().getCellAt(destX, destY).setEntity(entity);
+	private void moveSelectedEntity(int destX, int destY) {
+		gameState.getGrid().getCellAt(destX, destY).setEntity(selectedEntity);
+		gameState.getGrid().getCellAt((int) selectedEntity.getX(), (int) selectedEntity.getY()).setEntity(null);
+		selectedEntity.setX(destX);
+		selectedEntity.setY(destY);
 	}
 
 	/*
 	 * TODO implement the event triggers from input.class
 	 */
+
+	private void gameOver(Player winner) {
+		// TODO
+	}
 }
