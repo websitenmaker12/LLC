@@ -105,7 +105,7 @@ public class Logic {
 	private void countMove() {
 		gameState.moveCount++;
 		if (gameState.moveCount >= 1) {
-			gameState.setActivePlayer(gameState.getInActivePlayer());
+			//gameState.setActivePlayer(gameState.getInActivePlayer());
 			gameState.moveCount = 0;
 		}
 	}

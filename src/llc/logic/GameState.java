@@ -25,7 +25,8 @@ public class GameState {
 	}
 
 	public Player getActivePlayer() {
-		return activePlayer;
+//		return activePlayer;
+		return null;
 	}
 
 	public void setActivePlayer(Player activePlayer) {
@@ -39,10 +40,10 @@ public class GameState {
 	public Player getPlayer2() {
 		return player2;
 	}
-	public Player getActivePlayer() {
-		if (activePlayer == 1) {
-			return player1;
-		}
-		return player2;
-	}
+//	public Player getActivePlayer() {
+//		if (activePlayer == 1) {
+//			return player1;
+//		}
+//		return player2;
+//	}
 }
