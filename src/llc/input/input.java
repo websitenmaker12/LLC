@@ -28,20 +28,29 @@ public class input
 		int h = LLC_ref.height;
 		int w = LLC_ref.width;
 		
-		if (x < scrollFrameBorder) ThrowScrollEvent("left");
-		if (x > w - scrollFrameBorder) ThrowScrollEvent("right");
+		if (x < scrollFrameBorder) ThrowScrollEvent(Direction.left);
+		if (x > w - scrollFrameBorder) ThrowScrollEvent(Direction.right);
 
-		if (y < scrollFrameBorder) ThrowScrollEvent("up");
-		if (y > h - scrollFrameBorder) ThrowScrollEvent("down");
+		if (y < scrollFrameBorder) ThrowScrollEvent(Direction.up);
+		if (y > h - scrollFrameBorder) ThrowScrollEvent(Direction.down);
 
 	}
 	
 	// ------------- Interface for the Listener -------------
 	
-	interface logicListener
+	public interface logicListener
 	{
-		public void scrollEvent(String border);
+		public void scrollEvent(Direction d);
 		public void cellClickedEvent(int cell_x, int cell_y);
+	}
+	
+	public enum Direction
+	{
+		left,
+		right,
+		down,
+		up;
+		
 	}
 	
 	// -------------------------------------------------------
@@ -52,9 +61,9 @@ public class input
 	// ------------ Function to add yourself as Listener
     public void addThrowListener(logicListener toAdd){ listeners.add(toAdd); }
 
-    public void ThrowScrollEvent(String border) 
+    public void ThrowScrollEvent(Direction d) 
     {
-        for (logicListener hl : listeners) hl.scrollEvent(border);
+        for (logicListener hl : listeners) hl.scrollEvent(d);
     }
     
     public void cellClickedEvent(int cell_x, int cell_y) 
