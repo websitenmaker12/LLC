@@ -24,10 +24,10 @@ public class GUI {
 	}
 	
 	/**
-	 * An event which gets triggered when the GUI opens
+	 * An event which gets triggered when the GUI opens or when the display gets resized
 	 */
 	public void onOpen() {
-		for(GUIElement element : this.elements) element.init();
+		this.elements.clear();
 	}
 	
 	/**

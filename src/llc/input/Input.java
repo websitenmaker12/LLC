@@ -2,7 +2,7 @@ package llc.input;
 
 import java.util.*;
 
-import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import llc.LLC;
@@ -22,46 +22,56 @@ public class Input
 		LLC_ref = reference;
 		Cam = camera;
 	}
-	public void mouseClick(int x, int y)
-	{		
-		int width = LLC_ref.width;
-		int height = LLC_ref.height;
+	
+	private Vector2f rayCast(int x, int y)
+	{
+		float windowWidth = LLC_ref.width;
+		float windowHeight = LLC_ref.height;
+		float near = 0.1F;
+		float fovy = 45;
+		float aspect = windowWidth / windowHeight;
 		
-		// calculate dimensions of image plane
-		float fovy = 45f;    // TODO: see gluPerspective in Renderer and refactor to constant
-		float aspect = 1.3f; // TODO: see gluPerspective in Renderer and refactor to constant
-		float znear = 0.1f;  // TODO: see gluPerspective in Renderer and refactor to constant
+		float yMax = (float) (Math.tan(Math.toRadians(fovy)) * near);
 		
-		float ymax = znear * (float)Math.tan(fovy * Math.PI / 360.0);
-		float ymin = -ymax;
-		float xmax = ymax * aspect;
-		float xmin = -xmax;
+		float yMin = -yMax;
 		
-		float planeWidth = (xmax - xmin);
-		float planeHeight = (ymax - ymin);
+		float xMax = yMax * aspect;
+		float xMin = - xMax;
 		
-		// transform window coordinates into world coordinates
-		float wx = (x / (float)width ) * planeWidth + xmin;
-		float wy = (y / (float)height) * planeHeight + ymin;
+		float worldWidth = xMax - xMin;
+		float worldHeight = worldWidth / aspect;
 		
-		// determine x and y vector of camera transformed image plane
-		Vector3f xVec = (Vector3f)Vector3f.cross(Cam.viewDir, Cam.up, null).normalise(null).scale(wx);
-		Vector3f yVec = (Vector3f)Vector3f.cross(xVec, Cam.viewDir, null).normalise(null).scale(wy);
+		float xWorld = x/windowWidth * worldWidth + xMin;
+		float yWorld = y/windowHeight * worldHeight + yMin;
 		
-		// determine the position the user clicked on the image plane in world coordinates
-		Vector3f clickPos = Vector3f.add(Vector3f.add(Vector3f.add(Cam.pos, (Vector3f)Cam.viewDir.scale(znear), null), xVec, null), yVec, null);
-
-		Vector3f rayDir = Vector3f.sub(clickPos, Cam.pos, null);
-
-		float t = (0 - Cam.pos.z) / rayDir.z; // z of the grid is 0
+		Vector3f xImagePlaneVector =  Vector3f.cross(Cam.viewDir, Cam.up, null);
+		Vector3f yImagePlaneVector =  Vector3f.cross(xImagePlaneVector, Cam.viewDir, null);
 		
-		Vector3f intersection = Vector3f.add(Cam.pos, (Vector3f)rayDir.scale(t), null);
+		xImagePlaneVector.normalise().scale(xWorld);
+		yImagePlaneVector.normalise().scale(yWorld);
+		
+		Vector3f nearVector = (Vector3f) new Vector3f(Cam.viewDir).normalise().scale(near);
+		Vector3f ImagePlaneMousePos = Vector3f.add(Vector3f.add(Vector3f.add(Cam.pos, nearVector, null),xImagePlaneVector, null),yImagePlaneVector, null);
+		
+		Vector3f rayDirection = Vector3f.sub(ImagePlaneMousePos, Cam.pos, null);
+		
+		float t = (0 - Cam.pos.z) / rayDirection.z; // z of the grid is 0
+		
+		Vector3f intersection = Vector3f.add(Cam.pos, (Vector3f)rayDirection.scale(t), null);
 		
 		int cell_x = (int) intersection.x;
 		int cell_y = (int) intersection.y;
 		
 		System.out.println("clicked " + cell_x + " " + cell_y);
-		FireCellClickedEvent(cell_x, cell_y);
+		
+		Vector2f cellPos = new Vector2f(cell_x, cell_y);
+		return cellPos;
+	}
+	
+	public void mouseClick(int x, int y)
+	{		
+		Vector2f Ray = rayCast(x, y);
+		FireCellClickedEvent((int) Ray.x,(int) Ray.y);
 	}
 	
 	public void mousePos(int x, int y)
@@ -69,6 +79,7 @@ public class Input
 	
 		int h = LLC_ref.height;
 		int w = LLC_ref.width;
+		
 		
 		if (x < scrollFrameBorder) FireScrollEvent(Direction.left);
 		if (x > w - scrollFrameBorder) FireScrollEvent(Direction.right);

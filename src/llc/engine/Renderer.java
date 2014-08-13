@@ -36,7 +36,7 @@ public class Renderer
 		
 		warriorTexture = new Texture("res/entity/moveable/warrior/warrior.png");
 		workerTexture = new Texture("res/entity/moveable/miner/miner.png");
-//		baseTexture = new Texture("res/texture/base.png");
+		baseTexture = new Texture("res/entity/building/Base.png");
 		solidTexture = new Texture("res/texture/water.png");
 		walkableTexture = new Texture("res/texture/grass.png");
 		
@@ -119,17 +119,17 @@ public class Renderer
 					}
 					if (cells[y][x].getEntity() instanceof EntityBuildingBase)
 					{
-//						baseTexture.bind();
+						baseTexture.bind();
 					}
 				}
 				GL11.glBegin(GL11.GL_TRIANGLES);
-				GL11.glTexCoord2d(0, 0); GL11.glVertex2d(x, y);
-				GL11.glTexCoord2d(1, 0); GL11.glVertex2d(x + 1, y);
-				GL11.glTexCoord2d(0, 1); GL11.glVertex2d(x, y + 1);
+				GL11.glTexCoord2d(0, 1); GL11.glVertex2d(x, y);
+				GL11.glTexCoord2d(1, 1); GL11.glVertex2d(x + 1, y);
+				GL11.glTexCoord2d(0, 0); GL11.glVertex2d(x, y + 1);
 				
-				GL11.glTexCoord2d(1, 0); GL11.glVertex2d(x + 1, y);
-				GL11.glTexCoord2d(1, 1); GL11.glVertex2d(x + 1, y + 1);
-				GL11.glTexCoord2d(0, 1); GL11.glVertex2d(x, y + 1);
+				GL11.glTexCoord2d(1, 1); GL11.glVertex2d(x + 1, y);
+				GL11.glTexCoord2d(1, 0); GL11.glVertex2d(x + 1, y + 1);
+				GL11.glTexCoord2d(0, 0); GL11.glVertex2d(x, y + 1);
 				
 				GL11.glColor3f(1, 1, 1);
 				GL11.glEnd();
