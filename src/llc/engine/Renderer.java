@@ -41,15 +41,12 @@ public class Renderer
 		baseTexture = new Texture("res/entity/building/Base.png");
 		solidTexture = new Texture("res/texture/water.png");
 		walkableTexture = new Texture("res/texture/grass.png");
-<<<<<<< HEAD
-=======
 		
 //		try {
 //			this.modelBase = ObjLoader.loadObj("res/entity/base/base.obj");
 //		} catch (IOException e) {
 //			e.printStackTrace();
 //		}
->>>>>>> origin/master
 	}
 	
 	/**
