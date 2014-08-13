@@ -5,6 +5,11 @@ import llc.entity.EntityBuildingBase;
 import llc.entity.EntityMovable;
 import llc.entity.IAttacking;
 
+/**
+ * Logic class
+ * handles changes to the gamestate
+ * @author PetaByteBoy
+ */
 public class Logic {
 
 	private GameState gameState;
@@ -40,14 +45,14 @@ public class Logic {
 	public void clickCell(int clickX, int clickY) {
 		Cell clickedCell = gameState.getGrid().getCellAt(clickX, clickY);
 		if (clickedCell.containsEntity()) {
-			if (clickedCell.getEntity().getPlayer() == gameState.getActivePlayer()) {
+			if (clickedCell.getEntity().getPlayer() == gameState.activePlayer) {
 				// select
 				selectEntity(clickedCell.getEntity());
-			} else if (selectedEntity instanceof IAttacking) {
+			} else if (selectedEntity instanceof IAttacking && selectedEntity.isCellInRange(clickX, clickY)) {
 				// attack
 				attackCell( clickX, clickY);
 			}
-		} else if (clickedCell.getType() == CellType.WALKABLE) {
+		} else if (clickedCell.getType() == CellType.WALKABLE && selectedEntity.isCellInRange(clickX, clickY)) {
 			//move
 			moveSelectedEntity(clickX, clickY, true);
 		}
@@ -105,7 +110,7 @@ public class Logic {
 	private void countMove() {
 		gameState.moveCount++;
 		if (gameState.moveCount >= 1) {
-			//gameState.setActivePlayer(gameState.getInActivePlayer());
+			gameState.setActivePlayer(gameState.getInActivePlayer());
 			gameState.moveCount = 0;
 		}
 	}

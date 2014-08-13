@@ -5,7 +5,6 @@ import llc.engine.GUIRenderer;
 import llc.engine.Profiler;
 import llc.engine.Renderer;
 import llc.input.Input;
-import llc.input.Input.Direction;
 import llc.loading.GameLoader;
 import llc.logic.Cell;
 import llc.logic.Logic;
@@ -40,11 +39,10 @@ public class LLC {
 	public LLC() {
 
 		this.camera = new Camera(new Vector3f(4, -2, 10), new Vector3f(0, 0.5f, -1));
-		this.input = new Input(this);
+		this.input = new Input(this, this.camera);
 		
 		this.gameLoader = new GameLoader();
 		this.logic = new Logic(this.gameLoader.createNewGame("res/maps/areas/map-1_areas.png"));
-		
 		// add input listener
 		this.input.addFireListener(new Input.LogicListener(){
 
@@ -64,6 +62,7 @@ public class LLC {
 				
 			}
 		});
+
 	}
 	
 	/**

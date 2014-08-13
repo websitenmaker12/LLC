@@ -1,7 +1,5 @@
 package llc.entity;
 
-import llc.logic.Player;
-
 /**
  * The entity base class.
  * Contains player and health.
@@ -15,7 +13,7 @@ public abstract class Entity {
 	private float x;
 	private float y;
 	
-	private Player player;
+	private int player;
 	
 	/**
 	 * Creates a new entity with the amount of 100 health
@@ -35,7 +33,7 @@ public abstract class Entity {
 	/**
 	 * Gets the player the entity belongs to.
 	 */
-	public Player getPlayer() {
+	public int getPlayer() {
 		return player;
 	}
 
@@ -43,7 +41,7 @@ public abstract class Entity {
 	 * Sets the player the entity belongs to.
 	 * @param player The player
 	 */
-	public void setPlayer(Player player) {
+	public void setPlayer(int player) {
 		this.player = player;
 	}
 	
