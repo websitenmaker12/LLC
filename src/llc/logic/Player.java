@@ -42,10 +42,18 @@ public class Player {
 	}
 
 	/**
-	 * Adds to the players minerals.
+	 * Adds minerals to the player
 	 * @param The amount of minerals to add.
 	 */
 	public void addMinerals(int minerals) {
 		this.minerals += minerals;
+	}
+
+	/**
+	 * Removes minerals from the player
+	 * @param The amount of minerals to remove.
+	 */
+	public void removeMinerals(int minerals) {
+		this.minerals -= minerals;
 	}
 }

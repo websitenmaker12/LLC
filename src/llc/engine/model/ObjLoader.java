@@ -1,5 +1,6 @@
 package llc.engine.model;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -24,12 +25,7 @@ public class ObjLoader {
 	 * the specified file.
 	 */
 	public static ObjModel loadObj(String ref) throws IOException {
-		InputStream in = ObjLoader.class.getClassLoader().getResourceAsStream(ref);
-	
-		if (in == null) {
-			throw new IOException("Unable to find: "+ref);
-		}
-		
+		InputStream in = new FileInputStream(ref);
 		return new ObjModel(new ObjData(in));
 	}
 }

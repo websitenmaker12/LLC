@@ -1,5 +1,7 @@
 package llc.engine.gui;
 
+import llc.entity.EntityWarrior;
+import llc.entity.EntityWorker;
 import llc.logic.Logic;
 
 import org.lwjgl.opengl.Display;
@@ -18,13 +20,13 @@ public class GUIIngame extends GUI {
 		
 		this.elements.add(new GUIButton(20, Display.getHeight() - 55, 200, 35, "Buy Warrior") {
 			public void onClick(int x, int y) {
-				logic.buyEntity("Warrior");
+				logic.buyEntity(new EntityWarrior());
 			}
 		});
 		
 		this.elements.add(new GUIButton(20, Display.getHeight() - 110, 200, 35, "Buy Worker") {
 			public void onClick(int x, int y) {
-				logic.buyEntity("Worker");
+				logic.buyEntity(new EntityWorker());
 			}
 		});
 	}

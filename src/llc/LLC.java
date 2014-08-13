@@ -11,6 +11,7 @@ import llc.logic.Cell;
 import llc.logic.Logic;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -87,6 +88,9 @@ public class LLC {
 		Display.setResizable(true);
 		Display.setTitle("LLC - " + VERSION);
 		Display.create();
+		
+		Keyboard.create();
+		Mouse.create();
 	}
 	
 	/**
@@ -99,14 +103,15 @@ public class LLC {
 			this.handleDisplayResize();
 			if(Display.isCloseRequested()) this.isRunning = false;
 
+			// Input updates
 			this.profiler.start("Input updates");
-			
 			this.mouseX = Mouse.getX();
 			this.mouseY = this.height - Mouse.getY();
 			this.input.mousePos(this.mouseX, this.mouseY);
 			if(Mouse.isButtonDown(0) && !this.lastButtonState) this.input.mouseClick(this.mouseX, this.mouseY);
 			this.lastButtonState = Mouse.isButtonDown(0);
 			
+			// Rendering
 			this.profiler.endStart("Render game");
 			this.renderer.render(this.camera, this.logic.getGameState());
 			this.profiler.endStart("Render GUI");
