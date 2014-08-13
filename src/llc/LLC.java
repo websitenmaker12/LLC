@@ -5,6 +5,7 @@ import llc.engine.GUIRenderer;
 import llc.engine.Profiler;
 import llc.engine.Renderer;
 import llc.input.Input;
+import llc.input.Input.Direction;
 import llc.loading.GameLoader;
 import llc.logic.Logic;
 
@@ -42,6 +43,20 @@ public class LLC {
 		
 		this.gameLoader = new GameLoader();
 		this.logic = new Logic(this.gameLoader.createNewGame("res/maps/areas/map-1_areas.png"));
+		
+		// add input listener
+		this.input.addFireListener(new Input.LogicListener(){
+
+			@Override
+			public void onScroll(Input.Direction d) {
+				camera.scroll(d);
+			}
+
+			@Override
+			public void onCellClicked(int cell_x, int cell_y) {
+				
+			}
+		});
 	}
 	
 	/**
