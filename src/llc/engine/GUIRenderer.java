@@ -21,8 +21,9 @@ public class GUIRenderer {
 	 * Renders the current GUI
 	 */
 	public void render(int width, int height, int x, int y) {
-		GL11.glPushMatrix();
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
+		GL11.glPushMatrix();
+		
 		GL11.glLoadIdentity();
 		GL11.glOrtho(0, width, height, 0, -1, 1);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
@@ -32,8 +33,10 @@ public class GUIRenderer {
 			this.currentGUI.update(x, y);
 			this.currentGUI.render(this, x, y);
 		}
-		
+
+		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glPopMatrix();
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 	}
 	
 	/**
