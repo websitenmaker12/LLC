@@ -26,7 +26,7 @@ public class EntityInstanceCreator implements JsonDeserializer<Entity>, JsonSeri
 		
 		JsonObject object= json.getAsJsonObject();
 		
-		System.out.println(object.toString());
+		//System.out.println(object.toString());
 		Entity en = null;
 		
 		switch (object.get("type").getAsString()) {
