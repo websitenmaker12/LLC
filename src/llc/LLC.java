@@ -32,7 +32,7 @@ public class LLC {
 	private boolean lastButtonState = false;
 	
 	public LLC() {
-		this.camera = new Camera(new Vector3f(0, 0, 0), new Vector3f(0, 0, -1));
+		this.camera = new Camera(new Vector3f(0, 0, 10), new Vector3f(0, 0, -1));
 		this.input = new input();
 		
 		this.gameLoader = new GameLoader();
