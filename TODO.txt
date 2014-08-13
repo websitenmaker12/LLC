@@ -1,1 +1,2 @@
 - Capture the mouse in the window	-> Tim
+- Display.getHeight() in GUIIngame beim resizen aktualisieren

@@ -17,6 +17,7 @@ public abstract class GUIButton extends GUIElement {
 	
 	private boolean isHover = false;
 	private boolean isClicked = false;
+	private boolean wasClicked = false;
 	
 	private static final Texture button;
 	private static final Texture buttonHover;
@@ -37,7 +38,8 @@ public abstract class GUIButton extends GUIElement {
 
 	@Override
 	public void update(int x, int y) {
-		if(this.isClicked) this.onClick(x, y);
+		if(this.isClicked && !this.wasClicked) this.onClick(x, y);
+		this.wasClicked = this.isClicked;
 		
 		this.isHover = x >= this.posX && x <= this.posX + this.width && y >= this.posY && y <= this.posY + this.height;
 		this.isClicked = this.isHover && Mouse.isButtonDown(0);

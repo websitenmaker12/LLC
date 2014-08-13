@@ -13,11 +13,6 @@ public abstract class GUIElement {
 	}
 	
 	/**
-	 * This function gets called when the GUI, the element is bound to, opens
-	 */
-	public void init() {  }
-	
-	/**
 	 * Is called for input updates
 	 */
 	public abstract void update(int x, int y);

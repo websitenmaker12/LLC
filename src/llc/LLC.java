@@ -133,6 +133,7 @@ public class LLC {
 			this.height = Display.getHeight();
 			
 			this.renderer.handleDisplayResize(this.width, this.height);
+			this.guiRenderer.handleDisplayResize(this.width, this.height);
 		}
 	}
 	
