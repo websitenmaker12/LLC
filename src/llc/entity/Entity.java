@@ -14,6 +14,11 @@ public abstract class Entity {
 	private float y;
 	
 	private int player;
+
+	/**
+	 * @return cost to pay for an Entity of this type
+	 */
+	public abstract int getCost();
 	
 	/**
 	 * Creates a new entity with the amount of 100 health
@@ -28,7 +33,6 @@ public abstract class Entity {
 	 * @param maxHealth The amount of health
 	 */
 	public Entity(int health) {
-		this.maxHealth = maxHealth;
 		this.health = maxHealth;
 	}
 	

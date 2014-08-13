@@ -120,17 +120,14 @@ public class Logic {
 		}
 	}
 
-	public void buyEntity(String entityType) {
+	public void buyEntity(Entity entity) {
 		
-		//if () {
-		//	
-		//}
+		Cell spawnCell = gameState.getGrid().getCellAt(gameState.getActivePlayerTownHallLocation().x + 1, gameState.getActivePlayerTownHallLocation().y);
 		
-		//switch (entityType) {
-		//case "Warrior": 
-		//	break;
-		//case "Walker": 
-		//	break;
-		//}
+		if (!spawnCell.containsEntity() && entity.getCost() > 0) {
+			gameState.getActivePlayer().removeMinerals(entity.getCost());
+			entity.setPlayer(gameState.activePlayer);
+			spawnCell.setEntity(entity);
+		}
 	}
 }
