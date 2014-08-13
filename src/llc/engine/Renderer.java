@@ -82,8 +82,6 @@ public class Renderer {
 		GL11.glColor3f(0, 0, 1);
 		GL11.glVertex3f(0, 0, 0);
 		GL11.glVertex3f(0, 0, 10);
-
-		GL11.glColor3f(1, 1, 1);
 		GL11.glEnd();
 
 		// Render grid
@@ -92,8 +90,12 @@ public class Renderer {
 		GL11.glNormal3f(0, 0, 1);
 		for (int y = 0; y < cells.length; y++) {
 			for (int x = 0; x < cells[0].length; x++) {
+				// highlight hovered cell
 				if (cells[y][x] == gameState.hoveredCell)
-					GL11.glColor3f(1, 0.8f, 0.8f);
+					GL11.glColor3f(1, 0.5f, 0.5f);
+				else
+					GL11.glColor3f(1, 1, 1);
+				
 				if (cells[y][x].getEntity() == null) {
 					// Render terrain texture
 					if (cells[y][x].getType() == CellType.SOLID)
