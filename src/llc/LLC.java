@@ -35,7 +35,7 @@ public class LLC {
 	
 	public LLC() {
 
-		this.camera = new Camera(new Vector3f(0, 0, 10), new Vector3f(0, 0, -1));
+		this.camera = new Camera(new Vector3f(0, -2, 10), new Vector3f(0, 0.5f, -1));
 		this.input = new input(this);
 		
 		this.gameLoader = new GameLoader();
