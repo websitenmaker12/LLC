@@ -20,7 +20,7 @@ public class GUIIngame extends GUI {
 			}
 		});
 		
-		this.elements.add(new GUIButton(0, Display.getHeight() - 120, 200, 55, "Buy Worker") {
+		this.elements.add(new GUIButton(0, Display.getHeight() - 110, 200, 55, "Buy Worker") {
 			public void onClick(int x, int y) {
 				logic.buyEntity("Worker");
 			}
