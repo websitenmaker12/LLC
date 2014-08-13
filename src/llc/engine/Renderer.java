@@ -34,11 +34,11 @@ public class Renderer
 		GL11.glDepthFunc(GL11.GL_LEQUAL);
 
 		
-		warriorTexture = new Texture("/res/entity/moveable/warrior");
-		workerTexture = new Texture("/res/entity/moveable/worker");
-		baseTexture = new Texture("/res/texture/base");
-		solidTexture = new Texture("/res/texture/water");
-		walkableTexture = new Texture("/res/texture/grass");
+		warriorTexture = new Texture("res/entity/moveable/warrior/warrior.png");
+		workerTexture = new Texture("res/entity/moveable/miner/miner.png");
+//		baseTexture = new Texture("res/texture/base.png");
+		solidTexture = new Texture("res/texture/water.png");
+		walkableTexture = new Texture("res/texture/grass.png");
 		
 	}
 	
@@ -52,6 +52,7 @@ public class Renderer
 		GLU.gluPerspective(45, (float)width / (float)height, 0.1F, 100F);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glLoadIdentity();
+		GL11.glViewport(0, 0, width, height);
 	}
 	
 	/**
@@ -66,13 +67,29 @@ public class Renderer
 		GLU.gluLookAt(camera.pos.x, camera.pos.y, camera.pos.z,
 				camera.pos.x + camera.viewDir.x, camera.pos.y + camera.viewDir.y, camera.pos.z + camera.viewDir.z,
 				0, 0, 1);
+		
+		//Draw coordinate system
+		GL11.glBegin(GL11.GL_LINES);
+		GL11.glColor3f(1, 0, 0);
+		GL11.glVertex3f(0, 0, 0);
+		GL11.glVertex3f(10, 0, 0);
+		
+		GL11.glColor3f(0, 1, 0);
+		GL11.glVertex3f(0, 0, 0);
+		GL11.glVertex3f(0, 10, 0);
+		
+		GL11.glColor3f(0, 0, 1);
+		GL11.glVertex3f(0, 0, 0);
+		GL11.glVertex3f(0, 0, 10);
+		GL11.glEnd();
+		
 		// Render grid
 		Cell[][] cells = gameState.getGrid().getCells();
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glNormal3f(0, 0, 1);
-		for (int y = 0; y > cells.length; y++)
+		for (int y = 0; y < cells.length; y++)
 		{
-			for (int x = 0; x > cells[0].length; x++)
+			for (int x = 0; x < cells[0].length; x++)
 			{
 				if (cells[y][x].getEntity() == null){
 					//Render terrain texture
@@ -99,7 +116,7 @@ public class Renderer
 					}
 					if (cells[y][x].getEntity() instanceof EntityBuildingBase)
 					{
-						baseTexture.bind();
+//						baseTexture.bind();
 					}
 				}
 				GL11.glBegin(GL11.GL_TRIANGLES);
@@ -116,5 +133,6 @@ public class Renderer
 			}
 		}
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
+//		System.out.println(GL11.glGetError());
 	}
 }
