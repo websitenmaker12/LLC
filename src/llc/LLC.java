@@ -7,6 +7,7 @@ import llc.engine.Renderer;
 import llc.input.Input;
 import llc.input.Input.Direction;
 import llc.loading.GameLoader;
+import llc.logic.Cell;
 import llc.logic.Logic;
 
 import org.lwjgl.LWJGLException;
@@ -50,6 +51,12 @@ public class LLC {
 			@Override
 			public void onScroll(Input.Direction d) {
 				camera.scroll(d);
+				float yOffset = camera.pos.z * (camera.viewDir.y / camera.viewDir.z);
+				Cell[][] cells = logic.getGameState().getGrid().getCells();
+				if (camera.pos.x < 0)	camera.pos.x = 0;
+				if (camera.pos.y < 0 + yOffset)	camera.pos.y = 0 + yOffset;
+				if (camera.pos.y > cells.length + yOffset)	camera.pos.y = cells.length + yOffset;
+				if (camera.pos.x > cells[0].length) camera.pos.x = cells[0].length;
 			}
 
 			@Override
