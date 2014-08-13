@@ -85,10 +85,10 @@ public class Logic {
 	}
 
 	/**
-	 * This method 
-	 * @param destX
-	 * @param destY
-	 * @param countMove
+	 * This method moves an entity
+	 * @param destX The new x position
+	 * @param destY The new y position
+	 * @param countMove Does the move count as player action.
 	 */
 	private void moveSelectedEntity(int destX, int destY, boolean countMove) {
 		gameState.getGrid().getCellAt(destX, destY).setEntity(selectedEntity);
@@ -98,6 +98,10 @@ public class Logic {
 		if (countMove) countMove();
 	}
 	
+	/**
+	 * This method counts a player move and sets the other player active if the action counter of the current player is
+	 * equal the max action number per round.
+	 */
 	private void countMove() {
 		gameState.moveCount++;
 		if (gameState.moveCount >= 1) {
