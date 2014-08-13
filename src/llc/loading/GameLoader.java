@@ -76,6 +76,7 @@ public class GameLoader {
 			throw new IllegalStateException("The save-file to load does not exist!");
 		}
 		try {
+			
 			BufferedReader in = new BufferedReader(new FileReader(f));
 			
 			String line = null;
