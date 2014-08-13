@@ -24,7 +24,6 @@ public class Renderer
 
 	public Renderer() 
 	{
-
 		GL11.glClearColor(0F, 0F, 0F, 1F);
 		
 		GL11.glEnable(GL11.GL_BLEND);
@@ -39,7 +38,6 @@ public class Renderer
 		baseTexture = new Texture("res/entity/building/Base.png");
 		solidTexture = new Texture("res/texture/water.png");
 		walkableTexture = new Texture("res/texture/grass.png");
-		
 	}
 	
 	/**
@@ -58,8 +56,7 @@ public class Renderer
 	/**
 	 * Is called each Display-Tick to render the game
 	 */
-	public void render(Camera camera, GameState gameState) 
-	{
+	public void render(Camera camera, GameState gameState) {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		
 		//Apply camera transformation		
@@ -104,7 +101,6 @@ public class Renderer
 					{
 						walkableTexture.bind();
 					}
-					
 				}
 				else
 				{
@@ -133,7 +129,6 @@ public class Renderer
 				
 				GL11.glColor3f(1, 1, 1);
 				GL11.glEnd();
-				
 			}
 		}
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
