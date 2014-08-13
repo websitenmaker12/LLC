@@ -54,10 +54,10 @@ public class Input
 	}
 	
 	// ------------- Interface for the Listener -------------
-	public interface logicListener
+	public interface LogicListener
 	{
-		public void scrollEvent(Direction d);
-		public void FireCellClickedEvent(int cell_x, int cell_y);
+		public void onScroll(Direction d);
+		public void onCellClicked(int cell_x, int cell_y);
 	}
 	
 	public enum Direction
@@ -69,20 +69,20 @@ public class Input
 	}
 	// -------------------------------------------------------
 	
-	List<logicListener> listeners = new ArrayList<logicListener>();
+	List<LogicListener> listeners = new ArrayList<LogicListener>();
 	
 	
 	// ------------ Function to add yourself as Listener
-	public void addFireListener(logicListener toAdd){ listeners.add(toAdd); }
+	public void addFireListener(LogicListener toAdd){ listeners.add(toAdd); }
 
     public void FireScrollEvent(Direction d) 
     {
-        for (logicListener hl : listeners) hl.scrollEvent(d);
+        for (LogicListener hl : listeners) hl.onScroll(d);
     }
     
     public void FireCellClickedEvent(int cell_x, int cell_y) 
     {
-        for (logicListener hl : listeners) hl.FireCellClickedEvent(cell_x,cell_y);
+        for (LogicListener hl : listeners) hl.onCellClicked(cell_x,cell_y);
     }
 	
 	

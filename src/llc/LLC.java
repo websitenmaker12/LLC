@@ -45,15 +45,15 @@ public class LLC {
 		this.logic = new Logic(this.gameLoader.createNewGame("res/maps/areas/map-1_areas.png"));
 		
 		// add input listener
-		this.input.addFireListener(new Input.logicListener(){
+		this.input.addFireListener(new Input.LogicListener(){
 
 			@Override
-			public void scrollEvent(Input.Direction d) {
+			public void onScroll(Input.Direction d) {
 				camera.scroll(d);
 			}
 
 			@Override
-			public void FireCellClickedEvent(int cell_x, int cell_y) {
+			public void onCellClicked(int cell_x, int cell_y) {
 				
 			}
 		});
