@@ -88,8 +88,7 @@ public class GameLoader {
 					continue;
 				}
 				content += line;
-			}
-			while (line != null);
+			} while (line != null);
 			
 			
 			in.close();
@@ -136,14 +135,14 @@ public class GameLoader {
 						Entity townHall1 = new EntityBuildingBase();
 						townHall1.setPlayer(1);
 						cell.setEntity(townHall1);
-//						state.setTownHall1Cell(cell);
+						state.setTownHall1Cell(cell);
 					}
 					else if (c.equals(Color.RED)) {
 						cell = new Cell(x, y, CellType.WALKABLE);
 						Entity townHall2 = new EntityBuildingBase();
 						townHall2.setPlayer(2);
 						cell.setEntity(townHall2);
-//						state.setTownHall2Cell(cell);
+						state.setTownHall2Cell(cell);
 					}
 					else {
 						//Unknown

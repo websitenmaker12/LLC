@@ -44,28 +44,34 @@ public class Input
 		float xWorld = x/windowWidth * worldWidth + xMin;
 		float yWorld = y/windowHeight * worldHeight + yMin;
 		
-		Vector3f xImagePlaneVector =  Vector3f.cross(Cam.viewDir, Cam.);
+		Vector3f xImagePlaneVector =  Vector3f.cross(Cam.viewDir, Cam.up, null);
+		Vector3f yImagePlaneVector =  Vector3f.cross(xImagePlaneVector, Cam.viewDir, null);
 		
-		return null;
+		xImagePlaneVector.normalise().scale(xWorld);
+		yImagePlaneVector.normalise().scale(yWorld);
+		
+		Vector3f nearVector = (Vector3f) new Vector3f(Cam.viewDir).normalise().scale(near);
+		Vector3f ImagePlaneMousePos = Vector3f.add(Vector3f.add(Vector3f.add(Cam.pos, nearVector, null),xImagePlaneVector, null),yImagePlaneVector, null);
+		
+		Vector3f rayDirection = Vector3f.sub(ImagePlaneMousePos, Cam.pos, null);
+		
+		float t = (0 - Cam.pos.z) / rayDirection.z; // z of the grid is 0
+		
+		Vector3f intersection = Vector3f.add(Cam.pos, (Vector3f)rayDirection.scale(t), null);
+		
+		int cell_x = (int) intersection.x;
+		int cell_y = (int) intersection.y;
+		
+		System.out.println("clicked " + cell_x + " " + cell_y);
+		
+		Vector2f cellPos = new Vector2f(cell_x, cell_y);
+		return cellPos;
 	}
 	
 	public void mouseClick(int x, int y)
 	{		
-		
-		Vector3f clickPos = new Vector3f(x, y, 1) ;
-		
-		clickPos.x = x;
-		clickPos.y = y;
-		clickPos.z = 1; // z of projection-plane is 1 ?
-		
-		float t = (- Cam.pos.z)/ (clickPos.z - Cam.pos.z); // z of the grid is 0
-		
-		int cell_x = (int) ((int) Cam.pos.x + t * (clickPos.x - Cam.pos.x));
-		int cell_y = (int) ((int) Cam.pos.y + t * (clickPos.y - Cam.pos.y));
-		
-		FireCellClickedEvent(cell_x, cell_y);
-		
-		
+		Vector2f Ray = rayCast(x, y);
+		FireCellClickedEvent((int) Ray.x,(int) Ray.y);
 	}
 	
 	public void mousePos(int x, int y)
@@ -81,6 +87,7 @@ public class Input
 		if (y < scrollFrameBorder) FireScrollEvent(Direction.up);
 		if (y > h - scrollFrameBorder) FireScrollEvent(Direction.down);
 
+		// TODO: fire cell hovered
 	}
 	
 	// ------------- Interface for the Listener -------------
@@ -88,6 +95,7 @@ public class Input
 	{
 		public void onScroll(Direction d);
 		public void onCellClicked(int cell_x, int cell_y);
+		// TODO: add cell hovered event
 	}
 	
 	public enum Direction

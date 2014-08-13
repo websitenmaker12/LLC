@@ -13,7 +13,7 @@ public class AudioEngine {
 	IntBuffer buffer = BufferUtils.createIntBuffer(1);
 	IntBuffer source = BufferUtils.createIntBuffer(1);
 	
-	
+	public static WaveData buttonClick;
 	
 	public AudioEngine() {
 		
@@ -27,9 +27,9 @@ public class AudioEngine {
 		AL10.alGenBuffers(buffer);
 		//if(AL10.alGetError() != AL10.AL_NO_ERROR)
 		
-		WaveData waveFile = WaveData.create("FancyPants.wav");
-		AL10.alBufferData(buffer.get(0), waveFile.format, waveFile.data, waveFile.samplerate);
-		waveFile.dispose();
+		buttonClick = WaveData.create("res/sound/buttonClick.wav");
+		AL10.alBufferData(buffer.get(0), buttonClick.format, buttonClick.data, buttonClick.samplerate);
+		buttonClick.dispose();
 	}
 	
 	public void playSoundAt(Sounds sound, float x, float z, float playerX, float playerY, float playerZ) {

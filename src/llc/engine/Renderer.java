@@ -66,7 +66,7 @@ public class Renderer
 		GL11.glLoadIdentity();
 		GLU.gluLookAt(camera.pos.x, camera.pos.y, camera.pos.z,
 				camera.pos.x + camera.viewDir.x, camera.pos.y + camera.viewDir.y, camera.pos.z + camera.viewDir.z,
-				0, 0, 1);
+				camera.up.x, camera.up.y, camera.up.z);
 		
 		//Draw coordinate system
 		GL11.glBegin(GL11.GL_LINES);

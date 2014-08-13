@@ -114,4 +114,8 @@ public class Logic {
 			gameState.moveCount = 0;
 		}
 	}
+
+	public void buyEntity(String string) {
+		System.out.println(string);
+	}
 }

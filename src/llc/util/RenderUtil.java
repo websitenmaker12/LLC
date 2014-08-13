@@ -1,5 +1,6 @@
 package llc.util;
 
+import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.GL11;
 
 public class RenderUtil {
@@ -23,6 +24,14 @@ public class RenderUtil {
 			GL11.glTexCoord2f(1, 1); GL11.glVertex2d(x + width, y + height);
 			GL11.glTexCoord2f(0, 1); GL11.glVertex2d(x		  , y + height);
 		GL11.glEnd();
+	}
+	
+	public static void unbindTexture() {
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+	}
+
+	public static void unbindShader() {
+		ARBShaderObjects.glUseProgramObjectARB(0);
 	}
 	
 }
