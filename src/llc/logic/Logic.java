@@ -5,16 +5,17 @@ import java.util.List;
 
 import llc.entity.Entity;
 import llc.entity.EntityMovable;
+import llc.entity.IAttacking;
 
 public class Logic {
 
 	private GameState gameState;
 	private EntityMovable selectedEntity;
-	
+
 	public Logic(Grid grid) {
 		this.setGameState(new GameState(grid));
 	}
-	
+
 	public GameState getGameState() {
 		return gameState;
 	}
@@ -23,11 +24,20 @@ public class Logic {
 		this.gameState = gameState;
 	}
 
-	private void clickCell(int x, int y) {
-		Cell clickedCell = gameState.getGrid().getCellAt(x, y);
-		if (selectedEntity != null) {
-		} else if (clickedCell.containsEntity() && clickedCell.getEntity().getPlayer() == gameState.getActivePlayer()) {
-			selectEntity(clickedCell.getEntity());
+	private void clickCell(int clickX, int clickY) {
+		Cell clickedCell = gameState.getGrid().getCellAt(clickX, clickY);
+		if (clickedCell.containsEntity()) {
+			if (clickedCell.getEntity().getPlayer() == gameState
+					.getActivePlayer()) {
+				// select
+				selectEntity(clickedCell.getEntity());
+			} else if (selectedEntity instanceof IAttacking) {
+				// attack
+				// attackCell(selectedEntity, clickX, clickY);
+			}
+		} else {
+			// unselect
+			unSelect();
 		}
 	}
 
@@ -41,13 +51,13 @@ public class Logic {
 		this.selectedEntity = null;
 	}
 
-	private void attackCell(EntityMovable entity, int startX, int startY, int destX, int destY) {
-		moveSelectedEntity(entity, startX, startY, destX, destY);
-		//TODO
+	private void attackCell(EntityMovable entity, int destX, int destY) {
+		moveSelectedEntity(entity, destX, destY + 1);
+		// TODO
 	}
 
-	private void moveSelectedEntity(EntityMovable entity, int startX, int startY, int destX, int destY) {
-		//TODO
+	private void moveSelectedEntity(EntityMovable entity, int destX, int destY) {
+		// TODO
 	}
 
 	/*
