@@ -17,7 +17,7 @@ public class Shader {
 	
 	private String path;
 	private int shaderType;
-	private int programID;
+	private int shaderID;
 	
 	public Shader(String path, int shaderType) {
 		this.path = path;
@@ -27,12 +27,12 @@ public class Shader {
 	}
 	
 	private void load() {
-		int shaderID = 0;
+		this.shaderID = 0;
 		BufferedReader reader = null;
 		
 		try {
-			shaderID = ARBShaderObjects.glCreateShaderObjectARB(this.shaderType);
-			if(shaderID == 0) return;
+			this.shaderID = ARBShaderObjects.glCreateShaderObjectARB(this.shaderType);
+			if(this.shaderID == 0) return;
 			
 			// Load file
 			StringBuilder builder = new StringBuilder();
@@ -43,20 +43,14 @@ public class Shader {
 			reader.close();
 			
 			// Compile shader
-			ARBShaderObjects.glShaderSourceARB(shaderID, builder.toString());
-			ARBShaderObjects.glCompileShaderARB(shaderID);
+			ARBShaderObjects.glShaderSourceARB(this.shaderID, builder.toString());
+			ARBShaderObjects.glCompileShaderARB(this.shaderID);
 			
-			if(ARBShaderObjects.glGetObjectParameteriARB(shaderID, ARBShaderObjects.GL_OBJECT_COMPILE_STATUS_ARB) == GL11.GL_FALSE) {
-				throw new RuntimeException("Error by creating shader: " + this.getLog(shaderID));
+			if(ARBShaderObjects.glGetObjectParameteriARB(this.shaderID, ARBShaderObjects.GL_OBJECT_COMPILE_STATUS_ARB) == GL11.GL_FALSE) {
+				throw new RuntimeException("Error by creating shader: " + this.getLog(this.shaderID));
 			}
-			
-			this.programID = ARBShaderObjects.glCreateProgramObjectARB();
-			if(this.programID == 0) return;
-			
-			ARBShaderObjects.glAttachObjectARB(this.programID, shaderID);
-			ARBShaderObjects.glLinkProgramARB(this.programID);
 		} catch(Exception e) {
-			ARBShaderObjects.glDeleteObjectARB(shaderID);
+			ARBShaderObjects.glDeleteObjectARB(this.shaderID);
 			e.printStackTrace();
 		} finally {
 			try {
@@ -72,8 +66,8 @@ public class Shader {
 		return ARBShaderObjects.glGetInfoLogARB(shaderID, ARBShaderObjects.glGetObjectParameteriARB(shaderID, ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB));
 	}
 	
-	public void bind() {
-		ARBShaderObjects.glUseProgramObjectARB(this.programID);
+	public int getShaderID() {
+		return this.shaderID;
 	}
 	
 }
