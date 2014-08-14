@@ -7,7 +7,9 @@ import llc.engine.Renderer;
 import llc.engine.Timing;
 import llc.engine.audio.AudioEngine;
 import llc.engine.gui.GUIIngame;
+import llc.input.IKeybindingListener;
 import llc.input.Input;
+import llc.input.KeyBinding;
 import llc.input.KeyboardListener;
 import llc.loading.GameLoader;
 import llc.logic.Cell;
@@ -22,7 +24,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Vector3f;
 
-public class LLC {
+public class LLC implements IKeybindingListener {
 
 	public static final String VERSION = "0.1 INDEV";
 	private boolean isRunning = false;
@@ -43,6 +45,7 @@ public class LLC {
 	private int mouseX = 0;
 	private int mouseY = 0;
 	private boolean lastButtonState = false;
+	private boolean isFullscreen = false;
 	
 	public LLC() {
 		this.camera = new Camera(new Vector3f(4, 4, 10), new Vector3f(0, 1.5f, -1), new Vector3f(0, 0, 1));
@@ -75,7 +78,10 @@ public class LLC {
 		
 		this.audioEngine = new AudioEngine();
 		this.timing = new Timing();
+
 		this.keyboardListener = new KeyboardListener();
+		this.keyboardListener.registerEventHandler(this);
+		this.keyboardListener.registerKeyBinding(new KeyBinding("func.fullscreen", Keyboard.KEY_F11, false));
 	}
 	
 	/**
@@ -102,6 +108,7 @@ public class LLC {
 	private void initDisplay() throws LWJGLException {
 		Display.setDisplayMode(new DisplayMode(640, 480));
 		Display.setResizable(true);
+		Display.setVSyncEnabled(true);
 		Display.setTitle("LLC - " + VERSION);
 		Display.create();
 		
@@ -170,6 +177,34 @@ public class LLC {
 			this.renderer.handleDisplayResize(this.width, this.height);
 			this.guiRenderer.handleDisplayResize(this.width, this.height);
 		}
+	}
+
+	@Override
+	public void onKeyBindingUpdate(KeyBinding keyBinding, boolean isPressed) {
+		try {
+			if(keyBinding.name.equals("func.fullscreen")) this.toggleFullscreen();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void toggleFullscreen() throws LWJGLException {
+		// TODO Overwork
+		
+		DisplayMode displayMode = null;
+	    DisplayMode[] modes = Display.getAvailableDisplayModes();
+	    for(int i = 0; i < modes.length; i++) {
+	    	if(modes[i].getWidth() == this.width && modes[i].getHeight() == this.height && modes[i].isFullscreenCapable()) {
+	    		displayMode = modes[i];
+	    	}
+	    }
+	    
+	    if(displayMode != null) {
+	    	this.isFullscreen = !this.isFullscreen;
+	    	
+	    	Display.setDisplayMode(displayMode);
+	    	Display.setFullscreen(this.isFullscreen);
+	    }
 	}
 	
 }
