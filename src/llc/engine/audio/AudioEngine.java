@@ -3,6 +3,7 @@ package llc.engine.audio;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.openal.AL;
 
+import llc.engine.res.Music;
 import llc.engine.res.Sound;
 
 /**
@@ -12,6 +13,7 @@ import llc.engine.res.Sound;
 public class AudioEngine {
 	
 	public static Sound buttonClick;
+	public static Music music_1;
 	
 	public AudioEngine() {
 		
@@ -31,12 +33,13 @@ public class AudioEngine {
 	 */
 	private void loadSounds() {
 		buttonClick = new Sound("/res/sound/gui_click.wav");
+		music_1 = new Music("/res/sound/gui_click.wav");
 	}
 	
 	/**
 	 * This function is used to play a sound at a given spot.
 	 * Note that you also need to give the camera / player position due to some cool AL calculations.
-	 * @param sound The {@link Sounds} to play.
+	 * @param sound The {@link EnumSounds} to play.
 	 * @param x	The source x position.
 	 * @param y The source y position.
 	 * @param z The source z position.
@@ -44,8 +47,8 @@ public class AudioEngine {
 	 * @param playerY The player / camera y position.
 	 * @param playerZ The player / camera z position.
 	 */
-	public void playSoundAt(Sounds sound, float x, float y, float z, float playerX, float playerY, float playerZ) {
-		if(sound == Sounds.BUTTONCLICK) buttonClick.playSound(x, y, z, playerX, playerY, playerZ);
+	public void playSoundAt(EnumSounds sound, float x, float y, float z, float playerX, float playerY, float playerZ) {
+		if(sound == EnumSounds.BUTTONCLICK) buttonClick.playSound(x, y, z, playerX, playerY, playerZ);
 	}
 	
 	/**
@@ -53,8 +56,16 @@ public class AudioEngine {
 	 * the volume is the same at every location. This is used to play GUI button sounds for example.
 	 * @param sound The {@link Sounds} to play.
 	 */
-	public void playSound(Sounds sound) {
-		if(sound == Sounds.BUTTONCLICK) buttonClick.playSound(0, 0, 0, 0, 0, 0);
+	public void playSound(EnumSounds sound) {
+		if(sound == EnumSounds.BUTTONCLICK) buttonClick.playSound(0, 0, 0, 0, 0, 0);
+	}
+	
+	/**
+	 * This function is used to play music.
+	 * @param music The {@link EnumMusic} to be played.
+	 */
+	public void playMusic(EnumMusic music) {
+		if (music == EnumMusic.MUSIC1) music_1.playMusic();
 	}
 	
 	/**

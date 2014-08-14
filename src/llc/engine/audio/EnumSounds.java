@@ -1,6 +1,6 @@
 package llc.engine.audio;
 
-public enum Sounds {
+public enum EnumSounds {
 	BUTTONCLICK,
-	ATTACK
+	MUSIC1
 }
