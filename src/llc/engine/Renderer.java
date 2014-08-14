@@ -1,6 +1,10 @@
 package llc.engine;
 
-import llc.engine.model.ObjModel;
+import java.io.File;
+import java.io.IOException;
+
+import llc.engine.res.Model;
+import llc.engine.res.ObjLoader;
 import llc.engine.res.Texture;
 import llc.entity.EntityBuildingBase;
 import llc.entity.EntityWarrior;
@@ -19,9 +23,9 @@ public class Renderer {
 	private Texture baseTexture;
 	private Texture solidTexture;
 	private Texture walkableTexture;
-
-	private ObjModel modelBase;
-
+	
+	private int baseID;
+	
 	public Renderer() {
 		GL11.glClearColor(0F, 0F, 0F, 1F);
 
@@ -36,12 +40,12 @@ public class Renderer {
 		baseTexture = new Texture("res/entity/building/Base.png");
 		solidTexture = new Texture("res/texture/water.png");
 		walkableTexture = new Texture("res/texture/grass.png");
-
-//		 try {
-//		 this.modelBase = ObjLoader.loadObj("res/entity/base/base.obj");
-//		 } catch (IOException e) {
-//		 e.printStackTrace();
-//		 }
+		
+		try {
+			this.baseID = ObjLoader.createDisplayList(ObjLoader.loadModel(new File("res/entity/base/base.obj")));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -111,8 +115,15 @@ public class Renderer {
 					if (cells[y][x].getEntity() instanceof EntityWorker)
 						workerTexture.bind();
 
-					if (cells[y][x].getEntity() instanceof EntityBuildingBase)
-						baseTexture.bind();
+					if (cells[y][x].getEntity() instanceof EntityBuildingBase) {
+//						baseTexture.bind();
+						GL11.glPushMatrix();
+						GL11.glTranslatef(x + 0.5F, y + 0.5F, 1);
+						GL11.glScalef(0.75F, 0.75F, 0.75F);
+						GL11.glRotatef(90F, 1, 0, 0);
+						GL11.glCallList(this.baseID);
+						GL11.glPopMatrix();
+					}
 				}
 				
 				GL11.glBegin(GL11.GL_TRIANGLES);
@@ -135,6 +146,5 @@ public class Renderer {
 		}
 		
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		// System.out.println(GL11.glGetError());
 	}
 }
