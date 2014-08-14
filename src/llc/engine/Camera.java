@@ -11,6 +11,7 @@ public class Camera {
 	public Vector3f pos;
 	public Vector3f viewDir;
 	public Vector3f up;
+	private double scrollSpeed = 0.6;
 	
 	public Camera(Vector3f pos, Vector3f viewDir, Vector3f up) {
 		this.pos = pos;
@@ -20,10 +21,10 @@ public class Camera {
 
 	public void scroll(Input.Direction d) {
 		switch(d){
-		case right: pos.x += 0.4; break;
-		case down: pos.y -= 0.4; break;
-		case left: pos.x -= 0.4; break;
-		case up: pos.y += 0.4; break;
+		case right: pos.x += scrollSpeed; break;
+		case down: pos.y -= scrollSpeed; break;
+		case left: pos.x -= scrollSpeed; break;
+		case up: pos.y += scrollSpeed; break;
 		}
 		
 	}
