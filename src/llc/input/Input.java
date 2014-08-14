@@ -15,6 +15,7 @@ public class Input
 	
 	public int scrollFrameBorder = 30;
  
+	private Vector2f lastHoveredCell = null;
 	private LLC LLC_ref;
 	
 	public Input(LLC reference, Camera camera)
@@ -83,7 +84,7 @@ public class Input
 	public void mouseClick(int x, int y)
 	{		
 		Vector2f Ray = rayCast(x, y);
-		FireCellClickedEvent((int) Ray.x,(int) Ray.y);
+		//FireCellClickedEvent((int) Ray.x,(int) Ray.y);
 	}
 	
 	public void mousePos(int x, int y)
@@ -99,7 +100,13 @@ public class Input
 		if (y < scrollFrameBorder) FireScrollEvent(Direction.up);
 		if (y > h - scrollFrameBorder) FireScrollEvent(Direction.down);
 
-		// TODO: fire cell hovered
+		
+		Vector2f hoveredCell = rayCast(x, y);
+		if (hoveredCell != lastHoveredCell) 
+			{
+			lastHoveredCell = hoveredCell; 
+			//FireNewCellHoveredEvent((int)hoveredCell.x,(int)hoveredCell.y);
+			}
 	}
 	
 	// ------------- Interface for the Listener -------------
@@ -107,7 +114,7 @@ public class Input
 	{
 		public void onScroll(Direction d);
 		public void onCellClicked(int cell_x, int cell_y);
-		// TODO: add cell hovered event
+		//public void onNewCellHovered(int cell_x, int cell_y);
 	}
 	
 	public enum Direction
@@ -134,6 +141,13 @@ public class Input
     {
         for (LogicListener hl : listeners) hl.onCellClicked(cell_x,cell_y);
     }
+//    
+//    public void FireNewCellHoveredEvent(int cell_x, int cell_y) 
+//    {
+//        for (LogicListener hl : listeners) hl.onNewCellHovered(cell_x,cell_y);
+//    }
+    
+
 	
 	
 }
