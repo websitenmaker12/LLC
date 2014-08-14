@@ -146,25 +146,25 @@ public class Renderer {
 				heights[2][2] = y < heigth -1 && x < width - 1 ? cells[y + 1][x + 1].height : currentHeight;
 				
 				
-				float topRightHeight = (heights[0][2] + heights[1][2] + heights[2][1] + heights[1][1]) / 4f;
+				float topRightHeight = (heights[0][1] + heights[0][2] + heights[1][1] + heights[1][2]) / 4f;
 				float topLeftHeight = (heights[0][0] + heights[0][1] + heights[1][0] + heights[1][1]) / 4f;
-				float bottomRightHeight = (heights[2][1] + heights[2][2] + heights[1][2] + heights[1][1]) / 4f;
-				float bottomLeftHeight = (heights[0][2] + heights[1][2] + heights[0][1] + heights[1][1]) / 4f;
+				float bottomRightHeight = (heights[1][1] + heights[1][2] + heights[2][1] + heights[2][2]) / 4f;
+				float bottomLeftHeight = (heights[1][0] + heights[1][1] + heights[2][1] + heights[2][0]) / 4f;
 				
 				GL11.glBegin(GL11.GL_TRIANGLES);
 				GL11.glTexCoord2d(0, 1);
-				GL11.glVertex3f(x, y, (heights[0][2] + heights[1][2] + heights[0][1] + heights[1][1]) / 4);
+				GL11.glVertex3f(x, y, topLeftHeight);
 				GL11.glTexCoord2d(1, 1);
-				GL11.glVertex3f(x + 1, y, (heights[2][1] + heights[2][2] + heights[1][2] + heights[1][1]) / 4);
+				GL11.glVertex3f(x + 1, y, topRightHeight);
 				GL11.glTexCoord2d(0, 0);
-				GL11.glVertex3f(x, y + 1, topLeftHeight);
+				GL11.glVertex3f(x, y + 1, bottomLeftHeight);
 
 				GL11.glTexCoord2d(1, 1);
-				GL11.glVertex3f(x + 1, y, bottomRightHeight);
+				GL11.glVertex3f(x + 1, y, topRightHeight);
 				GL11.glTexCoord2d(1, 0);
-				GL11.glVertex3f(x + 1, y + 1, topRightHeight);
+				GL11.glVertex3f(x + 1, y + 1, bottomRightHeight);
 				GL11.glTexCoord2d(0, 0);
-				GL11.glVertex3f(x, y + 1, topLeftHeight);
+				GL11.glVertex3f(x, y + 1, bottomLeftHeight);
 
 				GL11.glEnd();
 			}

@@ -42,7 +42,7 @@ public class LLC {
 		this.camera = new Camera(new Vector3f(4, 4, 10), new Vector3f(0, 1.5f, -1), new Vector3f(0, 0, 1));
 		this.input = new Input(this, this.camera);
 		this.gameLoader = new GameLoader();
-		this.logic = new Logic(this.gameLoader.createNewGame("res/maps/areas/map-1_areas.png"), this.input);
+		this.logic = new Logic(this.gameLoader.createNewGame("res/maps/areas/map-2_areas.png"), this.input);
 		
 		this.input.addFireListener(new Input.LogicListener() {
 
