@@ -19,7 +19,7 @@ public class Logic {
 	private EntityMovable selectedEntity;
 	private Input input;
 	
-	private int subTurns = 4;
+	public int subTurns = 4;
 
 	public Logic(GameState state, Input input) {
 		this.setGameState(state);

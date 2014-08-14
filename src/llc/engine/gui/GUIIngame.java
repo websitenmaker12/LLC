@@ -43,6 +43,13 @@ public class GUIIngame extends GUI {
 				setText("Player " + logic.getGameState().getActivePlayer().playerID);
 			}
 		});
+		
+		this.elements.add(new GUIText(Display.getWidth() / 2 - 40, 20, "Turns left: ") {
+			@Override
+			public void update(int x, int y) {
+				setText("Turns left: " + (logic.subTurns - logic.getGameState().moveCount) + "/" + logic.subTurns);
+			}
+		});
 	}
 	
 }
