@@ -98,6 +98,7 @@ public class Renderer {
 		
 		drawCoordinateSystem();
 		drawGrid(gameState, width, height);
+		drawHoveredAndSelectedCells(gameState);
 		drawWaterSurface(width, height);
 	}
 
@@ -207,71 +208,91 @@ public class Renderer {
 		}
 	}
 	
+	private void drawHoveredAndSelectedCells(GameState state)
+	{
+		// highlight hovered cell
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		this.shaderProg.bind();
+		if (state.hoveredCell != null)
+		{
+			GL11.glColor3f(1, 0.5f, 0.5f);
+			drawCell(state.hoveredCell, state.hoveredCell.y, state.hoveredCell.x);
+		}
+		if (state.selectedCell != null)
+		{
+			GL11.glColor3f(0.5f, 1, 0.8f);
+			drawCell(state.selectedCell, state.selectedCell.y, state.selectedCell.x);
+		}
+		RenderUtil.unbindShader();
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+	}
+	
+	private void drawEntity (GameState state)
+	{
+//		if (c.getEntity() instanceof EntityBuildingBase) {
+//			GL11.glPushMatrix();
+//			GL11.glTranslatef(x + 0.5F, y + 0.5F, 1);
+//			GL11.glScalef(0.75F, 0.75F, 0.75F);
+//			GL11.glRotatef(90F, 1, 0, 0);
+//			GL11.glCallList(this.baseID);
+//			GL11.glPopMatrix();
+//		}
+	}
+
 	private void drawGrid(GameState state, int width, int height) {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		this.shaderProg.bind();
+		GL11.glColor3f(1, 1, 1);
 		
 		Cell[][] cells = state.getGrid().getCells();
 		for (int y = 0; y < height; y++) 
 		{
 			for (int x = 0; x < width; x++) 
 			{
-				// highlight hovered cell
-				if (cells[y][x] == state.hoveredCell)
-					GL11.glColor3f(1, 0.5f, 0.5f);
-				else if (cells[y][x] == state.selectedCell)
-					GL11.glColor3f(0.5f, 1, 0.8f);
-				else
-					GL11.glColor3f(1, 1, 1);
-				
-				if (cells[y][x].getEntity() == null) 
-				{
-					float h = cells[y][x].getHeight();
-					// Render terrain texture
-					if (h < -sandRegion)
-						waterTexture.bind();
-					else if (h > sandRegion)
-						grassTexture.bind();
-					else 
-						sandTexture.bind();
-				} 
-				else
-				{
-					// Render entity texture
-					if (cells[y][x].getEntity() instanceof EntityWarrior)
-						warriorTexture.bind();
-
-					if (cells[y][x].getEntity() instanceof EntityWorker)
-						minerTexture.bind();
-
-					if (cells[y][x].getEntity() instanceof EntityBuildingBase) {
-						GL11.glPushMatrix();
-						GL11.glTranslatef(x + 0.5F, y + 0.5F, 1);
-						GL11.glScalef(0.75F, 0.75F, 0.75F);
-						GL11.glRotatef(90F, 1, 0, 0);
-						GL11.glCallList(this.baseID);
-						GL11.glPopMatrix();
-					}
-				}
-				
-				Triangle[] ts = triangles[y][x];
-				GL11.glBegin(GL11.GL_TRIANGLES);
-				for (int t = 0; t < 2; t++)
-				{
-					for (int i = 0; i < 3; i++)
-					{
-						GL11.glTexCoord2d(ts[t].vertices[i].texCoord.x, ts[t].vertices[i].texCoord.y);
-						GL11.glNormal3f(ts[t].vertices[i].normal.x, ts[t].vertices[i].normal.y, ts[t].vertices[i].normal.z);
-						GL11.glVertex3f(ts[t].vertices[i].position.x, ts[t].vertices[i].position.y, ts[t].vertices[i].position.z);
-					}
-				}
-
-				GL11.glEnd();
+				Cell c = cells[y][x];
+				drawCell(c, y, x);
 			}
 		}
 		
 		RenderUtil.unbindShader();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
+	}
+
+	private void drawCell(Cell c, int y, int x) {
+		if (c.getEntity() == null) 
+		{
+			float h = c.getHeight();
+			// Render terrain texture
+			if (h < -sandRegion)
+				waterTexture.bind();
+			else if (h > sandRegion)
+				grassTexture.bind();
+			else 
+				sandTexture.bind();
+		} 
+		else
+		{
+			// Render entity texture
+			if (c.getEntity() instanceof EntityWarrior)
+				warriorTexture.bind();
+
+			if (c.getEntity() instanceof EntityWorker)
+				minerTexture.bind();
+		}
+		
+		Triangle[] ts = triangles[y][x];
+		GL11.glBegin(GL11.GL_TRIANGLES);
+		for (int t = 0; t < 2; t++)
+		{
+			for (int i = 0; i < 3; i++)
+			{
+				GL11.glTexCoord2d(ts[t].vertices[i].texCoord.x, ts[t].vertices[i].texCoord.y);
+				GL11.glNormal3f(ts[t].vertices[i].normal.x, ts[t].vertices[i].normal.y, ts[t].vertices[i].normal.z);
+				GL11.glVertex3f(ts[t].vertices[i].position.x, ts[t].vertices[i].position.y, ts[t].vertices[i].position.z);
+			}
+		}
+
+		GL11.glEnd();
 	}
 
 	private Vector3f calcNormal(int x, int y, float topLeftHeight, float topRightHeight, float bottomLeftHeight, float bottomRightHeight) {
