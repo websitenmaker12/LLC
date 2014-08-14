@@ -19,8 +19,6 @@ uniform sampler2D tex;
 
 vec4 phongShade()
 {
-	normal = normalize(normal);
-
    vec3 L = normalize(lightPos - vertex);
    vec3 E = normalize(-vertex); // we are in Eye Coordinates, so EyePos is (0,0,0)
    vec3 R = normalize(-reflect(L, normal));

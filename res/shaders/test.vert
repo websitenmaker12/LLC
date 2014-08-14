@@ -8,5 +8,5 @@ void main() {
 	vertColor = gl_Color;
 	texCoord = gl_MultiTexCoord0.st;
 	normal = gl_Normal;
-	vertex = gl_Position;
+	vertex = gl_Position.xyz;
 }
