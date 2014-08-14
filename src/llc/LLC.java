@@ -64,8 +64,6 @@ public class LLC {
 
 			@Override
 			public void onNewCellHovered(int cell_x, int cell_y) {
-				// TODO Auto-generated method stub
-				
 			}
 		});
 	}
@@ -148,4 +146,3 @@ public class LLC {
 	}
 	
 }
-

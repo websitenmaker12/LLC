@@ -36,7 +36,6 @@ public class Logic {
 			@Override
 			public void onNewCellHovered(int cell_x, int cell_y) {
 				hoverCell(cell_x, cell_y);
-				
 			}
 		});
 	}
@@ -58,8 +57,10 @@ public class Logic {
 	}
 	
 	public void hoverCell(int hoverX, int hoverY) {
-		Cell hoveredCell = gameState.getGrid().getCellAt(hoverX, hoverY);
-		gameState.hoveredCell = hoveredCell;
+		if (0 <= hoverY && hoverY < gameState.getGrid().getHeigth() && 0 <= hoverX && hoverX < gameState.getGrid().getWidth()) {
+			Cell hoveredCell = gameState.getGrid().getCellAt(hoverX, hoverY);
+			gameState.hoveredCell = hoveredCell;
+		}
 	}
 
 	/**
