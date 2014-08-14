@@ -36,4 +36,11 @@ public class GUI {
 	public void onClose() {
 	}
 	
+	/**
+	 * 
+	 */
+	public List<GUIElement> getElements() {
+		return this.elements;
+	}
+	
 }

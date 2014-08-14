@@ -11,8 +11,6 @@ import org.newdawn.slick.opengl.TextureImpl;
 
 public abstract class GUIButton extends GUIElement {
 
-	private float width;
-	private float height;
 	private String text;
 	
 	private boolean isHover = false;
@@ -30,9 +28,7 @@ public abstract class GUIButton extends GUIElement {
 	}
 	
 	public GUIButton(float posX, float posY, float width, float height, String text) {
-		super(posX, posY);
-		this.width = width;
-		this.height = height;
+		super(posX, posY, width, height);
 		this.text = text;
 	}
 

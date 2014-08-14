@@ -1,12 +1,15 @@
 package llc.input;
 
-import java.util.*;
-
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
+import java.util.ArrayList;
+import java.util.List;
 
 import llc.LLC;
 import llc.engine.Camera;
+import llc.engine.gui.GUI;
+import llc.engine.gui.GUIElement;
+
+import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 
 public class Input 
@@ -17,6 +20,8 @@ public class Input
  
 	private Vector2f lastHoveredCell = null;
 	private LLC LLC_ref;
+	
+	private List<GUIElement> guiElements = new ArrayList<GUIElement>();
 	
 	public Input(LLC reference, Camera camera)
 	{
@@ -107,6 +112,10 @@ public class Input
 			lastHoveredCell = hoveredCell; 
 			FireNewCellHoveredEvent((int)hoveredCell.x,(int)hoveredCell.y);
 			}
+	}
+	
+	public void guiChange(GUI gui) {
+		this.guiElements = gui.getElements();
 	}
 	
 	// ------------- Interface for the Listener -------------

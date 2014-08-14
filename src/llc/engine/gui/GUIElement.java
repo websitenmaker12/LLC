@@ -6,10 +6,14 @@ public abstract class GUIElement {
 	
 	public float posX;
 	public float posY;
+	public float width;
+	public float height;
 
-	public GUIElement(float posX, float posY) {
+	public GUIElement(float posX, float posY, float widht, float height) {
 		this.posX = posX;
 		this.posY = posY;
+		this.width = widht;
+		this.height = height;
 	}
 	
 	/**
@@ -21,5 +25,11 @@ public abstract class GUIElement {
 	 * Is called for render updates
 	 */
 	public abstract void render(GUIRenderer renderer, int x, int y);
+
+	/**
+	 */
+	public boolean isHovered(int x, int y) {
+		return x >= this.posX && x <= this.posX + this.width && y >= this.posY && y <= this.posY + this.height;
+	}
 	
 }

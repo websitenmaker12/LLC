@@ -2,6 +2,7 @@ package llc.engine;
 
 import java.awt.Font;
 
+import llc.LLC;
 import llc.engine.gui.GUI;
 
 import org.lwjgl.opengl.GL11;
@@ -9,8 +10,14 @@ import org.newdawn.slick.TrueTypeFont;
 
 public class GUIRenderer {
 
-	private GUI currentGUI;
 	public final TrueTypeFont arial = new TrueTypeFont(new Font("Arial", Font.PLAIN, 24), true);
+	
+	private GUI currentGUI;
+	private LLC llc;
+	
+	public GUIRenderer(LLC llc) {
+		this.llc = llc;
+	}
 	
 	/**
 	 * Renders the current GUI
@@ -41,6 +48,7 @@ public class GUIRenderer {
 		this.closeCurrentGUI();
 		this.currentGUI = gui;
 		this.currentGUI.onOpen();
+		this.llc.input.guiChange(this.currentGUI);
 	}
 	
 	/**

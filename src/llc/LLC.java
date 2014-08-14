@@ -5,7 +5,6 @@ import llc.engine.GUIRenderer;
 import llc.engine.Profiler;
 import llc.engine.Renderer;
 import llc.engine.audio.AudioEngine;
-import llc.engine.audio.EnumMusic;
 import llc.engine.gui.GUIIngame;
 import llc.input.Input;
 import llc.loading.GameLoader;
@@ -28,7 +27,7 @@ public class LLC {
 	
 	private Profiler profiler = new Profiler();
 	private Camera camera;
-	private Input input;
+	public Input input;
 	private Renderer renderer;
 	private GameLoader gameLoader;
 	private Logic logic;
@@ -82,7 +81,7 @@ public class LLC {
 		this.profiler.endStart("Setup OpenGL");
 		this.renderer = new Renderer();
 		this.profiler.endStart("Setup GUI Renderer");
-		this.guiRenderer = new GUIRenderer();
+		this.guiRenderer = new GUIRenderer(this);
 		this.guiRenderer.openGUI(new GUIIngame(this.logic));
 		this.profiler.endStart("Setup Audio Engine");
 		this.audioEngine.initAudioEngine();
