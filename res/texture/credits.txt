@@ -1,1 +1,0 @@
-grass.png: author: s://www.flickr.com/photos/leooosterloo/ license: https://creativecommons.org/licenses/by/2.0/
