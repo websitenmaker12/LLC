@@ -36,6 +36,9 @@ public class Renderer {
 	private Triangle[][][] triangles;
 	
 	private int baseID;
+	private int minerID;
+	private int warriorID;
+	
 	private Program shaderProg;
 	
 	public Renderer() {
@@ -56,11 +59,9 @@ public class Renderer {
 		grassTexture = new Texture("res/texture/grass.png");
 		sandTexture = new Texture("res/texture/sand.png");
 		
-		try {
-			this.baseID = ObjLoader.createDisplayList(ObjLoader.loadModel(new File("res/entity/base/base.obj")));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.baseID = this.loadModel("res/entity/base/base.obj");
+		this.minerID = this.loadModel("res/entity/test/testentity-human_Jeans.obj");
+		this.warriorID = this.loadModel("res/entity/test/testentity-human_Jeans.obj");
 		
 		this.shaderProg = new Program();
 		this.shaderProg.addShader(new Shader("res/shaders/test.vert", Shader.vertexShader));
@@ -68,6 +69,18 @@ public class Renderer {
 		this.shaderProg.validate();
 	}
 
+	/**
+	 * Loads a model into a Display list
+	 */
+	private int loadModel(String path) {
+		try {
+			return ObjLoader.createDisplayList(ObjLoader.loadModel(new File(path)));
+		} catch (IOException e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+	
 	/**
 	 * Handles the OpenGL-Part when the Display was resized
 	 */
@@ -95,6 +108,8 @@ public class Renderer {
 
 		int width = gameState.getGrid().getWidth();
 		int height = gameState.getGrid().getHeigth();
+		
+		GL11.glCallList(this.baseID);
 		
 		drawCoordinateSystem();
 		drawGrid(gameState, width, height);

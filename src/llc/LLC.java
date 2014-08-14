@@ -1,5 +1,8 @@
 package llc;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 import llc.engine.Camera;
 import llc.engine.GUIRenderer;
 import llc.engine.Profiler;
@@ -45,7 +48,9 @@ public class LLC implements IKeybindingListener {
 	private int mouseX = 0;
 	private int mouseY = 0;
 	private boolean lastButtonState = false;
+	
 	private boolean isFullscreen = false;
+	private DisplayMode oldDisplayMode = null;
 	
 	public LLC() {
 		this.camera = new Camera(new Vector3f(4, 4, 10), new Vector3f(0, 1.5f, -1), new Vector3f(0, 0, 1));
@@ -189,22 +194,14 @@ public class LLC implements IKeybindingListener {
 	}
 	
 	private void toggleFullscreen() throws LWJGLException {
-		// TODO Overwork
+		this.isFullscreen = !this.isFullscreen;
+		this.oldDisplayMode = Display.getDisplayMode();
 		
-		DisplayMode displayMode = null;
-	    DisplayMode[] modes = Display.getAvailableDisplayModes();
-	    for(int i = 0; i < modes.length; i++) {
-	    	if(modes[i].getWidth() == this.width && modes[i].getHeight() == this.height && modes[i].isFullscreenCapable()) {
-	    		displayMode = modes[i];
-	    	}
-	    }
-	    
-	    if(displayMode != null) {
-	    	this.isFullscreen = !this.isFullscreen;
-	    	
-	    	Display.setDisplayMode(displayMode);
-	    	Display.setFullscreen(this.isFullscreen);
-	    }
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		DisplayMode fullscreen = new DisplayMode(dim.width, dim.height);
+		
+	    Display.setDisplayMode(this.isFullscreen ? fullscreen : this.oldDisplayMode);
+	    Display.setFullscreen(this.isFullscreen);
 	}
 	
 }

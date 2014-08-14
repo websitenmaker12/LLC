@@ -50,7 +50,7 @@ public class Pathfinder {
 			Cell a = open.get(open.size()-1);
 			Cell[] neighbors = getNeighbors(a);
 			//Nearest, possible step
-			List<Cell> possible = new ArrayList<Cell>(Arrays.asList(neighbors));
+			List<Cell> possible = new ArrayList<Cell>();
 			for (Cell c : neighbors) {
 				//Walkable?
 				if (closed.contains(c)) {
@@ -65,9 +65,9 @@ public class Pathfinder {
 				}
 				possible.add(c);
 			}
-			System.out.println("I have found these cells for x:" + a.x + ", y: " + a.y);
+			System.out.println("I have found " + possible.size() + " cells for x:" + a.x + ", y: " + a.y);
 			for (Cell c : possible) {
-				System.out.println("(" + c.x + "|" + c.y + ")");
+				System.out.println("(" + c.x + "|" + c.y + ") (Status: " + c.getType() + ")");
 			}
 			//Nothing found? Then there is no way
 			if (possible.size() == 0) {
@@ -89,10 +89,10 @@ public class Pathfinder {
 			}
 			System.out.println("Closest: (" + closest.x + "|" + closest.y + ")");
 			System.out.println("To find: (" + to.x + "|" + to.y + ")");
+			open.add(closest);
 			if (found) {
 				break;
 			}
-			open.add(closest);
 		}
 		if (open.isEmpty()) {
 			throw new IllegalStateException("Impossible way!");
