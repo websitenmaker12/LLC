@@ -10,6 +10,7 @@ import llc.engine.res.ObjLoader;
 import llc.engine.res.Program;
 import llc.engine.res.Shader;
 import llc.engine.res.Texture;
+import llc.entity.Entity;
 import llc.entity.EntityBuildingBase;
 import llc.entity.EntityWarrior;
 import llc.entity.EntityWorker;
@@ -30,8 +31,6 @@ public class Renderer {
 	
 	private Texture loadingScreen;
 	
-	private Texture warriorTexture;
-	private Texture minerTexture;
 	private Texture waterTexture;
 	private Texture grassTexture;
 	private Texture sandTexture;
@@ -39,7 +38,7 @@ public class Renderer {
 	private Triangle[][][] triangles;
 	
 	private int baseID;
-	private int minerID;
+	private int workerID;
 	private int warriorID;
 	
 	private Program shaderProg;
@@ -58,15 +57,13 @@ public class Renderer {
 		this.loadingScreen = new Texture("res/gui/logo.png");
 		this.drawLoadingScreen(Display.getWidth(), Display.getHeight());
 		
-		warriorTexture = new Texture("res/entity/moveable/warrior/warrior.png");
-		minerTexture = new Texture("res/entity/moveable/miner/miner.png");
 		waterTexture = new Texture("res/texture/water.png");
 		grassTexture = new Texture("res/texture/grass.png");
 		sandTexture = new Texture("res/texture/sand.png");
 		
 		this.baseID = this.loadModel("res/entity/base/base.obj");
-		this.minerID = this.loadModel("res/entity/test/testentity-human_Jeans.obj");
-		this.warriorID = this.loadModel("res/entity/test/testentity-human_Jeans.obj");
+		this.workerID = this.loadModel("res/entity/base/base.obj");
+		this.warriorID = this.loadModel("res/entity/base/base.obj");
 		
 		colors.add(new GradientPoint(-1f, new Vector3f(0f, 0f, 1f)));
 		colors.add(new GradientPoint(-0.25f,new Vector3f(1f, 1f, 1f)));
@@ -120,11 +117,10 @@ public class Renderer {
 		int width = gameState.getGrid().getWidth();
 		int height = gameState.getGrid().getHeigth();
 		
-		GL11.glCallList(this.baseID);
-		
 		drawCoordinateSystem();
 		drawGrid(gameState, width, height);
 		drawHoveredAndSelectedCells(gameState);
+		drawEntities(gameState, width, height);
 		drawWaterSurface(width, height);
 	}
 
@@ -253,16 +249,27 @@ public class Renderer {
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 	}
 	
-	private void drawEntity (GameState state)
-	{
-//		if (c.getEntity() instanceof EntityBuildingBase) {
-//			GL11.glPushMatrix();
-//			GL11.glTranslatef(x + 0.5F, y + 0.5F, 1);
-//			GL11.glScalef(0.75F, 0.75F, 0.75F);
-//			GL11.glRotatef(90F, 1, 0, 0);
-//			GL11.glCallList(this.baseID);
-//			GL11.glPopMatrix();
-//		}
+	private void drawEntities(GameState state, int width, int height) {
+		Cell[][] cells = state.getGrid().getCells();
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				Cell c = cells[y][x];
+				Entity e = c.getEntity();
+				
+				if(e != null) {
+					GL11.glPushMatrix();
+					GL11.glTranslatef(x, y, c.height + 1);
+					if(e instanceof EntityBuildingBase) {
+						GL11.glCallList(this.baseID);
+					} else if(e instanceof EntityWarrior) {
+						GL11.glCallList(this.warriorID);
+					} else if(e instanceof EntityWorker) {
+						GL11.glCallList(this.workerID);
+					}
+					GL11.glPopMatrix();
+				}
+			}
+		}
 	}
 
 	private void drawGrid(GameState state, int width, int height) {
@@ -296,15 +303,6 @@ public class Renderer {
 			else 
 				sandTexture.bind();
 		} 
-		else
-		{
-			// Render entity texture
-			if (c.getEntity() instanceof EntityWarrior)
-				warriorTexture.bind();
-
-			if (c.getEntity() instanceof EntityWorker)
-				minerTexture.bind();
-		}
 		
 		Triangle[] ts = triangles[y][x];
 		GL11.glBegin(GL11.GL_TRIANGLES);

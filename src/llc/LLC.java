@@ -1,8 +1,5 @@
 package llc;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-
 import llc.engine.Camera;
 import llc.engine.GUIRenderer;
 import llc.engine.Profiler;
@@ -50,7 +47,7 @@ public class LLC implements IKeybindingListener {
 	private boolean lastButtonState = false;
 	
 	private boolean isFullscreen = false;
-	private DisplayMode oldDisplayMode = null;
+	private final DisplayMode standartDisplayMode = new DisplayMode(640, 480);
 	
 	public LLC() {
 		this.camera = new Camera(new Vector3f(4, 4, 10), new Vector3f(0, 1.5f, -1), new Vector3f(0, 0, 1));
@@ -111,7 +108,7 @@ public class LLC implements IKeybindingListener {
 	 * Setups the Display
 	 */
 	private void initDisplay() throws LWJGLException {
-		Display.setDisplayMode(new DisplayMode(640, 480));
+		Display.setDisplayMode(this.standartDisplayMode);
 		Display.setResizable(true);
 		Display.setVSyncEnabled(true);
 		Display.setTitle("LLC - " + VERSION);
@@ -193,14 +190,12 @@ public class LLC implements IKeybindingListener {
 		}
 	}
 	
+	/**
+	 * Toggles the window in Fullscreen- and Normal-Display-Mode
+	 */
 	private void toggleFullscreen() throws LWJGLException {
 		this.isFullscreen = !this.isFullscreen;
-		this.oldDisplayMode = Display.getDisplayMode();
-		
-		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		DisplayMode fullscreen = new DisplayMode(dim.width, dim.height);
-		
-	    Display.setDisplayMode(this.isFullscreen ? fullscreen : this.oldDisplayMode);
+	    Display.setDisplayMode(this.isFullscreen ? Display.getDesktopDisplayMode() : this.standartDisplayMode);
 	    Display.setFullscreen(this.isFullscreen);
 	}
 	

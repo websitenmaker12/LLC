@@ -23,7 +23,7 @@ public class Profiler {
 	 */
 	public void end() {
 		long time = System.currentTimeMillis() - this.stamps.get(this.stamps.size() - 1);
-		if(time > 4000) System.out.println("Operation '" + this.currentOperation + "' took longer than excepted (" + time + " millis)");
+		if(time > 4000) System.out.println("Operation '" + this.currentOperation + "' took longer than expected (" + time + " millis)");
 		
 		this.history.remove(this.history.size() - 1);
 		this.stamps.remove(this.stamps.size() - 1);
