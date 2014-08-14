@@ -179,10 +179,10 @@ public class Renderer {
 				float bottomRightHeight = (heights[1][1] + heights[1][2] + heights[2][1] + heights[2][2]) / 4f;
 				float bottomLeftHeight = (heights[1][0] + heights[1][1] + heights[2][1] + heights[2][0]) / 4f;
 				
-				topRightHeight = (topRightHeight - 0.5f) * terrainScale;
-				topLeftHeight = (topLeftHeight - 0.5f) * terrainScale;
-				bottomRightHeight = (bottomRightHeight - 0.5f) * terrainScale;
-				bottomLeftHeight = (bottomLeftHeight - 0.5f) * terrainScale;
+				topRightHeight = topRightHeight * terrainScale;
+				topLeftHeight = topLeftHeight * terrainScale;
+				bottomRightHeight = bottomRightHeight * terrainScale;
+				bottomLeftHeight = bottomLeftHeight * terrainScale;
 				
 				Vector3f topLeft = new Vector3f(x, y,  topLeftHeight);
 				Vector3f topRight = new Vector3f(x + 1, y, topRightHeight);
