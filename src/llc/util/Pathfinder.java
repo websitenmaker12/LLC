@@ -21,23 +21,27 @@ public class Pathfinder {
 		this.from = from;
 		this.to = to;
 		
-		aStar();
 	}
 	public void setIgnoredEntity(Entity en) {
 		ignore = en;
 	}
-	private void aStar() {
+	public List<Cell> aStar() {
 		boolean found = false;
 		open.add(from);
 		closed.clear();
 		
 		//While there still is a way and whe haven't found a solution yet, repeat
 		while (open.size() > 0 || !(found)) {
-			//First, select the most likely next step
-			
+			//Get all neighbors
+			Cell[] neighbors = getNeighbors(open.get(open.size()-1));
+			//Nearest, possible staey
 		}
+		if (open.isEmpty()) {
+			throw new IllegalStateException("Impossible way!");
+		}
+		return open;
 	}
-	private Cell[] getNeighbours(Cell c) {
+	private Cell[] getNeighbors(Cell c) {
 		//Is the cell at the border?
 		int width = g.getWidth();
 		int height = g.getHeigth();
@@ -92,9 +96,21 @@ public class Pathfinder {
 		}
 		if (c.y == 0) {
 			//Bottom
+			//Bottom-Right and Bottom-Left Corner already checked
+			Cell[] cells = new Cell[3];
+			cells[0] = g.getCellAt(c.x-1, c.y);
+			cells[0] = g.getCellAt(c.x+1, c.y);
+			cells[0] = g.getCellAt(c.x, c.y+1);
+			return cells;
 		}
 		if (c.y == height) {
 			//Top
+			//Top-Right and Top-Left Corner already checked
+			Cell[] cells = new Cell[3];
+			cells[0] = g.getCellAt(c.x-1, c.y);
+			cells[0] = g.getCellAt(c.x+1, c.y);
+			cells[0] = g.getCellAt(c.x, c.y-1);
+			return cells;
 		}
 		else {
 			//Not border
@@ -105,7 +121,6 @@ public class Pathfinder {
 			cells[3] = g.getCellAt(c.x, c.y-1);
 			return cells;
 		}
-		return null;
 	}
 	
 	private float manhattanDistance(Cell from) {

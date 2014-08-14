@@ -12,11 +12,18 @@ public class Cell {
 	private CellType type;
 	
 	public final int x,y;
+	public final float height;
 	
-	public Cell(int x, int y, CellType type) {
+	public Cell(int x, int y, float height) {
 		this.x = x;
 		this.y = y;
-		this.type = type;
+		this.height = height;
+		if (height < 0.5) {
+			type = CellType.SOLID;
+		}
+		if (height >= 0.5) {
+			type = CellType.WALKABLE;
+		}
 	}
 	
 	/**
@@ -55,7 +62,11 @@ public class Cell {
 	 * Sets the {@link CellType}
 	 * @param type
 	 */
+	@Deprecated
 	public void setType(CellType type) {
 		this.type = type;
+	}
+	public float getHeight() {
+		return height;
 	}
 }

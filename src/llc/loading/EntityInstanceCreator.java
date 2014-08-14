@@ -3,7 +3,6 @@ package llc.loading;
 import java.lang.reflect.Type;
 
 import llc.entity.*;
-import llc.logic.GameState;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -14,11 +13,9 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 public class EntityInstanceCreator implements JsonDeserializer<Entity>, JsonSerializer<Entity>{
-
-	private GameState state;
 	
-	public EntityInstanceCreator(GameState state) {
-		this.state = state;
+	public EntityInstanceCreator() {
+		
 	}
 	
 	@Override
@@ -61,13 +58,5 @@ public class EntityInstanceCreator implements JsonDeserializer<Entity>, JsonSeri
 		}
 		//System.out.println(e);
 		return e;
-	}
-	
-	public GameState getState() {
-		return state;
-	}
-
-	public void setGameState(GameState s) {
-		state = s;
 	}
 }
