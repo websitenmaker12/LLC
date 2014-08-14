@@ -26,7 +26,7 @@ public class AudioEngine {
 	 * @throws LWJGLException 
 	 */
 	public void initAudioEngine() throws LWJGLException {
-		if(AL.isCreated()) AL.create();
+		if(!AL.isCreated()) AL.create();
 		loadSounds();
 	}
 	
@@ -59,7 +59,7 @@ public class AudioEngine {
 	 * @param sound The {@link Sounds} to play.
 	 */
 	public void playSound(EnumSounds sound) {
-		if(sound == EnumSounds.BUTTONCLICK) buttonClick.playSound(0, 0, 0, 0, 0, 0);
+		if(sound == EnumSounds.BUTTONCLICK) buttonClick.playSound(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 	}
 	
 	/**

@@ -41,9 +41,12 @@ public class Sound {
 	 * @param lPosZ The listener z pos.
 	 */
 	public void playSound(float posX, float posY, float posZ, float lPosX, float lPosY, float lPosZ) {
-		FloatBuffer sourcePos = BufferUtils.createFloatBuffer(3).put(new float[] { posX, posY, posZ });
-		FloatBuffer listenerPos = BufferUtils.createFloatBuffer(3).put(new float[] { lPosX, lPosY, lPosZ });
+//		FloatBuffer sourcePos = BufferUtils.createFloatBuffer(3).put(new float[] { posX, posY, posZ });
+//		FloatBuffer listenerPos = BufferUtils.createFloatBuffer(3).put(new float[] { lPosX, lPosY, lPosZ });
 		
+		FloatBuffer sourcePos = BufferUtils.createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f });
+		FloatBuffer listenerPos = BufferUtils.createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f });
+
 		AL10.alSourcei(source.get(0), AL10.AL_BUFFER,   buffer.get(0) );
 		AL10.alSourcef(source.get(0), AL10.AL_PITCH,    1.0f          );
 		AL10.alSourcef(source.get(0), AL10.AL_GAIN,     1.0f          );
