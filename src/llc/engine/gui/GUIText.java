@@ -9,8 +9,8 @@ public abstract class GUIText extends GUIElement {
 	private String text;
 	private Color color;
 	
-	public GUIText(float posX, float posY, String text, Color color) {
-		super(posX, posY);
+	public GUIText(GUI gui, float posX, float posY, String text, Color color) {
+		super(gui, posX, posY, 0, 0);
 		this.setText(text);
 		this.color = color;
 	}

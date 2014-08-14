@@ -19,33 +19,33 @@ public class GUIIngame extends GUI {
 	public void onOpen() {
 		super.onOpen();
 		
-		this.elements.add(new GUIButton(20, Display.getHeight() - 55, 200, 35, "Buy Warrior") {
+		this.elements.add(new GUIButton(this, 20, Display.getHeight() - 55, 200, 35, "Buy Warrior") {
 			public void onClick(int x, int y) {
 				logic.buyEntity(new EntityWarrior());
 			}
 		});
 		
-		this.elements.add(new GUIButton(20, Display.getHeight() - 110, 200, 35, "Buy Worker") {
+		this.elements.add(new GUIButton(this, 20, Display.getHeight() - 110, 200, 35, "Buy Worker") {
 			public void onClick(int x, int y) {
 				logic.buyEntity(new EntityWorker());
 			}
 		});
 		
-		this.elements.add(new GUIText(20, 20, "Gold: ", Color.orange) {
+		this.elements.add(new GUIText(this, 20, 20, "Gold: ", Color.orange) {
 			@Override
 			public void update(int x, int y) {
 				setText("Gold:" + logic.getGameState().getActivePlayer().getMinerals());
 			}
 		});
 		
-		this.elements.add(new GUIText(Display.getWidth() - 110, 20, "Player: ", Color.orange) {
+		this.elements.add(new GUIText(this, Display.getWidth() - 110, 20, "Player: ", Color.orange) {
 			@Override
 			public void update(int x, int y) {
 				setText("Player " + logic.getGameState().getActivePlayer().playerID);
 			}
 		});
 		
-		this.elements.add(new GUIText(Display.getWidth() / 2 - 40, 20, "Turns left: ", Color.orange) {
+		this.elements.add(new GUIText(this, Display.getWidth() / 2 - 40, 20, "Turns left: ", Color.orange) {
 			@Override
 			public void update(int x, int y) {
 				setText("Turns left: " + (logic.subTurns - logic.getGameState().moveCount) + "/" + logic.subTurns);
