@@ -15,7 +15,9 @@ public class Sound {
 	IntBuffer buffer = BufferUtils.createIntBuffer(1);
 	IntBuffer source = BufferUtils.createIntBuffer(1);
 	public static WaveData data;
+	String path;
 	public Sound(String path) {
+		this.path = path;
 	}
 	
 	/**
@@ -24,7 +26,7 @@ public class Sound {
 	public Sound loadSound() {
 		AL10.alGenBuffers(buffer);
 		
-		data = WaveData.create("res/sound/buttonClick.wav");
+		data = WaveData.create(path);
 		AL10.alBufferData(buffer.get(0), data.format, data.data, data.samplerate);
 		data.dispose();
 		
@@ -46,7 +48,11 @@ public class Sound {
 		
 		FloatBuffer sourcePos = BufferUtils.createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f });
 		FloatBuffer listenerPos = BufferUtils.createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f });
-
+		
+		
+		sourcePos.flip();
+		listenerPos.flip();
+		
 		AL10.alSourcei(source.get(0), AL10.AL_BUFFER,   buffer.get(0) );
 		AL10.alSourcef(source.get(0), AL10.AL_PITCH,    1.0f          );
 		AL10.alSourcef(source.get(0), AL10.AL_GAIN,     1.0f          );
