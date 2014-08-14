@@ -27,7 +27,6 @@ public class Logic {
 	public Logic(GameState state, Input input) {
 		this.setGameState(state);
 		this.input = input;
-		cellWaveLoader();
 		this.input.addFireListener(new Input.LogicListener() {
 
 			@Override
@@ -191,29 +190,5 @@ public class Logic {
 			entity.setY(spawnCell.y);
 			clickCell(spawnCell.x,spawnCell.y);
 		}
-	}
-	private void cellWaveLoader() {
-		new Thread() {
-			@Override
-			public void run() {
-				Grid g = gameState.getGrid();
-				Random r = new Random();
-				Cell c = g.getCellAt((int)(Math.random() * g.getWidth()), (int) (Math.random() * g.getHeigth()));
-				if (r.nextBoolean()) {
-					c.height = r.nextFloat();
-				}
-				else {
-					c.height = r.nextFloat() * -1;
-				}
-				pennen(10);
-			}
-			private void pennen(long m) {
-				try {
-					sleep(m);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}.run();
 	}
 }
