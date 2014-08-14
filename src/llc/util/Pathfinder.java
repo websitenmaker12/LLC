@@ -1,10 +1,12 @@
 package llc.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import llc.entity.Entity;
 import llc.logic.Cell;
+import llc.logic.CellType;
 import llc.logic.Grid;
 
 public class Pathfinder {
@@ -34,7 +36,39 @@ public class Pathfinder {
 		while (open.size() > 0 || !(found)) {
 			//Get all neighbors
 			Cell[] neighbors = getNeighbors(open.get(open.size()-1));
-			//Nearest, possible staey
+			//Nearest, possible step
+			List<Cell> possible = new ArrayList<Cell>(Arrays.asList(neighbors));
+			for (Cell c : neighbors) {
+				//Walkable?
+				if (closed.contains(c)) {
+					continue;
+				}
+				if (c.getType() == CellType.SOLID) {
+					continue;
+				}
+				//If the cell has an entity and that entity is not ignored
+				if (c.containsEntity() && c.getEntity() != ignore) {
+					continue;
+				}
+				possible.add(c);
+			}
+			//Nothing found? Then there is no way
+			if (possible.size() == 0) {
+				open.clear();
+				break;
+			}
+			//Only possible cell is already in the way? Block Cell
+			if (possible.size() == 1 && open.contains(possible.get(0))) {
+				closed.add(possible.get(0));
+			}
+			Cell closest = possible.get(0);
+			for (Cell c : possible) {
+				if (manhattanDistance(c) < manhattanDistance(closest)) {
+					closest = c;
+				}
+			}
+			System.out.println("Closest: (" + closest.x + "|" + closest.y + ")");
+			open.add(closest);
 		}
 		if (open.isEmpty()) {
 			throw new IllegalStateException("Impossible way!");
@@ -42,6 +76,7 @@ public class Pathfinder {
 		return open;
 	}
 	private Cell[] getNeighbors(Cell c) {
+		System.out.println("(" + c.x + "|" + c.y + ")");
 		//Is the cell at the border?
 		int width = g.getWidth();
 		int height = g.getHeigth();
