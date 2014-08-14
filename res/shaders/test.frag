@@ -8,7 +8,7 @@ const vec4 specular = vec4(0.4, 0.4, 0.4, 1.0);
 const vec4 materialAmbient = vec4(1.0, 1.0, 1.0, 1.0);
 const vec4 materialDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
 const vec4 materialSpecular = vec4(1.0, 1.0, 1.0, 1.0);
-const float shininess = 4;
+const float shininess = 4.0;
 
 varying vec4 vertColor;
 varying vec3 normal;
