@@ -7,6 +7,7 @@ public class EntityBuildingBase extends EntityBuilding {
 	
 	public EntityBuildingBase() {
 		this.maxHealth = 250;
+		this.health = maxHealth;
 	}
 
 	@Override
