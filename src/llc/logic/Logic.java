@@ -18,6 +18,8 @@ public class Logic {
 	private GameState gameState;
 	private EntityMovable selectedEntity;
 	private Input input;
+	
+	public int subTurns = 4;
 
 	public Logic(GameState state, Input input) {
 		this.setGameState(state);
@@ -56,6 +58,11 @@ public class Logic {
 		this.gameState = gameState;
 	}
 	
+	/**
+	 * Handles if the mouse hovers above a cell
+	 * @param hoverX
+	 * @param hoverY
+	 */
 	public void hoverCell(int hoverX, int hoverY) {
 		if (0 <= hoverY && hoverY < gameState.getGrid().getHeigth() && 0 <= hoverX && hoverX < gameState.getGrid().getWidth()) {
 			Cell hoveredCell = gameState.getGrid().getCellAt(hoverX, hoverY);
@@ -149,7 +156,7 @@ public class Logic {
 	 */
 	private void countMove() {
 		gameState.moveCount++;
-		if (gameState.moveCount >= 4) {
+		if (gameState.moveCount >= subTurns) {
 			System.out.println("Player " + gameState.getActivePlayer().playerID + "'s turn is now over!");
 			gameState.getActivePlayer().addMinerals(50);
 			gameState.setActivePlayer(gameState.getInActivePlayer());

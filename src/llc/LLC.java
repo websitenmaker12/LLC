@@ -4,6 +4,8 @@ import llc.engine.Camera;
 import llc.engine.GUIRenderer;
 import llc.engine.Profiler;
 import llc.engine.Renderer;
+import llc.engine.audio.AudioEngine;
+import llc.engine.audio.EnumMusic;
 import llc.engine.gui.GUIIngame;
 import llc.input.Input;
 import llc.loading.GameLoader;
@@ -31,6 +33,7 @@ public class LLC {
 	private GameLoader gameLoader;
 	private Logic logic;
 	private GUIRenderer guiRenderer;
+	private AudioEngine audioEngine;
 	
 	public int width = 0;
 	public int height = 0;
@@ -66,6 +69,8 @@ public class LLC {
 			public void onNewCellHovered(int cell_x, int cell_y) {
 			}
 		});
+		
+		this.audioEngine = new AudioEngine();
 	}
 	
 	/**
@@ -79,6 +84,8 @@ public class LLC {
 		this.profiler.endStart("Setup GUI Renderer");
 		this.guiRenderer = new GUIRenderer();
 		this.guiRenderer.openGUI(new GUIIngame(this.logic));
+		this.profiler.endStart("Setup Audio Engine");
+		this.audioEngine.initAudioEngine();
 		this.profiler.end();
 		this.beginLoop();
 	}
@@ -101,6 +108,9 @@ public class LLC {
 	 */
 	private void beginLoop() {
 		this.isRunning = true;
+		
+		// TODO Remove
+		this.audioEngine.playMusic(EnumMusic.MUSIC1);
 		
 		while(this.isRunning) {
 			this.handleDisplayResize();
@@ -129,6 +139,7 @@ public class LLC {
 		}
 		
 		if(Display.isCreated()) Display.destroy();
+		this.audioEngine.dispose();
 		System.out.println(0);
 	}
 	
