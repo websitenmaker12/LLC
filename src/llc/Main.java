@@ -11,6 +11,9 @@ import org.lwjgl.LWJGLException;
 public class Main {
 
 	public static void main(String[] args) {
+		/**
+		 * Sets the global swing design (for dialogs) to the system GUI library.
+		 */
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e1) {
@@ -24,6 +27,7 @@ public class Main {
 		}
 
 		LLC game = new LLC();
+		
 		try {
 			game.startGame();
 		} catch (LWJGLException e) {

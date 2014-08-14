@@ -34,6 +34,11 @@ public class Logic {
 	public void setGameState(GameState gameState) {
 		this.gameState = gameState;
 	}
+	
+	public void hoverCell(int hoverX, int hoverY) {
+		Cell hoveredCell = gameState.getGrid().getCellAt(hoverX, hoverY);
+		gameState.hoveredCell = hoveredCell;
+	}
 
 	/**
 	 * This method is called when a player clicks at a cell on the grid.
@@ -45,7 +50,7 @@ public class Logic {
 	public void clickCell(int clickX, int clickY) {
 		if (0 <= clickY && clickY < gameState.getGrid().getHeigth() && 0 <= clickX && clickX < gameState.getGrid().getWidth()) {
 			Cell clickedCell = gameState.getGrid().getCellAt(clickX, clickY);
-			gameState.hoveredCell = clickedCell; // just for testing
+			
 			if (clickedCell.containsEntity()) {
 				if (clickedCell.getEntity().getPlayer() == gameState.activePlayer) {
 					// select
