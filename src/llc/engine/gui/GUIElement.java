@@ -4,12 +4,14 @@ import llc.engine.GUIRenderer;
 
 public abstract class GUIElement {
 	
+	protected GUI gui;
 	public float posX;
 	public float posY;
 	public float width;
 	public float height;
 
-	public GUIElement(float posX, float posY, float widht, float height) {
+	public GUIElement(GUI gui, float posX, float posY, float widht, float height) {
+		this.gui = gui;
 		this.posX = posX;
 		this.posY = posY;
 		this.width = widht;

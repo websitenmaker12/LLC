@@ -27,8 +27,8 @@ public abstract class GUIButton extends GUIElement {
 		buttonDown = new Texture("res/gui/button_down.png");
 	}
 	
-	public GUIButton(float posX, float posY, float width, float height, String text) {
-		super(posX, posY, width, height);
+	public GUIButton(GUI gui, float posX, float posY, float width, float height, String text) {
+		super(gui, posX, posY, width, height);
 		this.text = text;
 	}
 
