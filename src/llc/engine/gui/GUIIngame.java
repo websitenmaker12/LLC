@@ -37,7 +37,7 @@ public class GUIIngame extends GUI {
 			}
 		});
 		
-		this.elements.add(new GUIText(Display.getWidth() - 200, 20, "Player: ") {
+		this.elements.add(new GUIText(Display.getWidth() - 110, 20, "Player: ") {
 			@Override
 			public void update(int x, int y) {
 				setText("Player " + logic.getGameState().getActivePlayer().playerID);

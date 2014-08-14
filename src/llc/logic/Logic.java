@@ -18,6 +18,8 @@ public class Logic {
 	private GameState gameState;
 	private EntityMovable selectedEntity;
 	private Input input;
+	
+	private int subTurns = 4;
 
 	public Logic(GameState state, Input input) {
 		this.setGameState(state);
@@ -154,7 +156,7 @@ public class Logic {
 	 */
 	private void countMove() {
 		gameState.moveCount++;
-		if (gameState.moveCount >= 4) {
+		if (gameState.moveCount >= subTurns) {
 			System.out.println("Player " + gameState.getActivePlayer().playerID + "'s turn is now over!");
 			gameState.getActivePlayer().addMinerals(50);
 			gameState.setActivePlayer(gameState.getInActivePlayer());
