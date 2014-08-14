@@ -16,6 +16,7 @@ import llc.util.RenderUtil;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
+import org.lwjgl.util.vector.Vector3f;
 
 public class Renderer {
 	private static final float sandRegion = 0.1f;
@@ -128,7 +129,6 @@ public class Renderer {
 						workerTexture.bind();
 
 					if (cells[y][x].getEntity() instanceof EntityBuildingBase) {
-//						baseTexture.bind();
 						GL11.glPushMatrix();
 						GL11.glTranslatef(x + 0.5F, y + 0.5F, 1);
 						GL11.glScalef(0.75F, 0.75F, 0.75F);
@@ -156,25 +156,33 @@ public class Renderer {
 				float bottomRightHeight = (heights[1][1] + heights[1][2] + heights[2][1] + heights[2][2]) / 4f;
 				float bottomLeftHeight = (heights[1][0] + heights[1][1] + heights[2][1] + heights[2][0]) / 4f;
 				
-				topRightHeight = (topRightHeight-0.5f) * terrainScale;
-				topLeftHeight = (topLeftHeight-0.5f) * terrainScale;
-				bottomRightHeight = (bottomRightHeight-0.5f) * terrainScale;
-				bottomLeftHeight = (bottomLeftHeight-0.5f) * terrainScale;
+				//Vector3f topRightNormal = calcNormal(x + 1, y, heights[0][1], heights[0][2], heights[1][1], heights[1][2]);
+				
+				topRightHeight = (topRightHeight - 0.5f) * terrainScale;
+				topLeftHeight = (topLeftHeight - 0.5f) * terrainScale;
+				bottomRightHeight = (bottomRightHeight - 0.5f) * terrainScale;
+				bottomLeftHeight = (bottomLeftHeight - 0.5f) * terrainScale;
+				
+				Vector3f topLeft = new Vector3f(x, y,  topLeftHeight);
+				Vector3f topRight = new Vector3f(x + 1, y, topRightHeight);
+				Vector3f bottomLeft = new Vector3f(x, y + 1, bottomLeftHeight);
+				Vector3f bottomRight = new Vector3f(x + 1, y + 1, bottomRightHeight);
+				
 				
 				GL11.glBegin(GL11.GL_TRIANGLES);
 				GL11.glTexCoord2d(0, 1);
-				GL11.glVertex3f(x, y,  topLeftHeight);
+				GL11.glVertex3f(topLeft.x, topLeft.y,  topLeft.z);
 				GL11.glTexCoord2d(1, 1);
-				GL11.glVertex3f(x + 1, y, topRightHeight);
+				GL11.glVertex3f(topRight.x, topRight.y,  topRight.z);
 				GL11.glTexCoord2d(0, 0);
-				GL11.glVertex3f(x, y + 1, bottomLeftHeight);
+				GL11.glVertex3f(bottomLeft.x, bottomLeft.y,  bottomLeft.z);
 
 				GL11.glTexCoord2d(1, 1);
-				GL11.glVertex3f(x + 1, y, topRightHeight);
+				GL11.glVertex3f(topRight.x, topRight.y,  topRight.z);
 				GL11.glTexCoord2d(1, 0);
-				GL11.glVertex3f(x + 1, y + 1, bottomRightHeight);
+				GL11.glVertex3f(bottomRight.x, bottomRight.y,  bottomRight.z);
 				GL11.glTexCoord2d(0, 0);
-				GL11.glVertex3f(x, y + 1, bottomLeftHeight);
+				GL11.glVertex3f(bottomLeft.x, bottomLeft.y,  bottomLeft.z);
 
 				GL11.glEnd();
 			}
@@ -183,6 +191,17 @@ public class Renderer {
 		RenderUtil.unbindShader();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 	}
+
+//	private Vector3f calcNormal(int i, int y, float f, float g, float h, float j) {
+//		Vector3f topLeft = new Vector3f(x, y,  topLeftHeight);
+//		Vector3f topRight = new Vector3f(x + 1, y, topRightHeight);
+//		Vector3f bottomLeft = new Vector3f(x, y + 1, bottomLeftHeight);
+//		Vector3f bottomRight = new Vector3f(x + 1, y + 1, bottomRightHeight);
+//		Vector3f diagonal1 = Vector3f.sub(topLeft, bottomRight, null);
+//		Vector3f diagonal2 = Vector3f.sub(topRight, bottomLeft, null);
+//		Vector3f normal = Vector3f.cross(diagonal2, diagonal1, null).normalise(null);
+//		GL11.glNormal3f(normal.x, normal.y, normal.z);
+//	}
 
 	private void drawCoordinateSystem() {
 		// Draw coordinate system
