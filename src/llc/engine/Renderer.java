@@ -17,6 +17,7 @@ import llc.util.RenderUtil;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Renderer {
@@ -31,6 +32,8 @@ public class Renderer {
 	private Texture waterTexture;
 	private Texture grassTexture;
 	private Texture sandTexture;
+	
+	private Triangle[][][] triangles;
 	
 	private int baseID;
 	private Program shaderProg;
@@ -122,53 +125,17 @@ public class Renderer {
 		
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 	}
-
-	private void drawGrid(GameState gameState, int width, int height) {
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		this.shaderProg.bind();
-		
-		Cell[][] cells = gameState.getGrid().getCells();
-		for (int y = 0; y < gameState.getGrid().getHeigth(); y++) 
+	
+	public void generateGridGeometry (GameState state)
+	{
+		int width = state.getGrid().getWidth();
+		int height = state.getGrid().getHeigth();
+		Cell[][] cells = state.getGrid().getCells();
+		triangles = new Triangle[height][width][2];
+		for (int y = 0; y < height; y++) 
 		{
-			for (int x = 0; x < gameState.getGrid().getWidth(); x++) 
+			for (int x = 0; x < width; x++) 
 			{
-				// highlight hovered cell
-				if (cells[y][x] == gameState.hoveredCell)
-					GL11.glColor3f(1, 0.5f, 0.5f);
-				else if (cells[y][x] == gameState.selectedCell)
-					GL11.glColor3f(0.5f, 1, 0.8f);
-				else
-					GL11.glColor3f(1, 1, 1);
-				
-				if (cells[y][x].getEntity() == null) 
-				{
-					float h = cells[y][x].getHeight();
-					// Render terrain texture
-					if (h < -sandRegion)
-						waterTexture.bind();
-					else if (h > sandRegion)
-						grassTexture.bind();
-					else 
-						sandTexture.bind();
-				} 
-				else
-				{
-					// Render entity texture
-					if (cells[y][x].getEntity() instanceof EntityWarrior)
-						warriorTexture.bind();
-
-					if (cells[y][x].getEntity() instanceof EntityWorker)
-						minerTexture.bind();
-
-					if (cells[y][x].getEntity() instanceof EntityBuildingBase) {
-						GL11.glPushMatrix();
-						GL11.glTranslatef(x + 0.5F, y + 0.5F, 1);
-						GL11.glScalef(0.75F, 0.75F, 0.75F);
-						GL11.glRotatef(90F, 1, 0, 0);
-						GL11.glCallList(this.baseID);
-						GL11.glPopMatrix();
-					}
-				}
 				//Generating heigth coordinates
 				float currentHeight = cells[y][x].height;
 				float[][] heights = new float [3][3];
@@ -202,26 +169,102 @@ public class Renderer {
 				Vector3f bottomLeftNormal = calcNormal(x, y + 1, heights[1][0], heights[1][1], heights[2][1], heights[2][0]);
 				Vector3f bottomRightNormal = calcNormal(x + 1, y + 1, heights[1][0], heights[1][1], heights[2][1], heights[2][0]);
 				
-				GL11.glBegin(GL11.GL_TRIANGLES);
-				GL11.glTexCoord2d(0, 1);
-				GL11.glNormal3f(topLeftNormal.x, topLeftNormal.y, topLeftNormal.z);
-				GL11.glVertex3f(topLeft.x, topLeft.y,  topLeft.z);
-				GL11.glTexCoord2d(1, 1);
-				GL11.glNormal3f(topRightNormal.x, topRightNormal.y, topRightNormal.z);
-				GL11.glVertex3f(topRight.x, topRight.y,  topRight.z);
-				GL11.glTexCoord2d(0, 0);
-				GL11.glNormal3f(bottomLeftNormal.x, bottomLeftNormal.y, bottomLeftNormal.z);
-				GL11.glVertex3f(bottomLeft.x, bottomLeft.y,  bottomLeft.z);
+				triangles[y][x][0] = new Triangle(
+						new Vertex(
+								topLeft,
+								topLeftNormal,
+								new Vector2f(0, 1)
+								),
+						new Vertex(
+								topRight,
+								topRightNormal,
+								new Vector2f(1, 1)
+								),
+						new Vertex(
+								bottomLeft,
+								bottomLeftNormal,
+								new Vector2f(0, 0)
+								)
+						);
+				triangles[y][x][1] = new Triangle(
+						new Vertex(
+								topRight,
+								topRightNormal,
+								new Vector2f(1, 1)
+								),
+						new Vertex(
+								bottomRight,
+								bottomRightNormal,
+								new Vector2f(1, 0)
+								),
+						new Vertex(
+								bottomLeft,
+								bottomLeftNormal,
+								new Vector2f(0, 0)
+								)
+						);
+			}
+		}
+	}
+	
+	private void drawGrid(GameState state, int width, int height) {
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		this.shaderProg.bind();
+		
+		Cell[][] cells = state.getGrid().getCells();
+		for (int y = 0; y < height; y++) 
+		{
+			for (int x = 0; x < width; x++) 
+			{
+				// highlight hovered cell
+				if (cells[y][x] == state.hoveredCell)
+					GL11.glColor3f(1, 0.5f, 0.5f);
+				else if (cells[y][x] == state.selectedCell)
+					GL11.glColor3f(0.5f, 1, 0.8f);
+				else
+					GL11.glColor3f(1, 1, 1);
+				
+				if (cells[y][x].getEntity() == null) 
+				{
+					float h = cells[y][x].getHeight();
+					// Render terrain texture
+					if (h < -sandRegion)
+						waterTexture.bind();
+					else if (h > sandRegion)
+						grassTexture.bind();
+					else 
+						sandTexture.bind();
+				} 
+				else
+				{
+					// Render entity texture
+					if (cells[y][x].getEntity() instanceof EntityWarrior)
+						warriorTexture.bind();
 
-				GL11.glTexCoord2d(1, 1);
-				GL11.glNormal3f(topRightNormal.x, topRightNormal.y, topRightNormal.z);
-				GL11.glVertex3f(topRight.x, topRight.y,  topRight.z);
-				GL11.glTexCoord2d(1, 0);
-				GL11.glNormal3f(bottomRightNormal.x, bottomRightNormal.y, bottomRightNormal.z);
-				GL11.glVertex3f(bottomRight.x, bottomRight.y,  bottomRight.z);
-				GL11.glTexCoord2d(0, 0);
-				GL11.glNormal3f(bottomLeftNormal.x, bottomLeftNormal.y, bottomLeftNormal.z);
-				GL11.glVertex3f(bottomLeft.x, bottomLeft.y,  bottomLeft.z);
+					if (cells[y][x].getEntity() instanceof EntityWorker)
+						minerTexture.bind();
+
+					if (cells[y][x].getEntity() instanceof EntityBuildingBase) {
+						GL11.glPushMatrix();
+						GL11.glTranslatef(x + 0.5F, y + 0.5F, 1);
+						GL11.glScalef(0.75F, 0.75F, 0.75F);
+						GL11.glRotatef(90F, 1, 0, 0);
+						GL11.glCallList(this.baseID);
+						GL11.glPopMatrix();
+					}
+				}
+				
+				Triangle[] ts = triangles[y][x];
+				GL11.glBegin(GL11.GL_TRIANGLES);
+				for (int t = 0; t < 2; t++)
+				{
+					for (int i = 0; i < 3; i++)
+					{
+						GL11.glTexCoord2d(ts[t].vertices[i].texCoord.x, ts[t].vertices[i].texCoord.y);
+						GL11.glNormal3f(ts[t].vertices[i].normal.x, ts[t].vertices[i].normal.y, ts[t].vertices[i].normal.z);
+						GL11.glVertex3f(ts[t].vertices[i].position.x, ts[t].vertices[i].position.y, ts[t].vertices[i].position.z);
+					}
+				}
 
 				GL11.glEnd();
 			}
