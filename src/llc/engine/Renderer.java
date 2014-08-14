@@ -3,8 +3,9 @@ package llc.engine;
 import java.io.File;
 import java.io.IOException;
 
-import llc.engine.res.Model;
 import llc.engine.res.ObjLoader;
+import llc.engine.res.Program;
+import llc.engine.res.Shader;
 import llc.engine.res.Texture;
 import llc.entity.EntityBuildingBase;
 import llc.entity.EntityWarrior;
@@ -12,6 +13,7 @@ import llc.entity.EntityWorker;
 import llc.logic.Cell;
 import llc.logic.CellType;
 import llc.logic.GameState;
+import llc.util.RenderUtil;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
@@ -25,6 +27,7 @@ public class Renderer {
 	private Texture walkableTexture;
 	
 	private int baseID;
+	private Program shaderProg;
 	
 	public Renderer() {
 		GL11.glClearColor(0F, 0F, 0F, 1F);
@@ -46,6 +49,11 @@ public class Renderer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		this.shaderProg = new Program();
+		this.shaderProg.addShader(new Shader("res/shaders/test.vert", Shader.vertexShader));
+		this.shaderProg.addShader(new Shader("res/shaders/test.frag", Shader.fragmentShader));
+		this.shaderProg.validate();
 	}
 
 	/**
@@ -91,6 +99,8 @@ public class Renderer {
 		GL11.glEnd();
 
 		// Render grid
+		this.shaderProg.bind();
+		
 		Cell[][] cells = gameState.getGrid().getCells();
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glNormal3f(0, 0, 1);
@@ -170,6 +180,7 @@ public class Renderer {
 			}
 		}
 		
+		RenderUtil.unbindShader();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 	}
 }

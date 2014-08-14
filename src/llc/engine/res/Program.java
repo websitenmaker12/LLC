@@ -11,7 +11,7 @@ public class Program {
 		this.programID = ARBShaderObjects.glCreateProgramObjectARB();
 	}
 	
-	public void linkShader(Shader shader) {
+	public void addShader(Shader shader) {
 		if(this.isValidated) return;
 		ARBShaderObjects.glAttachObjectARB(this.programID, shader.getShaderID());
 	}

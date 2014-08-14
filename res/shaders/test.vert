@@ -1,6 +1,8 @@
 varying vec4 vertColor;
+varying vec2 texCoord;
 
 void main() {
-	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
-	vertColor = vec4(0.6, 0.3, 0.4, 1.0);
+	gl_Position = ftransform();
+	vertColor = gl_Color;
+	texCoord = gl_MultiTexCoord0.st;
 }
