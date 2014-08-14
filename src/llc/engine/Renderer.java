@@ -19,12 +19,14 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
 public class Renderer {
-	private final float terrainScale = 5;
+	private static final float sandRegion = 0.1f;
+	private static final float terrainScale = 5;
 	private Texture warriorTexture;
 	private Texture workerTexture;
 	private Texture baseTexture;
 	private Texture solidTexture;
 	private Texture walkableTexture;
+	private Texture sandTexture;
 	
 	private int baseID;
 	private Program shaderProg;
@@ -43,6 +45,7 @@ public class Renderer {
 		baseTexture = new Texture("res/entity/building/Base.png");
 		solidTexture = new Texture("res/texture/water.png");
 		walkableTexture = new Texture("res/texture/grass.png");
+		sandTexture = new Texture("res/texture/sand.png");
 		
 		try {
 			this.baseID = ObjLoader.createDisplayList(ObjLoader.loadModel(new File("res/entity/base/base.obj")));
@@ -109,12 +112,14 @@ public class Renderer {
 				
 				if (cells[y][x].getEntity() == null) 
 				{
+					float h = cells[y][x].getHeight();
 					// Render terrain texture
-					if (cells[y][x].getType() == CellType.SOLID)
+					if (h < -sandRegion)
 						solidTexture.bind();
-
-					if (cells[y][x].getType() == CellType.WALKABLE)
+					else if (h > sandRegion)
 						walkableTexture.bind();
+					else 
+						sandTexture.bind();
 				} 
 				else
 				{

@@ -14,14 +14,20 @@ public class Cell {
 	public final int x,y;
 	public final float height;
 	
+	/**
+	 * Constructor
+	 * @param x
+	 * @param y
+	 * @param height between 1 and -1
+	 */
 	public Cell(int x, int y, float height) {
 		this.x = x;
 		this.y = y;
 		this.height = height;
-		if (height < 0.5) {
+		if (height < 0) {
 			type = CellType.SOLID;
 		}
-		if (height >= 0.5) {
+		if (height >= 0) {
 			type = CellType.WALKABLE;
 		}
 	}
