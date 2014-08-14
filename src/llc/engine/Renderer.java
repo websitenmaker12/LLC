@@ -2,6 +2,9 @@ package llc.engine;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import llc.engine.res.ObjLoader;
 import llc.engine.res.Program;
@@ -41,6 +44,8 @@ public class Renderer {
 	
 	private Program shaderProg;
 	
+	List<GradientPoint> colors = new ArrayList<GradientPoint>();
+
 	public Renderer() {
 		GL11.glClearColor(0F, 0F, 0F, 1F);
 
@@ -62,6 +67,12 @@ public class Renderer {
 		this.baseID = this.loadModel("res/entity/base/base.obj");
 		this.minerID = this.loadModel("res/entity/test/testentity-human_Jeans.obj");
 		this.warriorID = this.loadModel("res/entity/test/testentity-human_Jeans.obj");
+		
+		colors.add(new GradientPoint(-1f, new Vector3f(0f, 0f, 1f)));
+		colors.add(new GradientPoint(-0.25f,new Vector3f(1f, 1f, 1f)));
+		colors.add(new GradientPoint(0.15f,new Vector3f(1f, 1f, 1f)));
+		colors.add(new GradientPoint(0.25f,new Vector3f(0.5f, 1f, 1f)));
+		colors.add(new GradientPoint(0.5f,new Vector3f(1f, 1f, 1f)));
 		
 		this.shaderProg = new Program();
 		this.shaderProg.addShader(new Shader("res/shaders/test.vert", Shader.vertexShader));
@@ -297,10 +308,19 @@ public class Renderer {
 		
 		Triangle[] ts = triangles[y][x];
 		GL11.glBegin(GL11.GL_TRIANGLES);
+		
+		float colorR;
+		float colorG;
+		float colorB;
+		
 		for (int t = 0; t < 2; t++)
 		{
 			for (int i = 0; i < 3; i++)
 			{
+				Vector3f color = getTerrainColorFromHeight(ts[t].vertices[i].position.z / terrainScale);
+				
+				GL11.glColor3f(color.x, color.y, color.z);
+				
 				GL11.glTexCoord2d(ts[t].vertices[i].texCoord.x, ts[t].vertices[i].texCoord.y);
 				GL11.glNormal3f(ts[t].vertices[i].normal.x, ts[t].vertices[i].normal.y, ts[t].vertices[i].normal.z);
 				GL11.glVertex3f(ts[t].vertices[i].position.x, ts[t].vertices[i].position.y, ts[t].vertices[i].position.z);
@@ -355,6 +375,41 @@ public class Renderer {
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		
 		Display.update();
+	}
+	
+	private class GradientPoint {
+		public float height;
+		public Vector3f color;
+		
+		public GradientPoint(float height, Vector3f color) {
+			this.height = height;
+			this.color = color;
+		}
+	}
+		
+	
+	private Vector3f getTerrainColorFromHeight(float height) {
+		
+		// find gradient colors around height
+		int upper;
+		for(upper = 0; upper < colors.size(); upper++) {
+			if(colors.get(upper).height > height)
+				break;
+		}
+		
+		GradientPoint upperColor = colors.get(Math.min(upper, colors.size() - 1));
+		GradientPoint lowerColor = colors.get(Math.max(upper - 1, 0));
+		
+		if(upperColor != lowerColor) {
+			float lowerPart = (height - lowerColor.height) / (upperColor.height - lowerColor.height);
+		
+			Vector3f color = new Vector3f(
+				lowerColor.color.x * (1 - lowerPart) + upperColor.color.x * lowerPart,
+				lowerColor.color.y * (1 - lowerPart) + upperColor.color.y * lowerPart,
+				lowerColor.color.z * (1 - lowerPart) + upperColor.color.z * lowerPart);
+			return color;
+		}
+		else return upperColor.color;
 	}
 	
 }
