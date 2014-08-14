@@ -1,5 +1,7 @@
 package llc.logic;
 
+import java.util.Random;
+
 import llc.entity.Entity;
 import llc.entity.EntityBuildingBase;
 import llc.entity.EntityMovable;
@@ -25,7 +27,6 @@ public class Logic {
 	public Logic(GameState state, Input input) {
 		this.setGameState(state);
 		this.input = input;
-		
 		this.input.addFireListener(new Input.LogicListener() {
 
 			@Override
@@ -86,7 +87,7 @@ public class Logic {
 				if (clickedCell.getEntity().getPlayer() == gameState.activePlayer) {
 					// select
 					selectEntity(clickedCell.getEntity());
-					System.out.println(GameLoader.getEntityDebugInformation(selectedEntity));
+					System.out.println(GameLoader.getEntityDebugInformation(clickedCell.getEntity()));
 					gameState.selectedCell = clickedCell;
 				} else if (selectedEntity instanceof IAttacking && selectedEntity.isCellInRange(clickX, clickY)) {
 					// attack

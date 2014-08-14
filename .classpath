@@ -15,5 +15,6 @@
 			<attribute name="javadoc_location" value="https://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/jnbt-1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
