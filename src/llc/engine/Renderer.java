@@ -258,7 +258,7 @@ public class Renderer {
 				
 				if(e != null) {
 					GL11.glPushMatrix();
-					GL11.glTranslatef(x, y, c.height + 1);
+					GL11.glTranslatef(x + 0.5F, y + 0.5F, c.height + 1);
 					if(e instanceof EntityBuildingBase) {
 						GL11.glCallList(this.baseID);
 					} else if(e instanceof EntityWarrior) {
