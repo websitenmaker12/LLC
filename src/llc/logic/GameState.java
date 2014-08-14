@@ -7,7 +7,7 @@ public class GameState {
 	private Player player1, player2;
 	private Cell townHall1, townHall2;
 	
-	public Cell hoveredCell;
+	public Cell hoveredCell, selectedCell;
 	
 	public int activePlayer;
 	public int moveCount = 0;

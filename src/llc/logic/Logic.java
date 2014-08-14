@@ -9,6 +9,7 @@ import llc.entity.IAttacking;
  * Logic class
  * handles changes to the gamestate
  * @author PetaByteBoy
+ * @author erdlof
  */
 public class Logic {
 
@@ -50,7 +51,7 @@ public class Logic {
 	public void clickCell(int clickX, int clickY) {
 		if (0 <= clickY && clickY < gameState.getGrid().getHeigth() && 0 <= clickX && clickX < gameState.getGrid().getWidth()) {
 			Cell clickedCell = gameState.getGrid().getCellAt(clickX, clickY);
-			
+			gameState.selectedCell = clickedCell;
 			if (clickedCell.containsEntity()) {
 				if (clickedCell.getEntity().getPlayer() == gameState.activePlayer) {
 					// select
@@ -117,7 +118,7 @@ public class Logic {
 		selectedEntity.setY(destY);
 		if (countMove) countMove();
 		selectedEntity = null;
-		gameState.hoveredCell = null;
+		gameState.selectedCell = null;
 	}
 	
 	/**
@@ -131,7 +132,7 @@ public class Logic {
 			gameState.getActivePlayer().addMinerals(50);
 			gameState.setActivePlayer(gameState.getInActivePlayer());
 			gameState.moveCount = 0;
-			gameState.hoveredCell = null;
+			gameState.selectedCell = null;
 		}
 	}
 
