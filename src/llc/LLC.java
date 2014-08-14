@@ -4,6 +4,7 @@ import llc.engine.Camera;
 import llc.engine.GUIRenderer;
 import llc.engine.Profiler;
 import llc.engine.Renderer;
+import llc.engine.Timing;
 import llc.engine.audio.AudioEngine;
 import llc.engine.gui.GUIIngame;
 import llc.input.Input;
@@ -33,6 +34,7 @@ public class LLC {
 	private Logic logic;
 	private GUIRenderer guiRenderer;
 	private AudioEngine audioEngine;
+	private Timing timing;
 	
 	public int width = 0;
 	public int height = 0;
@@ -70,6 +72,7 @@ public class LLC {
 		});
 		
 		this.audioEngine = new AudioEngine();
+		this.timing = new Timing();
 	}
 	
 	/**
@@ -111,7 +114,11 @@ public class LLC {
 		// TODO Remove
 //		this.audioEngine.playMusic(EnumMusic.MUSIC1);
 		
+		this.timing.init();
 		while(this.isRunning) {
+			int delta = this.timing.getDelta();
+			System.out.println(this.timing.getFPS());
+			
 			this.handleDisplayResize();
 			if(Display.isCloseRequested()) this.isRunning = false;
 
@@ -135,6 +142,8 @@ public class LLC {
 			
 			int error = GL11.glGetError();
 			if(error != GL11.GL_NO_ERROR) System.out.println("GLError " + error + ": " + GLU.gluErrorString(error));
+		
+			this.timing.updateFPS();
 		}
 		
 		if(Display.isCreated()) Display.destroy();

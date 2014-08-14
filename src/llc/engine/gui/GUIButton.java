@@ -1,6 +1,7 @@
 package llc.engine.gui;
 
 import llc.engine.GUIRenderer;
+import llc.engine.audio.EnumSounds;
 import llc.engine.res.Texture;
 import llc.util.RenderUtil;
 
@@ -36,6 +37,7 @@ public abstract class GUIButton extends GUIElement {
 	public void update(int x, int y) {
 		if(this.isClicked && !this.wasClicked) {
 			this.onClick(x, y);
+			this.gui.audioEngine.playSound(EnumSounds.BUTTONCLICK);
 		}
 		this.wasClicked = this.isClicked;
 		

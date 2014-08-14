@@ -39,7 +39,7 @@ public class GUI {
 	}
 	
 	/**
-	 * 
+	 * Returns a list of all GUI Elements
 	 */
 	public List<GUIElement> getElements() {
 		return this.elements;

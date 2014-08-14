@@ -40,7 +40,6 @@ public class Renderer {
 
 		warriorTexture = new Texture("res/entity/moveable/warrior/warrior.png");
 		workerTexture = new Texture("res/entity/moveable/miner/miner.png");
-		baseTexture = new Texture("res/entity/building/Base.png");
 		solidTexture = new Texture("res/texture/water.png");
 		walkableTexture = new Texture("res/texture/grass.png");
 		sandTexture = new Texture("res/texture/sand.png");
