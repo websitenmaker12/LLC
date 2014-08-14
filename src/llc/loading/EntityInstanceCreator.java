@@ -37,7 +37,9 @@ public class EntityInstanceCreator implements JsonDeserializer<Entity>, JsonSeri
 			en = new EntityBuildingBase();
 			break;
 		}
-		
+		if (en instanceof EntityMovable) {
+			((EntityMovable) en).setMoveRange(object.get("moveRange").getAsInt());
+		}
 		en.health = object.get("health").getAsInt();
 		en.setPlayer(object.get("player").getAsInt());
 		return en;
