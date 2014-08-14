@@ -24,12 +24,6 @@ public class Sound {
 	 * This function is used to load the sound.
 	 */
 	public Sound loadSound() {
-		AL10.alGenBuffers(buffer);
-		
-		data = WaveData.create(path);
-		AL10.alBufferData(buffer.get(0), data.format, data.data, data.samplerate);
-		data.dispose();
-		
 		return this;
 	}
 	
@@ -46,19 +40,34 @@ public class Sound {
 //		FloatBuffer sourcePos = BufferUtils.createFloatBuffer(3).put(new float[] { posX, posY, posZ });
 //		FloatBuffer listenerPos = BufferUtils.createFloatBuffer(3).put(new float[] { lPosX, lPosY, lPosZ });
 		
+		AL10.alGenBuffers(buffer);
+		
+		data = WaveData.create(path);
+		AL10.alBufferData(buffer.get(0), data.format, data.data, data.samplerate);
+		data.dispose();
+		
 		FloatBuffer sourcePos = BufferUtils.createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f });
 		FloatBuffer listenerPos = BufferUtils.createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f });
+		FloatBuffer sourceVel = BufferUtils.createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f });
+		FloatBuffer listenerVel = BufferUtils.createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f });
+		FloatBuffer listenerOri = BufferUtils.createFloatBuffer(6).put(new float[] { 0.0f, 0.0f, -1.0f,  0.0f, 1.0f, 0.0f });  
+		  
 		
+	    sourcePos.flip();
+	    sourceVel.flip();
+	    listenerPos.flip();
+	    listenerVel.flip();
+	    listenerOri.flip();
 		
-		sourcePos.flip();
-		listenerPos.flip();
+	    AL10.alSourcei(source.get(0), AL10.AL_BUFFER,   buffer.get(0) );
+	    AL10.alSourcef(source.get(0), AL10.AL_PITCH,    1.0f          );
+	    AL10.alSourcef(source.get(0), AL10.AL_GAIN,     1.0f          );
+	    AL10.alSource (source.get(0), AL10.AL_POSITION, sourcePos     );
+	    AL10.alSource (source.get(0), AL10.AL_VELOCITY, sourceVel     );
 		
-		AL10.alSourcei(source.get(0), AL10.AL_BUFFER,   buffer.get(0) );
-		AL10.alSourcef(source.get(0), AL10.AL_PITCH,    1.0f          );
-		AL10.alSourcef(source.get(0), AL10.AL_GAIN,     1.0f          );
-		AL10.alSource (source.get(0), AL10.AL_POSITION, sourcePos     );
-		
-		AL10.alListener(AL10.AL_POSITION,    listenerPos);
+	    AL10.alListener(AL10.AL_POSITION,    listenerPos);
+	    AL10.alListener(AL10.AL_VELOCITY,    listenerVel);
+	    AL10.alListener(AL10.AL_ORIENTATION, listenerOri);
 		
 		AL10.alSourcePlay(source.get(0));
 	}

@@ -18,7 +18,7 @@ public class AudioEngine {
 	public static Music music_1;
 	
 	public AudioEngine() {
-		
+		buttonClick = new Sound("/res/sound/gui_click.wav");
 	}
 	
 	/**
@@ -26,7 +26,7 @@ public class AudioEngine {
 	 * @throws LWJGLException 
 	 */
 	public void initAudioEngine() throws LWJGLException {
-		if(!AL.isCreated()) AL.create();
+		AL.create();
 		loadSounds();
 	}
 	
@@ -34,7 +34,7 @@ public class AudioEngine {
 	 * Function that is used to load sounds.
 	 */
 	private void loadSounds() {
-		buttonClick = new Sound("/res/sound/gui_click.wav");
+		buttonClick.loadSound();
 //		music_1 = new Music("/res/sound/music_1.ogg").loadMusic();
 	}
 	
