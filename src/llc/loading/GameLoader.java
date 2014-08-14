@@ -25,7 +25,7 @@ import com.google.gson.GsonBuilder;
  */
 public class GameLoader {
 	
-	private Gson gson;
+	private static Gson gson;
 	
 	/**
 	 * Creates a new GameLoader, make sure to only do this once!(Performance...)
@@ -168,5 +168,8 @@ public class GameLoader {
 		else {
 			return 0;
 		}
+	}
+	public static String getEntityDebugInformation(Entity en) {
+		return gson.toJson(en);
 	}
 }

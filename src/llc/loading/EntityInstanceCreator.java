@@ -40,6 +40,8 @@ public class EntityInstanceCreator implements JsonDeserializer<Entity>, JsonSeri
 		if (en instanceof EntityMovable) {
 			((EntityMovable) en).setMoveRange(object.get("moveRange").getAsInt());
 		}
+		en.setX(object.get("x").getAsFloat());
+		en.setY(object.get("y").getAsFloat());
 		en.health = object.get("health").getAsInt();
 		en.setPlayer(object.get("player").getAsInt());
 		return en;
@@ -61,7 +63,7 @@ public class EntityInstanceCreator implements JsonDeserializer<Entity>, JsonSeri
 		else if (entity instanceof EntityBuildingBase) {
 			e.getAsJsonObject().addProperty("type", "base");
 		}
-		//System.out.println(e);
+		System.out.println("Deserizaler:" + e);
 		return e;
 	}
 }
