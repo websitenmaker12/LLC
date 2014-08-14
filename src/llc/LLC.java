@@ -8,6 +8,7 @@ import llc.engine.Timing;
 import llc.engine.audio.AudioEngine;
 import llc.engine.gui.GUIIngame;
 import llc.input.Input;
+import llc.input.KeyboardListener;
 import llc.loading.GameLoader;
 import llc.logic.Cell;
 import llc.logic.Logic;
@@ -35,6 +36,7 @@ public class LLC {
 	private GUIRenderer guiRenderer;
 	private AudioEngine audioEngine;
 	private Timing timing;
+	private KeyboardListener keyboardListener;
 	
 	public int width = 0;
 	public int height = 0;
@@ -73,6 +75,7 @@ public class LLC {
 		
 		this.audioEngine = new AudioEngine();
 		this.timing = new Timing();
+		this.keyboardListener = new KeyboardListener();
 	}
 	
 	/**
@@ -123,13 +126,17 @@ public class LLC {
 			this.handleDisplayResize();
 			if(Display.isCloseRequested()) this.isRunning = false;
 
-			// Input updates
-			this.profiler.start("Input updates");
+			// Mouse updates
+			this.profiler.start("Mouse updates");
 			this.mouseX = Mouse.getX();
 			this.mouseY = this.height - Mouse.getY();
 			this.input.mousePos(this.mouseX, this.mouseY);
 			if(Mouse.isButtonDown(0) && !this.lastButtonState) this.input.mouseClick(this.mouseX, this.mouseY);
 			this.lastButtonState = Mouse.isButtonDown(0);
+			
+			// Keyboard updates
+			this.profiler.endStart("Keyboard updates");
+			this.keyboardListener.update();
 			
 			// Rendering
 			this.profiler.endStart("Render game");
