@@ -32,7 +32,7 @@ public class GameLoader {
 	 */
 	public GameLoader() {
 		EntityInstanceCreator enCreator = new EntityInstanceCreator();
-		
+
 		gson = new GsonBuilder().registerTypeAdapter(Entity.class, enCreator).create();
 	}
 	
