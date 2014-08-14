@@ -27,13 +27,18 @@ public class GameLoader {
 	
 	private static Gson gson;
 	
+	static {
+		EntityInstanceCreator enCreator = new EntityInstanceCreator();
+
+		gson = new GsonBuilder().registerTypeAdapter(Entity.class, enCreator).create();
+	}
 	/**
 	 * Creates a new GameLoader, make sure to only do this once!(Performance...)
 	 */
 	public GameLoader() {
-		EntityInstanceCreator enCreator = new EntityInstanceCreator();
-
-		gson = new GsonBuilder().registerTypeAdapter(Entity.class, enCreator).create();
+//		EntityInstanceCreator enCreator = new EntityInstanceCreator();
+//
+//		gson = new GsonBuilder().registerTypeAdapter(Entity.class, enCreator).create();
 	}
 	
 	/**
@@ -95,7 +100,14 @@ public class GameLoader {
 			//System.out.println(content);
 			try {
 				GameState loaded = gson.fromJson(content, GameState.class);
-				
+				Grid g = loaded.getGrid();
+				for (Cell[] cs : g.getCells()) {
+					for (Cell c : cs) {
+						if (c.containsEntity()) {
+							System.out.println("Found entity while loading: " + c.getEntity().toString() + " Json Representation:" + getEntityDebugInformation(c.getEntity()));
+						}
+					}
+				}
 				return loaded;
 			}
 			catch (Exception e) {
@@ -109,9 +121,13 @@ public class GameLoader {
 		return null;
 	}
 	public GameState createNewGame(String map) {
+		return createNewGame(new File(map));
+	}
+	
+	public GameState createNewGame(File map) {
 		GameState state = null;
 		try {
-			BufferedImage img = ImageIO.read(new File(map));
+			BufferedImage img = ImageIO.read(map);
 			int height, width;
 			height = img.getHeight();
 			width = img.getWidth();
@@ -128,6 +144,8 @@ public class GameLoader {
 						cell = new Cell(x, y, getHeight(c));
 						Entity townHall1 = new EntityBuildingBase();
 						townHall1.setPlayer(1);
+						townHall1.setX(x);
+						townHall1.setY(y);
 						cell.setEntity(townHall1);
 						state.setTownHall1Cell(cell);
 					}
@@ -135,6 +153,8 @@ public class GameLoader {
 						cell = new Cell(x, y, getHeight(c));
 						Entity townHall2 = new EntityBuildingBase();
 						townHall2.setPlayer(2);
+						townHall2.setX(x);
+						townHall2.setY(y);
 						cell.setEntity(townHall2);
 						state.setTownHall2Cell(cell);
 					}
@@ -170,6 +190,6 @@ public class GameLoader {
 		}
 	}
 	public static String getEntityDebugInformation(Entity en) {
-		return gson.toJson(en);
+		return en.getClass().getName() + gson.toJson(en);
 	}
 }
