@@ -92,11 +92,30 @@ public class Renderer {
 
 	private void drawWaterSurface(int width, int height) {
 		
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		waterTexture.bind();
+		GL11.glColor4f(1,  1,  1, 0.5f);
+		
+		GL11.glBegin(GL11.GL_TRIANGLES);
+		GL11.glTexCoord2d(0, 1);
+		GL11.glVertex3f(0, 0, 0);
+		GL11.glTexCoord2d(1, 1);
+		GL11.glVertex3f(width, 0, 0);
+		GL11.glTexCoord2d(0, 0);
+		GL11.glVertex3f(0, height, 0);
+
+		GL11.glTexCoord2d(1, 1);
+		GL11.glVertex3f(width, 0, 0);
+		GL11.glTexCoord2d(1, 0);
+		GL11.glVertex3f(width, height, 0);
+		GL11.glTexCoord2d(0, 0);
+		GL11.glVertex3f(height, 0, 0);
+		GL11.glEnd();
+		
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
 	}
 
 	private void drawGrid(GameState gameState, int width, int height) {
-
-		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		this.shaderProg.bind();
 		
@@ -216,6 +235,8 @@ public class Renderer {
 	}
 
 	private void drawCoordinateSystem() {
+		GL11.glDisable(GL11.GL_TEXTURE_2D); // someone leaves textures enabled, fix this
+		
 		// Draw coordinate system
 		GL11.glBegin(GL11.GL_LINES);
 		GL11.glColor3f(1, 0, 0);
