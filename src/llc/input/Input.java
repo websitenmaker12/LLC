@@ -105,7 +105,7 @@ public class Input
 		if (hoveredCell != lastHoveredCell) 
 			{
 			lastHoveredCell = hoveredCell; 
-			//FireNewCellHoveredEvent((int)hoveredCell.x,(int)hoveredCell.y);
+			FireNewCellHoveredEvent((int)hoveredCell.x,(int)hoveredCell.y);
 			}
 	}
 	
@@ -114,7 +114,7 @@ public class Input
 	{
 		public void onScroll(Direction d);
 		public void onCellClicked(int cell_x, int cell_y);
-		//public void onNewCellHovered(int cell_x, int cell_y);
+		public void onNewCellHovered(int cell_x, int cell_y);
 	}
 	
 	public enum Direction
@@ -141,11 +141,11 @@ public class Input
     {
         for (LogicListener hl : listeners) hl.onCellClicked(cell_x,cell_y);
     }
-//    
-//    public void FireNewCellHoveredEvent(int cell_x, int cell_y) 
-//    {
-//        for (LogicListener hl : listeners) hl.onNewCellHovered(cell_x,cell_y);
-//    }
+    
+    public void FireNewCellHoveredEvent(int cell_x, int cell_y) 
+    {
+        for (LogicListener hl : listeners) hl.onNewCellHovered(cell_x,cell_y);
+    }
     
 
 	

@@ -32,6 +32,12 @@ public class Logic {
 
 			@Override
 			public void onScroll(Direction d) {}
+
+			@Override
+			public void onNewCellHovered(int cell_x, int cell_y) {
+				hoverCell(cell_x, cell_y);
+				
+			}
 		});
 	}
 
