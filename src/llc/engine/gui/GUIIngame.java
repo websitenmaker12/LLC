@@ -36,6 +36,13 @@ public class GUIIngame extends GUI {
 				setText("Gold:" + logic.getGameState().getActivePlayer().getMinerals());
 			}
 		});
+		
+		this.elements.add(new GUIText(Display.getWidth() - 200, 20, "Player: ") {
+			@Override
+			public void update(int x, int y) {
+				setText("Player " + logic.getGameState().getActivePlayer().playerID);
+			}
+		});
 	}
 	
 }

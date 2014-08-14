@@ -5,6 +5,7 @@ import llc.entity.EntityBuildingBase;
 import llc.entity.EntityMovable;
 import llc.entity.IAttacking;
 import llc.input.Input;
+import llc.input.Input.Direction;
 
 /**
  * Logic class
@@ -21,6 +22,17 @@ public class Logic {
 	public Logic(GameState state, Input input) {
 		this.setGameState(state);
 		this.input = input;
+		
+		this.input.addFireListener(new Input.LogicListener() {
+
+			@Override
+			public void onCellClicked(int cell_x, int cell_y) {
+				clickCell(cell_x, cell_y);
+			}
+
+			@Override
+			public void onScroll(Direction d) {}
+		});
 	}
 
 	/**
@@ -51,7 +63,7 @@ public class Logic {
 	 * @param clickX The x coord of the clicked cell.
 	 * @param clickY The y coord of the clicked cell.
 	 */
-	public void clickCell(int clickX, int clickY) {
+	private void clickCell(int clickX, int clickY) {
 		if (0 <= clickY && clickY < gameState.getGrid().getHeigth() && 0 <= clickX && clickX < gameState.getGrid().getWidth()) {
 			Cell clickedCell = gameState.getGrid().getCellAt(clickX, clickY);
 			gameState.selectedCell = clickedCell;
