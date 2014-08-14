@@ -1,8 +1,5 @@
 package llc.engine;
 
-import java.io.IOException;
-
-import llc.engine.model.ObjLoader;
 import llc.engine.model.ObjModel;
 import llc.engine.res.Texture;
 import llc.entity.EntityBuildingBase;

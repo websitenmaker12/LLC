@@ -131,9 +131,19 @@ public class Logic {
 	}
 
 	public void buyEntity(Entity entity) {
-		Cell spawnCell = gameState.getGrid().getCellAt(gameState.getActivePlayerTownHallLocation().x + 1, gameState.getActivePlayerTownHallLocation().y);
+		int cx = gameState.getActivePlayerTownHallLocation().x;
+		int cy = gameState.getActivePlayerTownHallLocation().y;
+		Cell spawnCell = null;
 		
-		if (!spawnCell.containsEntity() && entity.getCost() > 0 && gameState.getActivePlayer().getMinerals() >= entity.getCost()) {
+		for(int x = -2; x <= 2; x++) {
+			for(int y = -2; y <= 2; y++) {
+				spawnCell = gameState.getGrid().getCellAt(cx + x, cy + y);
+				if(spawnCell == null || spawnCell.containsEntity() || spawnCell.getType() == CellType.SOLID) continue;
+				else break;
+			}
+		}
+		
+		if (spawnCell != null && !spawnCell.containsEntity() && entity.getCost() > 0 && gameState.getActivePlayer().getMinerals() >= entity.getCost()) {
 			gameState.getActivePlayer().removeMinerals(entity.getCost());
 			entity.setPlayer(gameState.activePlayer);
 			spawnCell.setEntity(entity);

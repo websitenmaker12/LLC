@@ -48,9 +48,12 @@ public abstract class GUIButton extends GUIElement {
 	@Override
 	public void render(GUIRenderer renderer, int x, int y) {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		RenderUtil.clearColor();
+		
 		if(this.isClicked) buttonDown.bind();
 		else if(this.isHover) buttonHover.bind();
 		else button.bind();
+		
 		RenderUtil.drawTexturedQuad(this.posX, this.posY, this.width, this.height);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		
