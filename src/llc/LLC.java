@@ -61,6 +61,10 @@ public class LLC {
 			@Override
 			public void onCellClicked(int cell_x, int cell_y) {
 			}
+
+			@Override
+			public void onNewCellHovered(int cell_x, int cell_y) {
+			}
 		});
 	}
 	
