@@ -29,6 +29,13 @@ public class GUIIngame extends GUI {
 				logic.buyEntity(new EntityWorker());
 			}
 		});
+		
+		this.elements.add(new GUIText(20, 20, "Gold: ") {
+			@Override
+			public void update(int x, int y) {
+				setText("Gold:" + logic.getGameState().getActivePlayer().getMinerals());
+			}
+		});
 	}
 	
 }
