@@ -1,2 +1,3 @@
 - Render health bars above entitys
 - Update font
+- Show FPS

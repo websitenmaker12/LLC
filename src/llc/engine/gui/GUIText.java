@@ -7,15 +7,17 @@ import org.newdawn.slick.Color;
 public abstract class GUIText extends GUIElement {
 	
 	private String text;
+	private Color color;
 	
-	public GUIText(float posX, float posY, String text) {
+	public GUIText(float posX, float posY, String text, Color color) {
 		super(posX, posY);
 		this.setText(text);
+		this.color = color;
 	}
 	
 	@Override
 	public void render(GUIRenderer renderer, int x, int y) {
-		renderer.arial.drawString(this.posX, this.posY, this.getText(), Color.orange);
+		renderer.arial.drawString(this.posX, this.posY, this.getText(), this.color);
 	}
 
 	public String getText() {

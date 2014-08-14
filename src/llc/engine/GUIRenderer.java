@@ -2,15 +2,25 @@ package llc.engine;
 
 import java.awt.Font;
 
+import llc.engine.audio.AudioEngine;
 import llc.engine.gui.GUI;
+import llc.input.Input;
 
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.TrueTypeFont;
 
 public class GUIRenderer {
 
-	private GUI currentGUI;
 	public final TrueTypeFont arial = new TrueTypeFont(new Font("Arial", Font.PLAIN, 24), true);
+	
+	private GUI currentGUI;
+	private Input input;
+	private AudioEngine audioEngine;
+	
+	public GUIRenderer(Input input, AudioEngine audioEngine) {
+		this.input = input;
+		this.audioEngine = audioEngine;
+	}
 	
 	/**
 	 * Renders the current GUI
@@ -41,6 +51,9 @@ public class GUIRenderer {
 		this.closeCurrentGUI();
 		this.currentGUI = gui;
 		this.currentGUI.onOpen();
+		
+		this.input.guiChange(this.currentGUI);
+		this.currentGUI.audioEngine = this.audioEngine;
 	}
 	
 	/**

@@ -5,7 +5,6 @@ import llc.engine.GUIRenderer;
 import llc.engine.Profiler;
 import llc.engine.Renderer;
 import llc.engine.audio.AudioEngine;
-import llc.engine.audio.EnumMusic;
 import llc.engine.gui.GUIIngame;
 import llc.input.Input;
 import llc.loading.GameLoader;
@@ -82,7 +81,7 @@ public class LLC {
 		this.profiler.endStart("Setup OpenGL");
 		this.renderer = new Renderer();
 		this.profiler.endStart("Setup GUI Renderer");
-		this.guiRenderer = new GUIRenderer();
+		this.guiRenderer = new GUIRenderer(this.input, this.audioEngine);
 		this.guiRenderer.openGUI(new GUIIngame(this.logic));
 		this.profiler.endStart("Setup Audio Engine");
 		this.audioEngine.initAudioEngine();
@@ -110,7 +109,7 @@ public class LLC {
 		this.isRunning = true;
 		
 		// TODO Remove
-		this.audioEngine.playMusic(EnumMusic.MUSIC1);
+//		this.audioEngine.playMusic(EnumMusic.MUSIC1);
 		
 		while(this.isRunning) {
 			this.handleDisplayResize();

@@ -11,7 +11,6 @@ import llc.entity.EntityBuildingBase;
 import llc.entity.EntityWarrior;
 import llc.entity.EntityWorker;
 import llc.logic.Cell;
-import llc.logic.CellType;
 import llc.logic.GameState;
 import llc.util.RenderUtil;
 
@@ -19,12 +18,13 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
 public class Renderer {
-	private final float terrainScale = 5;
+	private static final float sandRegion = 0.1f;
+	private static final float terrainScale = 5;
 	private Texture warriorTexture;
 	private Texture workerTexture;
-	private Texture baseTexture;
 	private Texture solidTexture;
 	private Texture walkableTexture;
+	private Texture sandTexture;
 	
 	private int baseID;
 	private Program shaderProg;
@@ -43,6 +43,7 @@ public class Renderer {
 		baseTexture = new Texture("res/entity/building/Base.png");
 		solidTexture = new Texture("res/texture/water.png");
 		walkableTexture = new Texture("res/texture/grass.png");
+		sandTexture = new Texture("res/texture/sand.png");
 		
 		try {
 			this.baseID = ObjLoader.createDisplayList(ObjLoader.loadModel(new File("res/entity/base/base.obj")));
@@ -83,21 +84,12 @@ public class Renderer {
 				camera.pos.z + camera.viewDir.z, camera.up.x, camera.up.y,
 				camera.up.z);
 
-		// Draw coordinate system
-		GL11.glBegin(GL11.GL_LINES);
-		GL11.glColor3f(1, 0, 0);
-		GL11.glVertex3f(0, 0, 0);
-		GL11.glVertex3f(10, 0, 0);
+		drawCoordinateSystem();
 
-		GL11.glColor3f(0, 1, 0);
-		GL11.glVertex3f(0, 0, 0);
-		GL11.glVertex3f(0, 10, 0);
+		renderGrid(gameState, width, heigth);
+	}
 
-		GL11.glColor3f(0, 0, 1);
-		GL11.glVertex3f(0, 0, 0);
-		GL11.glVertex3f(0, 0, 10);
-		GL11.glEnd();
-
+	private void renderGrid(GameState gameState, int width, int heigth) {
 		// Render grid
 		this.shaderProg.bind();
 		
@@ -118,12 +110,14 @@ public class Renderer {
 				
 				if (cells[y][x].getEntity() == null) 
 				{
+					float h = cells[y][x].getHeight();
 					// Render terrain texture
-					if (cells[y][x].getType() == CellType.SOLID)
+					if (h < -sandRegion)
 						solidTexture.bind();
-
-					if (cells[y][x].getType() == CellType.WALKABLE)
+					else if (h > sandRegion)
 						walkableTexture.bind();
+					else 
+						sandTexture.bind();
 				} 
 				else
 				{
@@ -189,5 +183,22 @@ public class Renderer {
 		
 		RenderUtil.unbindShader();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
+	}
+
+	private void drawCoordinateSystem() {
+		// Draw coordinate system
+		GL11.glBegin(GL11.GL_LINES);
+		GL11.glColor3f(1, 0, 0);
+		GL11.glVertex3f(0, 0, 0);
+		GL11.glVertex3f(10, 0, 0);
+
+		GL11.glColor3f(0, 1, 0);
+		GL11.glVertex3f(0, 0, 0);
+		GL11.glVertex3f(0, 10, 0);
+
+		GL11.glColor3f(0, 0, 1);
+		GL11.glVertex3f(0, 0, 0);
+		GL11.glVertex3f(0, 0, 10);
+		GL11.glEnd();
 	}
 }

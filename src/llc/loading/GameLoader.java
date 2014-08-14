@@ -155,15 +155,15 @@ public class GameLoader {
 	private float getHeight(Color c) {
 		if (c.getBlue() == c.getGreen() && c.getRed() == c.getBlue()) {
 			//Normal cell!
-			return ((float)c.getBlue())/(float)255;
+			return (((float)c.getBlue())/255f)*2-1;
 		}
 		if (c.getBlue() == 0 && c.getRed() == 0) {
 			//Base of player 1!
-			return ((float)c.getGreen())/(float)255;
+			return (((float)c.getGreen())/255f)*2-1;
 		}
 		if (c.getBlue() == 0 && c.getGreen() == 0) {
 			//Base of player 2!
-			return ((float)c.getRed())/(float)255;
+			return (((float)c.getRed())/255f)*2-1;
 		}
 		else {
 			return 0;

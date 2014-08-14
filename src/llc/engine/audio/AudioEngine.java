@@ -1,5 +1,7 @@
 package llc.engine.audio;
 
+import java.io.IOException;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.openal.AL;
 
@@ -24,7 +26,7 @@ public class AudioEngine {
 	 * @throws LWJGLException 
 	 */
 	public void initAudioEngine() throws LWJGLException {
-		AL.create();
+		if(AL.isCreated()) AL.create();
 		loadSounds();
 	}
 	
@@ -33,7 +35,7 @@ public class AudioEngine {
 	 */
 	private void loadSounds() {
 		buttonClick = new Sound("/res/sound/gui_click.wav");
-		music_1 = new Music("/res/sound/music_1.ogg");
+//		music_1 = new Music("/res/sound/music_1.ogg").loadMusic();
 	}
 	
 	/**
@@ -65,7 +67,7 @@ public class AudioEngine {
 	 * @param music The {@link EnumMusic} to be played.
 	 */
 	public void playMusic(EnumMusic music) {
-		if (music == EnumMusic.MUSIC1) music_1.playMusic();
+		if (music == EnumMusic.MUSIC1 & music_1 != null) music_1.playMusic();
 	}
 	
 	/**

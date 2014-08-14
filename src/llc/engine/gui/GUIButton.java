@@ -11,8 +11,6 @@ import org.newdawn.slick.opengl.TextureImpl;
 
 public abstract class GUIButton extends GUIElement {
 
-	private float width;
-	private float height;
 	private String text;
 	
 	private boolean isHover = false;
@@ -29,16 +27,16 @@ public abstract class GUIButton extends GUIElement {
 		buttonDown = new Texture("res/gui/button_down.png");
 	}
 	
-	public GUIButton(float posX, float posY, float width, float height, String text) {
-		super(posX, posY);
-		this.width = width;
-		this.height = height;
+	public GUIButton(GUI gui, float posX, float posY, float width, float height, String text) {
+		super(gui, posX, posY, width, height);
 		this.text = text;
 	}
 
 	@Override
 	public void update(int x, int y) {
-		if(this.isClicked && !this.wasClicked) this.onClick(x, y);
+		if(this.isClicked && !this.wasClicked) {
+			this.onClick(x, y);
+		}
 		this.wasClicked = this.isClicked;
 		
 		this.isHover = x >= this.posX && x <= this.posX + this.width && y >= this.posY && y <= this.posY + this.height;

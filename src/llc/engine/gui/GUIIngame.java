@@ -5,6 +5,7 @@ import llc.entity.EntityWorker;
 import llc.logic.Logic;
 
 import org.lwjgl.opengl.Display;
+import org.newdawn.slick.Color;
 
 public class GUIIngame extends GUI {
 
@@ -30,21 +31,21 @@ public class GUIIngame extends GUI {
 			}
 		});
 		
-		this.elements.add(new GUIText(20, 20, "Gold: ") {
+		this.elements.add(new GUIText(20, 20, "Gold: ", Color.orange) {
 			@Override
 			public void update(int x, int y) {
 				setText("Gold:" + logic.getGameState().getActivePlayer().getMinerals());
 			}
 		});
 		
-		this.elements.add(new GUIText(Display.getWidth() - 110, 20, "Player: ") {
+		this.elements.add(new GUIText(Display.getWidth() - 110, 20, "Player: ", Color.orange) {
 			@Override
 			public void update(int x, int y) {
 				setText("Player " + logic.getGameState().getActivePlayer().playerID);
 			}
 		});
 		
-		this.elements.add(new GUIText(Display.getWidth() / 2 - 40, 20, "Turns left: ") {
+		this.elements.add(new GUIText(Display.getWidth() / 2 - 40, 20, "Turns left: ", Color.orange) {
 			@Override
 			public void update(int x, int y) {
 				setText("Turns left: " + (logic.subTurns - logic.getGameState().moveCount) + "/" + logic.subTurns);
