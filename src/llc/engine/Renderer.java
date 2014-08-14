@@ -11,7 +11,6 @@ import llc.entity.EntityBuildingBase;
 import llc.entity.EntityWarrior;
 import llc.entity.EntityWorker;
 import llc.logic.Cell;
-import llc.logic.CellType;
 import llc.logic.GameState;
 import llc.util.RenderUtil;
 
@@ -23,7 +22,6 @@ public class Renderer {
 	private static final float terrainScale = 5;
 	private Texture warriorTexture;
 	private Texture workerTexture;
-	private Texture baseTexture;
 	private Texture solidTexture;
 	private Texture walkableTexture;
 	private Texture sandTexture;
