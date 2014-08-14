@@ -21,12 +21,14 @@ public class Sound {
 	/**
 	 * This function is used to load the sound.
 	 */
-	public void loadSound() {
+	public Sound loadSound() {
 		AL10.alGenBuffers(buffer);
 		
 		data = WaveData.create("res/sound/buttonClick.wav");
 		AL10.alBufferData(buffer.get(0), data.format, data.data, data.samplerate);
 		data.dispose();
+		
+		return this;
 	}
 	
 	/**

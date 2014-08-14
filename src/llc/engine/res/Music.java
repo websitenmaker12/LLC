@@ -22,10 +22,10 @@ public class Music {
 	
 	/**
 	 * This function is used to load the audio file.
-	 * @throws IOException
 	 */
-	public void loadMusic() throws IOException {
+	public Music loadMusic() throws IOException {
 		music = AudioLoader.getStreamingAudio("OGG", ResourceLoader.getResource(path));
+		return this;
 	}
 	
 	/**

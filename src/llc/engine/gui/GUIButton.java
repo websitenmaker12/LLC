@@ -38,7 +38,9 @@ public abstract class GUIButton extends GUIElement {
 
 	@Override
 	public void update(int x, int y) {
-		if(this.isClicked && !this.wasClicked) this.onClick(x, y);
+		if(this.isClicked && !this.wasClicked) {
+			this.onClick(x, y);
+		}
 		this.wasClicked = this.isClicked;
 		
 		this.isHover = x >= this.posX && x <= this.posX + this.width && y >= this.posY && y <= this.posY + this.height;
