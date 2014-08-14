@@ -110,7 +110,7 @@ public class LLC {
 		this.isRunning = true;
 		
 		// TODO Remove
-		this.audioEngine.playMusic(EnumMusic.MUSIC1);
+//		this.audioEngine.playMusic(EnumMusic.MUSIC1);
 		
 		while(this.isRunning) {
 			this.handleDisplayResize();
