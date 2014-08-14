@@ -14,13 +14,18 @@ import llc.logic.Cell;
 import llc.logic.GameState;
 import llc.util.RenderUtil;
 
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Renderer {
+	
 	private static final float sandRegion = 0.1f;
 	private static final float terrainScale = 5;
+	
+	private Texture loadingScreen;
+	
 	private Texture warriorTexture;
 	private Texture minerTexture;
 	private Texture waterTexture;
@@ -39,6 +44,9 @@ public class Renderer {
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glDepthFunc(GL11.GL_LEQUAL);
 
+		this.loadingScreen = new Texture("res/gui/logo.png");
+		this.drawLoadingScreen(Display.getWidth(), Display.getHeight());
+		
 		warriorTexture = new Texture("res/entity/moveable/warrior/warrior.png");
 		minerTexture = new Texture("res/entity/moveable/miner/miner.png");
 		waterTexture = new Texture("res/texture/water.png");
@@ -252,4 +260,22 @@ public class Renderer {
 		GL11.glVertex3f(0, 0, 10);
 		GL11.glEnd();
 	}
+	
+	private void drawLoadingScreen(int width, int height) {
+		GL11.glMatrixMode(GL11.GL_PROJECTION);
+		GL11.glLoadIdentity();
+		GL11.glOrtho(0, width, height, 0, -1, 1);
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		GL11.glLoadIdentity();
+		GL11.glViewport(0, 0, width, height);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		this.loadingScreen.bind();
+		RenderUtil.drawTexturedQuad(0, 0, width, height);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		
+		Display.update();
+	}
+	
 }

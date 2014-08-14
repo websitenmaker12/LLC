@@ -117,7 +117,7 @@ public class LLC {
 		this.timing.init();
 		while(this.isRunning) {
 			int delta = this.timing.getDelta();
-//			System.out.println(this.timing.getFPS());
+			Display.setTitle("FPS " + String.valueOf(this.timing.getFPS())); // TODO Remove
 			
 			this.handleDisplayResize();
 			if(Display.isCloseRequested()) this.isRunning = false;
