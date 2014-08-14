@@ -91,11 +91,10 @@ public class Renderer {
 
 	private void renderGrid(GameState gameState, int width, int heigth) {
 		// Render grid
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		this.shaderProg.bind();
 		
 		Cell[][] cells = gameState.getGrid().getCells();
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glNormal3f(0, 0, 1);
 		for (int y = 0; y < cells.length; y++) 
 		{
 			for (int x = 0; x < cells[0].length; x++) 
@@ -150,13 +149,10 @@ public class Renderer {
 				heights[2][1] = y < heigth - 1 ? cells[y + 1][x].height : currentHeight;
 				heights[2][2] = y < heigth -1 && x < width - 1 ? cells[y + 1][x + 1].height : currentHeight;
 				
-				
 				float topRightHeight = (heights[0][1] + heights[0][2] + heights[1][1] + heights[1][2]) / 4f;
 				float topLeftHeight = (heights[0][0] + heights[0][1] + heights[1][0] + heights[1][1]) / 4f;
 				float bottomRightHeight = (heights[1][1] + heights[1][2] + heights[2][1] + heights[2][2]) / 4f;
 				float bottomLeftHeight = (heights[1][0] + heights[1][1] + heights[2][1] + heights[2][0]) / 4f;
-				
-				//Vector3f topRightNormal = calcNormal(x + 1, y, heights[0][1], heights[0][2], heights[1][1], heights[1][2]);
 				
 				topRightHeight = (topRightHeight - 0.5f) * terrainScale;
 				topLeftHeight = (topLeftHeight - 0.5f) * terrainScale;
@@ -168,20 +164,30 @@ public class Renderer {
 				Vector3f bottomLeft = new Vector3f(x, y + 1, bottomLeftHeight);
 				Vector3f bottomRight = new Vector3f(x + 1, y + 1, bottomRightHeight);
 				
+				Vector3f topLeftNormal = calcNormal(x, y, heights[0][0], heights[0][1], heights[1][0], heights[1][1]);
+				Vector3f topRightNormal = calcNormal(x + 1, y, heights[0][1], heights[0][2], heights[1][1], heights[1][2]);
+				Vector3f bottomLeftNormal = calcNormal(x, y + 1, heights[1][0], heights[1][1], heights[2][1], heights[2][0]);
+				Vector3f bottomRightNormal = calcNormal(x + 1, y + 1, heights[1][0], heights[1][1], heights[2][1], heights[2][0]);
 				
 				GL11.glBegin(GL11.GL_TRIANGLES);
 				GL11.glTexCoord2d(0, 1);
+				GL11.glNormal3f(topLeftNormal.x, topLeftNormal.y, topLeftNormal.z);
 				GL11.glVertex3f(topLeft.x, topLeft.y,  topLeft.z);
 				GL11.glTexCoord2d(1, 1);
+				GL11.glNormal3f(topRightNormal.x, topRightNormal.y, topRightNormal.z);
 				GL11.glVertex3f(topRight.x, topRight.y,  topRight.z);
 				GL11.glTexCoord2d(0, 0);
+				GL11.glNormal3f(bottomLeftNormal.x, bottomLeftNormal.y, bottomLeftNormal.z);
 				GL11.glVertex3f(bottomLeft.x, bottomLeft.y,  bottomLeft.z);
 
 				GL11.glTexCoord2d(1, 1);
+				GL11.glNormal3f(topRightNormal.x, topRightNormal.y, topRightNormal.z);
 				GL11.glVertex3f(topRight.x, topRight.y,  topRight.z);
 				GL11.glTexCoord2d(1, 0);
+				GL11.glNormal3f(bottomRightNormal.x, bottomRightNormal.y, bottomRightNormal.z);
 				GL11.glVertex3f(bottomRight.x, bottomRight.y,  bottomRight.z);
 				GL11.glTexCoord2d(0, 0);
+				GL11.glNormal3f(bottomLeftNormal.x, bottomLeftNormal.y, bottomLeftNormal.z);
 				GL11.glVertex3f(bottomLeft.x, bottomLeft.y,  bottomLeft.z);
 
 				GL11.glEnd();
@@ -192,16 +198,16 @@ public class Renderer {
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 	}
 
-//	private Vector3f calcNormal(int i, int y, float f, float g, float h, float j) {
-//		Vector3f topLeft = new Vector3f(x, y,  topLeftHeight);
-//		Vector3f topRight = new Vector3f(x + 1, y, topRightHeight);
-//		Vector3f bottomLeft = new Vector3f(x, y + 1, bottomLeftHeight);
-//		Vector3f bottomRight = new Vector3f(x + 1, y + 1, bottomRightHeight);
-//		Vector3f diagonal1 = Vector3f.sub(topLeft, bottomRight, null);
-//		Vector3f diagonal2 = Vector3f.sub(topRight, bottomLeft, null);
-//		Vector3f normal = Vector3f.cross(diagonal2, diagonal1, null).normalise(null);
-//		GL11.glNormal3f(normal.x, normal.y, normal.z);
-//	}
+	private Vector3f calcNormal(int x, int y, float topLeftHeight, float topRightHeight, float bottomLeftHeight, float bottomRightHeight) {
+		Vector3f topLeft = new Vector3f(x, y,  topLeftHeight);
+		Vector3f topRight = new Vector3f(x + 1, y, topRightHeight);
+		Vector3f bottomLeft = new Vector3f(x, y + 1, bottomLeftHeight);
+		Vector3f bottomRight = new Vector3f(x + 1, y + 1, bottomRightHeight);
+		Vector3f diagonal1 = Vector3f.sub(topLeft, bottomRight, null);
+		Vector3f diagonal2 = Vector3f.sub(topRight, bottomLeft, null);
+		Vector3f normal = Vector3f.cross(diagonal1, diagonal2, null).normalise(null);
+		return normal;
+	}
 
 	private void drawCoordinateSystem() {
 		// Draw coordinate system

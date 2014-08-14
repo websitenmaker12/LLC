@@ -3,12 +3,12 @@
 const vec3 lightPos = vec3(-10.0, 10.0, 10.0);
 const vec4 ambient = vec4(0.7, 0.7, 0.7, 1.0);
 const vec4 diffuse = vec4(0.8, 0.8, 0.8, 1.0);
-const vec4 specular = vec4(0.7, 0.7, 0.7, 1.0);
+const vec4 specular = vec4(0.4, 0.4, 0.4, 1.0);
 
 const vec4 materialAmbient = vec4(1.0, 1.0, 1.0, 1.0);
 const vec4 materialDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
 const vec4 materialSpecular = vec4(1.0, 1.0, 1.0, 1.0);
-const float shininess = 20.0;
+const float shininess = 4;
 
 varying vec4 vertColor;
 varying vec3 normal;
@@ -19,6 +19,8 @@ uniform sampler2D tex;
 
 vec4 phongShade()
 {
+	normal = normalize(normal);
+
    vec3 L = normalize(lightPos - vertex);
    vec3 E = normalize(-vertex); // we are in Eye Coordinates, so EyePos is (0,0,0)
    vec3 R = normalize(-reflect(L, normal));
@@ -41,4 +43,5 @@ vec4 phongShade()
 void main() {
 	vec4 texColor = texture2D(tex, texCoord);
 	gl_FragColor = texColor * vertColor * phongShade();
+	//gl_FragColor = normal;
 }
