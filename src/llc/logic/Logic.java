@@ -56,6 +56,11 @@ public class Logic {
 		this.gameState = gameState;
 	}
 	
+	/**
+	 * Handles if the mouse hovers above a cell
+	 * @param hoverX
+	 * @param hoverY
+	 */
 	public void hoverCell(int hoverX, int hoverY) {
 		if (0 <= hoverY && hoverY < gameState.getGrid().getHeigth() && 0 <= hoverX && hoverX < gameState.getGrid().getWidth()) {
 			Cell hoveredCell = gameState.getGrid().getCellAt(hoverX, hoverY);
