@@ -22,9 +22,9 @@ public class Renderer {
 	private static final float sandRegion = 0.1f;
 	private static final float terrainScale = 5;
 	private Texture warriorTexture;
-	private Texture workerTexture;
-	private Texture solidTexture;
-	private Texture walkableTexture;
+	private Texture minerTexture;
+	private Texture waterTexture;
+	private Texture grassTexture;
 	private Texture sandTexture;
 	
 	private int baseID;
@@ -40,9 +40,9 @@ public class Renderer {
 		GL11.glDepthFunc(GL11.GL_LEQUAL);
 
 		warriorTexture = new Texture("res/entity/moveable/warrior/warrior.png");
-		workerTexture = new Texture("res/entity/moveable/miner/miner.png");
-		solidTexture = new Texture("res/texture/water.png");
-		walkableTexture = new Texture("res/texture/grass.png");
+		minerTexture = new Texture("res/entity/moveable/miner/miner.png");
+		waterTexture = new Texture("res/texture/water.png");
+		grassTexture = new Texture("res/texture/grass.png");
 		sandTexture = new Texture("res/texture/sand.png");
 		
 		try {
@@ -82,14 +82,20 @@ public class Renderer {
 				camera.pos.z + camera.viewDir.z, camera.up.x, camera.up.y,
 				camera.up.z);
 
+		int width = gameState.getGrid().getWidth();
+		int height = gameState.getGrid().getHeigth();
+		
 		drawCoordinateSystem();
-
-		renderGrid(gameState);
+		drawGrid(gameState, width, height);
+		drawWaterSurface(width, height);
 	}
 
-	private void renderGrid(GameState gameState) {
-		int width = gameState.getGrid().getWidth();
-		int heigth = gameState.getGrid().getHeigth();
+	private void drawWaterSurface(int width, int height) {
+		
+	}
+
+	private void drawGrid(GameState gameState, int width, int height) {
+
 		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		this.shaderProg.bind();
@@ -112,9 +118,9 @@ public class Renderer {
 					float h = cells[y][x].getHeight();
 					// Render terrain texture
 					if (h < -sandRegion)
-						solidTexture.bind();
+						waterTexture.bind();
 					else if (h > sandRegion)
-						walkableTexture.bind();
+						grassTexture.bind();
 					else 
 						sandTexture.bind();
 				} 
@@ -125,7 +131,7 @@ public class Renderer {
 						warriorTexture.bind();
 
 					if (cells[y][x].getEntity() instanceof EntityWorker)
-						workerTexture.bind();
+						minerTexture.bind();
 
 					if (cells[y][x].getEntity() instanceof EntityBuildingBase) {
 						GL11.glPushMatrix();
@@ -145,9 +151,9 @@ public class Renderer {
 				heights[1][0] = x > 0 ? cells[y][x - 1].height : currentHeight;
 				heights[1][1] = currentHeight;
 				heights[1][2] = x < width - 1 ? cells[y][x + 1].height : currentHeight;
-				heights[2][0] = y < heigth - 1 && x > 0 ? cells[y + 1][x - 1].height : currentHeight;
-				heights[2][1] = y < heigth - 1 ? cells[y + 1][x].height : currentHeight;
-				heights[2][2] = y < heigth -1 && x < width - 1 ? cells[y + 1][x + 1].height : currentHeight;
+				heights[2][0] = y < height - 1 && x > 0 ? cells[y + 1][x - 1].height : currentHeight;
+				heights[2][1] = y < height - 1 ? cells[y + 1][x].height : currentHeight;
+				heights[2][2] = y < height -1 && x < width - 1 ? cells[y + 1][x + 1].height : currentHeight;
 				
 				float topRightHeight = (heights[0][1] + heights[0][2] + heights[1][1] + heights[1][2]) / 4f;
 				float topLeftHeight = (heights[0][0] + heights[0][1] + heights[1][0] + heights[1][1]) / 4f;
