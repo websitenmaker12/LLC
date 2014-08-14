@@ -84,7 +84,7 @@ public class Input
 	public void mouseClick(int x, int y)
 	{		
 		Vector2f Ray = rayCast(x, y);
-		//FireCellClickedEvent((int) Ray.x,(int) Ray.y);
+		FireCellClickedEvent((int) Ray.x,(int) Ray.y);
 	}
 	
 	public void mousePos(int x, int y)
