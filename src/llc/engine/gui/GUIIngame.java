@@ -2,6 +2,7 @@ package llc.engine.gui;
 
 import llc.entity.EntityWarrior;
 import llc.entity.EntityWorker;
+import llc.loading.GameLoader;
 import llc.logic.Logic;
 
 import org.lwjgl.opengl.Display;
@@ -10,9 +11,11 @@ import org.newdawn.slick.Color;
 public class GUIIngame extends GUI {
 
 	private Logic logic;
+	private GameLoader gameLoader;
 	
-	public GUIIngame(Logic logic) {
+	public GUIIngame(Logic logic, GameLoader gameLoader) {
 		this.logic = logic;
+		this.gameLoader = gameLoader;
 	}
 	
 	@Override
@@ -28,6 +31,18 @@ public class GUIIngame extends GUI {
 		this.elements.add(new GUIButton(this, 20, Display.getHeight() - 110, 200, 35, "Buy Worker") {
 			public void onClick(int x, int y) {
 				logic.buyEntity(new EntityWorker());
+			}
+		});
+		
+		this.elements.add(new GUIButton(this, Display.getWidth() - 220, Display.getHeight() - 110, 200, 35, "Save") {
+			public void onClick(int x, int y) {
+				gameLoader.saveToFile(logic.getGameState(), "save.llcsav");
+			}
+		});
+		
+		this.elements.add(new GUIButton(this, Display.getWidth() - 220, Display.getHeight() - 55, 200, 35, "Load") {
+			public void onClick(int x, int y) {
+				logic.setGameState(gameLoader.loadFromFile("save.llcsav"));
 			}
 		});
 		

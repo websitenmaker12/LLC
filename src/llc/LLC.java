@@ -89,7 +89,7 @@ public class LLC {
 		this.renderer.generateGridGeometry(this.logic.getGameState());
 		this.profiler.endStart("Setup GUI Renderer");
 		this.guiRenderer = new GUIRenderer(this.input, this.audioEngine);
-		this.guiRenderer.openGUI(new GUIIngame(this.logic));
+		this.guiRenderer.openGUI(new GUIIngame(this.logic, gameLoader));
 		this.profiler.endStart("Setup Audio Engine");
 		this.audioEngine.initAudioEngine();
 		this.profiler.end();
