@@ -59,6 +59,7 @@ public class Logic {
 				moveSelectedEntity(clickX, clickY, true);
 			}
 		}
+		System.out.println(selectedEntity);
 	}
 
 	/**
@@ -117,17 +118,20 @@ public class Logic {
 			gameState.getActivePlayer().addMinerals(50);
 			gameState.setActivePlayer(gameState.getInActivePlayer());
 			gameState.moveCount = 0;
+			selectedEntity = null;
+			gameState.hoveredCell = null;
 		}
 	}
 
 	public void buyEntity(Entity entity) {
-		
 		Cell spawnCell = gameState.getGrid().getCellAt(gameState.getActivePlayerTownHallLocation().x + 1, gameState.getActivePlayerTownHallLocation().y);
 		
 		if (!spawnCell.containsEntity() && entity.getCost() > 0) {
 			gameState.getActivePlayer().removeMinerals(entity.getCost());
 			entity.setPlayer(gameState.activePlayer);
 			spawnCell.setEntity(entity);
+			entity.setX(spawnCell.x);
+			entity.setY(spawnCell.y);
 		}
 	}
 }

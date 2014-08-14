@@ -1,5 +1,8 @@
 package llc.engine;
 
+import java.io.IOException;
+
+import llc.engine.model.ObjLoader;
 import llc.engine.model.ObjModel;
 import llc.engine.res.Texture;
 import llc.entity.EntityBuildingBase;
@@ -37,11 +40,11 @@ public class Renderer {
 		solidTexture = new Texture("res/texture/water.png");
 		walkableTexture = new Texture("res/texture/grass.png");
 
-		// try {
-		// this.modelBase = ObjLoader.loadObj("res/entity/base/base.obj");
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// }
+		 try {
+		 this.modelBase = ObjLoader.loadObj("res/entity/base/base.obj");
+		 } catch (IOException e) {
+		 e.printStackTrace();
+		 }
 	}
 
 	/**
@@ -134,6 +137,7 @@ public class Renderer {
 				GL11.glEnd();
 			}
 		}
+		
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		// System.out.println(GL11.glGetError());
 	}
