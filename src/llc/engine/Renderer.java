@@ -96,6 +96,8 @@ public class Renderer {
 		int width = gameState.getGrid().getWidth();
 		int height = gameState.getGrid().getHeigth();
 		
+		GL11.glCallList(this.baseID);
+		
 		drawCoordinateSystem();
 		drawGrid(gameState, width, height);
 		drawHoveredAndSelectedCells(gameState);
