@@ -1,5 +1,7 @@
 package llc.logic;
 
+import java.util.Random;
+
 import llc.entity.Entity;
 import llc.entity.EntityBuildingBase;
 import llc.entity.EntityMovable;
@@ -25,7 +27,7 @@ public class Logic {
 	public Logic(GameState state, Input input) {
 		this.setGameState(state);
 		this.input = input;
-		
+		cellWaveLoader();
 		this.input.addFireListener(new Input.LogicListener() {
 
 			@Override
@@ -86,7 +88,7 @@ public class Logic {
 				if (clickedCell.getEntity().getPlayer() == gameState.activePlayer) {
 					// select
 					selectEntity(clickedCell.getEntity());
-					System.out.println(GameLoader.getEntityDebugInformation(selectedEntity));
+					System.out.println(GameLoader.getEntityDebugInformation(clickedCell.getEntity()));
 					gameState.selectedCell = clickedCell;
 				} else if (selectedEntity instanceof IAttacking && selectedEntity.isCellInRange(clickX, clickY)) {
 					// attack
@@ -189,5 +191,29 @@ public class Logic {
 			entity.setY(spawnCell.y);
 			clickCell(spawnCell.x,spawnCell.y);
 		}
+	}
+	private void cellWaveLoader() {
+		new Thread() {
+			@Override
+			public void run() {
+				Grid g = gameState.getGrid();
+				Random r = new Random();
+				Cell c = g.getCellAt((int)(Math.random() * g.getWidth()), (int) (Math.random() * g.getHeigth()));
+				if (r.nextBoolean()) {
+					c.height = r.nextFloat();
+				}
+				else {
+					c.height = r.nextFloat() * -1;
+				}
+				pennen(10);
+			}
+			private void pennen(long m) {
+				try {
+					sleep(m);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}.run();
 	}
 }
