@@ -19,7 +19,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
 public class Renderer {
-
+	private final float terrainScale = 5;
 	private Texture warriorTexture;
 	private Texture workerTexture;
 	private Texture baseTexture;
@@ -111,6 +111,8 @@ public class Renderer {
 				// highlight hovered cell
 				if (cells[y][x] == gameState.hoveredCell)
 					GL11.glColor3f(1, 0.5f, 0.5f);
+				else if (cells[y][x] == gameState.selectedCell)
+					GL11.glColor3f(0.5f, 1, 0.8f);
 				else
 					GL11.glColor3f(1, 1, 1);
 				
@@ -161,9 +163,14 @@ public class Renderer {
 				float bottomRightHeight = (heights[1][1] + heights[1][2] + heights[2][1] + heights[2][2]) / 4f;
 				float bottomLeftHeight = (heights[1][0] + heights[1][1] + heights[2][1] + heights[2][0]) / 4f;
 				
+				topRightHeight = (topRightHeight-0.5f) * terrainScale;
+				topLeftHeight = (topLeftHeight-0.5f) * terrainScale;
+				bottomRightHeight = (bottomRightHeight-0.5f) * terrainScale;
+				bottomLeftHeight = (bottomLeftHeight-0.5f) * terrainScale;
+				
 				GL11.glBegin(GL11.GL_TRIANGLES);
 				GL11.glTexCoord2d(0, 1);
-				GL11.glVertex3f(x, y, topLeftHeight);
+				GL11.glVertex3f(x, y,  topLeftHeight);
 				GL11.glTexCoord2d(1, 1);
 				GL11.glVertex3f(x + 1, y, topRightHeight);
 				GL11.glTexCoord2d(0, 0);
