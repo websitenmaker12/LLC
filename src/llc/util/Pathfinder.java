@@ -22,10 +22,22 @@ public class Pathfinder {
 		this.g = g;
 		this.from = from;
 		this.to = to;
-		
+		//analize();
 	}
 	public void setIgnoredEntity(Entity en) {
 		ignore = en;
+	}
+	public void analize() {
+		for (Cell[] cs : g.getCells()) {
+			for (Cell c : cs) {
+				if (c.getType() == CellType.SOLID) {
+					System.out.println("This cell is solid:" + c.x + ", y: " + c.y);
+				}
+				else {
+					System.out.println("This cell is not solid:" + c.x + ", y: " + c.y);
+				}
+			}
+		}
 	}
 	public List<Cell> aStar() {
 		boolean found = false;
@@ -33,9 +45,10 @@ public class Pathfinder {
 		closed.clear();
 		
 		//While there still is a way and whe haven't found a solution yet, repeat
-		while (open.size() > 0 || !(found)) {
+		while (open.size() > 0) {
 			//Get all neighbors
-			Cell[] neighbors = getNeighbors(open.get(open.size()-1));
+			Cell a = open.get(open.size()-1);
+			Cell[] neighbors = getNeighbors(a);
 			//Nearest, possible step
 			List<Cell> possible = new ArrayList<Cell>(Arrays.asList(neighbors));
 			for (Cell c : neighbors) {
@@ -52,6 +65,10 @@ public class Pathfinder {
 				}
 				possible.add(c);
 			}
+			System.out.println("I have found these cells for x:" + a.x + ", y: " + a.y);
+			for (Cell c : possible) {
+				System.out.println("(" + c.x + "|" + c.y + ")");
+			}
 			//Nothing found? Then there is no way
 			if (possible.size() == 0) {
 				open.clear();
@@ -67,7 +84,14 @@ public class Pathfinder {
 					closest = c;
 				}
 			}
+			if (closest.x == to.x && closest.y == to.y) {
+				found = true;
+			}
 			System.out.println("Closest: (" + closest.x + "|" + closest.y + ")");
+			System.out.println("To find: (" + to.x + "|" + to.y + ")");
+			if (found) {
+				break;
+			}
 			open.add(closest);
 		}
 		if (open.isEmpty()) {
@@ -76,14 +100,15 @@ public class Pathfinder {
 		return open;
 	}
 	private Cell[] getNeighbors(Cell c) {
-		System.out.println("(" + c.x + "|" + c.y + ")");
+		System.out.println("Finding neighbors for (" + c.x + "|" + c.y + ")");
 		//Is the cell at the border?
-		int width = g.getWidth();
-		int height = g.getHeigth();
+		int width = g.getWidth()-1;
+		int height = g.getHeigth()-1;
 		
 		if (c.x == 0) {
 			//Left
 			if (c.y == 0) {
+				System.out.println("Cell is on bottom left corner!");
 				//Bottom-Left corner
 				Cell[] cells = new Cell[2];
 				cells[0] = g.getCellAt(c.x, c.y+1);
@@ -92,6 +117,7 @@ public class Pathfinder {
 			}
 			else if (c.y == height) {
 				//Top-Left corner
+				System.out.println("Cell is on top left corner!");
 				Cell[] cells = new Cell[2];
 				cells[0] = g.getCellAt(c.x+1, c.y);
 				cells[1] = g.getCellAt(c.x, c.y-1);
@@ -99,16 +125,19 @@ public class Pathfinder {
 			}
 			else {
 				//Not a corner, but left border
+				System.out.println("Cell is at the left border!");
 				Cell[] cells = new Cell[3];
 				cells[0] = g.getCellAt(c.x+1, c.y);
 				cells[1] = g.getCellAt(c.x, c.y+1);
 				cells[2] = g.getCellAt(c.x, c.y-1);
+				return cells;
 			}
 		}
 		if (c.x == width) {
 			//Right
 			if (c.y == 0) {
 				//Bottom-Right corner
+				System.out.println("Cell is on bottom right corner!");
 				Cell[] cells = new Cell[2];
 				cells[0] = g.getCellAt(c.x, c.y+1);
 				cells[1] = g.getCellAt(c.x-1, c.y);
@@ -116,6 +145,7 @@ public class Pathfinder {
 			}
 			else if (c.y == height) {
 				//Top-Right corner
+				System.out.println("Cell is on top right corner!");
 				Cell[] cells = new Cell[2];
 				cells[0] = g.getCellAt(c.x-1, c.y);
 				cells[1] = g.getCellAt(c.x, c.y-1);
@@ -123,15 +153,18 @@ public class Pathfinder {
 			}
 			else {
 				//Not a corner, but right border
+				System.out.println("Cell is at the right border!");
 				Cell[] cells = new Cell[3];
 				cells[0] = g.getCellAt(c.x-1, c.y);
 				cells[1] = g.getCellAt(c.x, c.y+1);
 				cells[2] = g.getCellAt(c.x, c.y-1);
+				return cells;
 			}
 		}
 		if (c.y == 0) {
 			//Bottom
 			//Bottom-Right and Bottom-Left Corner already checked
+			System.out.println("Cell is at the bottom border!");
 			Cell[] cells = new Cell[3];
 			cells[0] = g.getCellAt(c.x-1, c.y);
 			cells[0] = g.getCellAt(c.x+1, c.y);
@@ -141,6 +174,7 @@ public class Pathfinder {
 		if (c.y == height) {
 			//Top
 			//Top-Right and Top-Left Corner already checked
+			System.out.println("Cell is at the top border!");
 			Cell[] cells = new Cell[3];
 			cells[0] = g.getCellAt(c.x-1, c.y);
 			cells[0] = g.getCellAt(c.x+1, c.y);
@@ -149,6 +183,7 @@ public class Pathfinder {
 		}
 		else {
 			//Not border
+			System.out.println("The cell is not at a border!");
 			Cell[] cells = new Cell[4];
 			cells[0] = g.getCellAt(c.x+1, c.y);
 			cells[1] = g.getCellAt(c.x-1, c.y);
