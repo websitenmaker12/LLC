@@ -83,21 +83,12 @@ public class Renderer {
 				camera.pos.z + camera.viewDir.z, camera.up.x, camera.up.y,
 				camera.up.z);
 
-		// Draw coordinate system
-		GL11.glBegin(GL11.GL_LINES);
-		GL11.glColor3f(1, 0, 0);
-		GL11.glVertex3f(0, 0, 0);
-		GL11.glVertex3f(10, 0, 0);
+		drawCoordinateSystem();
 
-		GL11.glColor3f(0, 1, 0);
-		GL11.glVertex3f(0, 0, 0);
-		GL11.glVertex3f(0, 10, 0);
+		renderGrid(gameState, width, heigth);
+	}
 
-		GL11.glColor3f(0, 0, 1);
-		GL11.glVertex3f(0, 0, 0);
-		GL11.glVertex3f(0, 0, 10);
-		GL11.glEnd();
-
+	private void renderGrid(GameState gameState, int width, int heigth) {
 		// Render grid
 		this.shaderProg.bind();
 		
@@ -189,5 +180,22 @@ public class Renderer {
 		
 		RenderUtil.unbindShader();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
+	}
+
+	private void drawCoordinateSystem() {
+		// Draw coordinate system
+		GL11.glBegin(GL11.GL_LINES);
+		GL11.glColor3f(1, 0, 0);
+		GL11.glVertex3f(0, 0, 0);
+		GL11.glVertex3f(10, 0, 0);
+
+		GL11.glColor3f(0, 1, 0);
+		GL11.glVertex3f(0, 0, 0);
+		GL11.glVertex3f(0, 10, 0);
+
+		GL11.glColor3f(0, 0, 1);
+		GL11.glVertex3f(0, 0, 0);
+		GL11.glVertex3f(0, 0, 10);
+		GL11.glEnd();
 	}
 }
