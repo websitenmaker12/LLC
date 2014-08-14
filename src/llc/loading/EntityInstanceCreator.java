@@ -29,10 +29,13 @@ public class EntityInstanceCreator implements JsonDeserializer<Entity>, JsonSeri
 		switch (object.get("type").getAsString()) {
 		case "warrior":
 			en = new EntityWarrior();
+			break;
 		case "worker":
 			en =  new EntityWorker();
+			break;
 		case "base":
 			en = new EntityBuildingBase();
+			break;
 		}
 		
 		en.health = object.get("health").getAsInt();
