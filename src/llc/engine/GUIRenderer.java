@@ -23,7 +23,7 @@ public class GUIRenderer {
 		this.audioEngine = audioEngine;
 		
 		try {
-			this.font = new TrueTypeFont(Font.createFont(Font.TRUETYPE_FONT, ResourceLoader.getResourceAsStream("res/font/EraserRegular.ttf")).deriveFont(20F), true);
+			this.font = new TrueTypeFont(Font.createFont(Font.TRUETYPE_FONT, ResourceLoader.getResourceAsStream("res/font/PTM55FT.ttf")).deriveFont(20F), true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
