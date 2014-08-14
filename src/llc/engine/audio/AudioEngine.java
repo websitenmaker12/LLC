@@ -33,7 +33,7 @@ public class AudioEngine {
 	 */
 	private void loadSounds() {
 		buttonClick = new Sound("/res/sound/gui_click.wav");
-		music_1 = new Music("/res/sound/gui_click.wav");
+		music_1 = new Music("/res/sound/music_1.ogg");
 	}
 	
 	/**
