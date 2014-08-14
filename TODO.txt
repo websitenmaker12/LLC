@@ -1,2 +1,4 @@
 - Capture the mouse in the window	-> Tim
 - Render health bars above entitys
+- Fix mesh loader problems
+- Game stats gui
