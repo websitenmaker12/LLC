@@ -74,8 +74,6 @@ public class Renderer {
 	 */
 	public void render(Camera camera, GameState gameState) {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		int width = gameState.getGrid().getWidth();
-		int heigth = gameState.getGrid().getHeigth();
 
 		// Apply camera transformation
 		GL11.glLoadIdentity();
@@ -86,18 +84,20 @@ public class Renderer {
 
 		drawCoordinateSystem();
 
-		renderGrid(gameState, width, heigth);
+		renderGrid(gameState);
 	}
 
-	private void renderGrid(GameState gameState, int width, int heigth) {
-		// Render grid
+	private void renderGrid(GameState gameState) {
+		int width = gameState.getGrid().getWidth();
+		int heigth = gameState.getGrid().getHeigth();
+		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		this.shaderProg.bind();
 		
 		Cell[][] cells = gameState.getGrid().getCells();
-		for (int y = 0; y < cells.length; y++) 
+		for (int y = 0; y < gameState.getGrid().getHeigth(); y++) 
 		{
-			for (int x = 0; x < cells[0].length; x++) 
+			for (int x = 0; x < gameState.getGrid().getWidth(); x++) 
 			{
 				// highlight hovered cell
 				if (cells[y][x] == gameState.hoveredCell)
