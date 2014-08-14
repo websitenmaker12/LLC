@@ -4,6 +4,7 @@ import llc.entity.Entity;
 import llc.entity.EntityBuildingBase;
 import llc.entity.EntityMovable;
 import llc.entity.IAttacking;
+import llc.input.Input;
 
 /**
  * Logic class
@@ -15,9 +16,11 @@ public class Logic {
 
 	private GameState gameState;
 	private EntityMovable selectedEntity;
+	private Input input;
 
-	public Logic(GameState state) {
+	public Logic(GameState state, Input input) {
 		this.setGameState(state);
+		this.input = input;
 	}
 
 	/**
