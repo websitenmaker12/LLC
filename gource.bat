@@ -1,0 +1,1 @@
+gource --key -o stream.ppm -r 30 --stop-at-end --auto-skip-seconds 2 --seconds-per-day 25 --file-idle-time 0 -e 0.2 --logo logo.png C:\Users\MilaPaess14\Desktop\LLC
