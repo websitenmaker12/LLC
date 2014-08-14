@@ -13,7 +13,6 @@ import javax.imageio.ImageIO;
 import llc.entity.Entity;
 import llc.entity.EntityBuildingBase;
 import llc.logic.Cell;
-import llc.logic.CellType;
 import llc.logic.GameState;
 import llc.logic.Grid;
 
@@ -26,11 +25,15 @@ import com.google.gson.GsonBuilder;
  */
 public class GameLoader {
 	
+	private Gson gson;
+	
 	/**
 	 * Creates a new GameLoader, make sure to only do this once!(Performance...)
 	 */
 	public GameLoader() {
+		EntityInstanceCreator enCreator = new EntityInstanceCreator();
 		
+		gson = new GsonBuilder().registerTypeAdapter(Entity.class, enCreator).create();
 	}
 	
 	/**
@@ -40,8 +43,6 @@ public class GameLoader {
 	 * @throws IllegalArgumentException if gamestate is null!
 	 */
 	public void saveToFile(GameState f, String fileName) {
-		EntityInstanceCreator creator = new EntityInstanceCreator(f);
-		Gson gson = new GsonBuilder().registerTypeAdapter(Entity.class, creator).create();
 		if (f == null) {
 			throw new IllegalArgumentException("The GameState cannot be null!");
 		}
@@ -69,8 +70,6 @@ public class GameLoader {
 	}
 	
 	public GameState loadFromFile(String pathName) {
-		EntityInstanceCreator creator = new EntityInstanceCreator(null);
-		Gson gson = new GsonBuilder().registerTypeAdapter(Entity.class, creator).create();
 		File f = new File(pathName);
 		if (!f.exists()) {
 			throw new IllegalStateException("The save-file to load does not exist!");
@@ -124,29 +123,24 @@ public class GameLoader {
 			for (int y = 0; y < height; y++) {
 				for (int x = 0; x < width; x++) {
 					c = new Color(img.getRGB(x, y));
-					if (c.equals(Color.BLACK)) {
-						cell = new Cell(x, y, CellType.SOLID);
-					}
-					else if (c.equals(Color.WHITE)) {
-						cell = new Cell(x, y, CellType.WALKABLE);
-					}
-					else if (c.equals(Color.GREEN)) {
-						cell = new Cell(x, y, CellType.WALKABLE);
+					//Check for base-cells
+					if (c.getBlue() == 0 && c.getRed() == 0 && c.getGreen() > 0) {
+						cell = new Cell(x, y, getHeight(c));
 						Entity townHall1 = new EntityBuildingBase();
 						townHall1.setPlayer(1);
 						cell.setEntity(townHall1);
 						state.setTownHall1Cell(cell);
 					}
-					else if (c.equals(Color.RED)) {
-						cell = new Cell(x, y, CellType.WALKABLE);
+					else if (c.getBlue() == 0 && c.getGreen() == 0 && c.getRed() > 0) {
+						cell = new Cell(x, y, getHeight(c));
 						Entity townHall2 = new EntityBuildingBase();
 						townHall2.setPlayer(2);
 						cell.setEntity(townHall2);
 						state.setTownHall2Cell(cell);
 					}
 					else {
-						//Unknown
-						cell = new Cell(x, y, CellType.SOLID);
+						//Normal cell
+						cell = new Cell(x, y, getHeight(c));
 					}
 					g.setCellAt(cell, x, y);
 				}
@@ -158,61 +152,21 @@ public class GameLoader {
 		}
 		return state;
 	}
-	/**
-	 * @deprecated Use createNewGame or loadFromFile instead!
-	 */
-	@Deprecated
-	public Grid getGridFromImage(BufferedImage i) {
-		int height, width;
-		height = i.getHeight();
-		width = i.getWidth();
-		
-		Grid g = new Grid(height, width);
-		Color co;
-		Cell c;
-		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width; x++) {
-				co = new Color(i.getRGB(x, y));
-				if (co.getRed() == 255 && co.getBlue() == 0 && co.getGreen() == 0) {
-					c = new Cell(x, x, CellType.WALKABLE);
-					Entity en = new EntityBuildingBase();
-					c.setEntity(en);
-				}
-				else {
-					c = getCellByColorAndLocation(x, y, co);
-				}
-				g.setCellAt(c, x, y);
-			}
+	private float getHeight(Color c) {
+		if (c.getBlue() == c.getGreen() && c.getRed() == c.getBlue()) {
+			//Normal cell!
+			return ((float)c.getBlue())/(float)255;
 		}
-		return g;
-	}
-	public Cell getCellByColorAndLocation(int x, int y, Color c) {
-		CellType type = null;
-		
-		if (c.getBlue() == 0 && c.getGreen() == 0 && c.getRed() == 0) {
-			type = CellType.SOLID;
+		if (c.getBlue() == 0 && c.getRed() == 0) {
+			//Base of player 1!
+			return ((float)c.getGreen())/(float)255;
 		}
-		else if (c.getBlue() == 255 && c.getGreen() == 255 && c.getRed() == 255) {
-			type = CellType.WALKABLE;
+		if (c.getBlue() == 0 && c.getGreen() == 0) {
+			//Base of player 2!
+			return ((float)c.getRed())/(float)255;
 		}
 		else {
-			throw new IllegalArgumentException("Unknown Cell Color!");
+			return 0;
 		}
-		return new Cell(x, y, type);
-	}
-	/**
-	 * @deprecated Use createNewGame or loadFromFile instead!
-	 */
-	@Deprecated
-	public Grid loadMap(String fileName) {
-		File f = new File(fileName);
-		BufferedImage i;
-		try {
-			i = ImageIO.read(f);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-		return getGridFromImage(i);
 	}
 }

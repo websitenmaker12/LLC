@@ -130,7 +130,6 @@ public class Renderer {
 				GL11.glTexCoord2d(0, 0);
 				GL11.glVertex2d(x, y + 1);
 
-				GL11.glColor3f(1, 1, 1);
 				GL11.glEnd();
 			}
 		}

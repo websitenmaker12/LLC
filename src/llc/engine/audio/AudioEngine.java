@@ -56,4 +56,12 @@ public class AudioEngine {
 	public void playSound(Sounds sound) {
 		if(sound == Sounds.BUTTONCLICK) buttonClick.playSound(0, 0, 0, 0, 0, 0);
 	}
+	
+	/**
+	 * This function should be called when the sound engine is not used anymore.
+	 * It frees all the sound engines memory.
+	 */
+	public void dispose() {
+		buttonClick.dispose();
+	}
 }
