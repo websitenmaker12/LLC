@@ -1,7 +1,7 @@
 package llc.util;
 
-import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 
 public class RenderUtil {
 
@@ -31,7 +31,7 @@ public class RenderUtil {
 	}
 
 	public static void unbindShader() {
-		ARBShaderObjects.glUseProgramObjectARB(0);
+		GL20.glUseProgram(0);
 	}
 
 	public static void clearColor() {

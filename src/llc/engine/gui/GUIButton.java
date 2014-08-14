@@ -37,7 +37,7 @@ public abstract class GUIButton extends GUIElement {
 	public void update(int x, int y) {
 		if(this.isClicked && !this.wasClicked) {
 			this.onClick(x, y);
-			this.gui.audioEngine.playSound(EnumSounds.BUTTONCLICK);
+			//this.gui.audioEngine.playSound(EnumSounds.BUTTONCLICK);
 		}
 		this.wasClicked = this.isClicked;
 		
@@ -58,8 +58,8 @@ public abstract class GUIButton extends GUIElement {
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		
 		TextureImpl.bindNone();
-		renderer.arial.drawString(this.posX + this.width / 2 - renderer.arial.getWidth(this.text) / 2,
-				this.posY + this.height / 2 - renderer.arial.getHeight() / 2, this.text, Color.black);
+		renderer.font.drawString(this.posX + this.width / 2 - renderer.font.getWidth(this.text) / 2,
+				this.posY + this.height / 2 - renderer.font.getHeight() / 2, this.text, Color.black);
 	}
 
 	/**

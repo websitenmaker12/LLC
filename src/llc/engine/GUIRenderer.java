@@ -8,10 +8,11 @@ import llc.input.Input;
 
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.util.ResourceLoader;
 
 public class GUIRenderer {
 
-	public final TrueTypeFont arial = new TrueTypeFont(new Font("Arial", Font.PLAIN, 24), true);
+	public TrueTypeFont font;
 	
 	private GUI currentGUI;
 	private Input input;
@@ -20,6 +21,12 @@ public class GUIRenderer {
 	public GUIRenderer(Input input, AudioEngine audioEngine) {
 		this.input = input;
 		this.audioEngine = audioEngine;
+		
+		try {
+			this.font = new TrueTypeFont(Font.createFont(Font.TRUETYPE_FONT, ResourceLoader.getResourceAsStream("res/font/EraserRegular.ttf")).deriveFont(20F), true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**

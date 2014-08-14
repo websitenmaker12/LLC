@@ -3,12 +3,12 @@
 const vec3 lightPos = vec3(-10.0, 10.0, 10.0);
 const vec4 ambient = vec4(0.7, 0.7, 0.7, 1.0);
 const vec4 diffuse = vec4(0.8, 0.8, 0.8, 1.0);
-const vec4 specular = vec4(0.7, 0.7, 0.7, 1.0);
+const vec4 specular = vec4(0.4, 0.4, 0.4, 1.0);
 
 const vec4 materialAmbient = vec4(1.0, 1.0, 1.0, 1.0);
 const vec4 materialDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
 const vec4 materialSpecular = vec4(1.0, 1.0, 1.0, 1.0);
-const float shininess = 20.0;
+const float shininess = 4.0;
 
 varying vec4 vertColor;
 varying vec3 normal;
@@ -41,4 +41,5 @@ vec4 phongShade()
 void main() {
 	vec4 texColor = texture2D(tex, texCoord);
 	gl_FragColor = texColor * vertColor * phongShade();
+	//gl_FragColor = normal;
 }

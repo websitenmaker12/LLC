@@ -7,7 +7,7 @@ package llc.entity;
 public abstract class EntityMovable extends Entity {
 
 	private float moveSpeed = 1;
-	private int moveRange = 4;
+	private int moveRange = 15;
 
 	/**
 	 * Gets the {@link EntityMoveable} move speed.

@@ -7,7 +7,10 @@ import llc.engine.Renderer;
 import llc.engine.Timing;
 import llc.engine.audio.AudioEngine;
 import llc.engine.gui.GUIIngame;
+import llc.input.IKeybindingListener;
 import llc.input.Input;
+import llc.input.KeyBinding;
+import llc.input.KeyboardListener;
 import llc.loading.GameLoader;
 import llc.logic.Cell;
 import llc.logic.Logic;
@@ -21,7 +24,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Vector3f;
 
-public class LLC {
+public class LLC implements IKeybindingListener {
 
 	public static final String VERSION = "0.1 INDEV";
 	private boolean isRunning = false;
@@ -35,12 +38,14 @@ public class LLC {
 	private GUIRenderer guiRenderer;
 	private AudioEngine audioEngine;
 	private Timing timing;
+	private KeyboardListener keyboardListener;
 	
 	public int width = 0;
 	public int height = 0;
 	private int mouseX = 0;
 	private int mouseY = 0;
 	private boolean lastButtonState = false;
+	private boolean isFullscreen = false;
 	
 	public LLC() {
 		this.camera = new Camera(new Vector3f(4, 4, 10), new Vector3f(0, 1.5f, -1), new Vector3f(0, 0, 1));
@@ -73,6 +78,10 @@ public class LLC {
 		
 		this.audioEngine = new AudioEngine();
 		this.timing = new Timing();
+
+		this.keyboardListener = new KeyboardListener();
+		this.keyboardListener.registerEventHandler(this);
+		this.keyboardListener.registerKeyBinding(new KeyBinding("func.fullscreen", Keyboard.KEY_F11, false));
 	}
 	
 	/**
@@ -83,9 +92,10 @@ public class LLC {
 		this.initDisplay();
 		this.profiler.endStart("Setup OpenGL");
 		this.renderer = new Renderer();
+		this.renderer.generateGridGeometry(this.logic.getGameState());
 		this.profiler.endStart("Setup GUI Renderer");
 		this.guiRenderer = new GUIRenderer(this.input, this.audioEngine);
-		this.guiRenderer.openGUI(new GUIIngame(this.logic));
+		this.guiRenderer.openGUI(new GUIIngame(this.logic, gameLoader));
 		this.profiler.endStart("Setup Audio Engine");
 		this.audioEngine.initAudioEngine();
 		this.profiler.end();
@@ -98,6 +108,7 @@ public class LLC {
 	private void initDisplay() throws LWJGLException {
 		Display.setDisplayMode(new DisplayMode(640, 480));
 		Display.setResizable(true);
+		Display.setVSyncEnabled(true);
 		Display.setTitle("LLC - " + VERSION);
 		Display.create();
 		
@@ -117,18 +128,22 @@ public class LLC {
 		this.timing.init();
 		while(this.isRunning) {
 			int delta = this.timing.getDelta();
-			System.out.println(this.timing.getFPS());
+			Display.setTitle("FPS " + String.valueOf(this.timing.getFPS())); // TODO Remove
 			
 			this.handleDisplayResize();
 			if(Display.isCloseRequested()) this.isRunning = false;
 
-			// Input updates
-			this.profiler.start("Input updates");
+			// Mouse updates
+			this.profiler.start("Mouse updates");
 			this.mouseX = Mouse.getX();
 			this.mouseY = this.height - Mouse.getY();
 			this.input.mousePos(this.mouseX, this.mouseY);
 			if(Mouse.isButtonDown(0) && !this.lastButtonState) this.input.mouseClick(this.mouseX, this.mouseY);
 			this.lastButtonState = Mouse.isButtonDown(0);
+			
+			// Keyboard updates
+			this.profiler.endStart("Keyboard updates");
+			this.keyboardListener.update();
 			
 			// Rendering
 			this.profiler.endStart("Render game");
@@ -162,6 +177,34 @@ public class LLC {
 			this.renderer.handleDisplayResize(this.width, this.height);
 			this.guiRenderer.handleDisplayResize(this.width, this.height);
 		}
+	}
+
+	@Override
+	public void onKeyBindingUpdate(KeyBinding keyBinding, boolean isPressed) {
+		try {
+			if(keyBinding.name.equals("func.fullscreen")) this.toggleFullscreen();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void toggleFullscreen() throws LWJGLException {
+		// TODO Overwork
+		
+		DisplayMode displayMode = null;
+	    DisplayMode[] modes = Display.getAvailableDisplayModes();
+	    for(int i = 0; i < modes.length; i++) {
+	    	if(modes[i].getWidth() == this.width && modes[i].getHeight() == this.height && modes[i].isFullscreenCapable()) {
+	    		displayMode = modes[i];
+	    	}
+	    }
+	    
+	    if(displayMode != null) {
+	    	this.isFullscreen = !this.isFullscreen;
+	    	
+	    	Display.setDisplayMode(displayMode);
+	    	Display.setFullscreen(this.isFullscreen);
+	    }
 	}
 	
 }
