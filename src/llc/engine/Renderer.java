@@ -65,6 +65,8 @@ public class Renderer {
 	 */
 	public void render(Camera camera, GameState gameState) {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		int width = gameState.getGrid().getWidth();
+		int heigth = gameState.getGrid().getHeigth();
 
 		// Apply camera transformation
 		GL11.glLoadIdentity();
@@ -92,22 +94,27 @@ public class Renderer {
 		Cell[][] cells = gameState.getGrid().getCells();
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glNormal3f(0, 0, 1);
-		for (int y = 0; y < cells.length; y++) {
-			for (int x = 0; x < cells[0].length; x++) {
+		for (int y = 0; y < cells.length; y++) 
+		{
+			for (int x = 0; x < cells[0].length; x++) 
+			{
 				// highlight hovered cell
 				if (cells[y][x] == gameState.hoveredCell)
 					GL11.glColor3f(1, 0.5f, 0.5f);
 				else
 					GL11.glColor3f(1, 1, 1);
 				
-				if (cells[y][x].getEntity() == null) {
+				if (cells[y][x].getEntity() == null) 
+				{
 					// Render terrain texture
 					if (cells[y][x].getType() == CellType.SOLID)
 						solidTexture.bind();
 
 					if (cells[y][x].getType() == CellType.WALKABLE)
 						walkableTexture.bind();
-				} else {
+				} 
+				else
+				{
 					// Render entity texture
 					if (cells[y][x].getEntity() instanceof EntityWarrior)
 						warriorTexture.bind();
@@ -125,21 +132,39 @@ public class Renderer {
 						GL11.glPopMatrix();
 					}
 				}
+				//Generating heigth coordinates
+				float currentHeight = cells[y][x].height;
+				float[][] heights = new float [3][3];
+				heights[0][0] = y > 0 && x > 0 ? cells[y - 1][x - 1].height : currentHeight;
+				heights[0][1] = y > 0 ? cells[y - 1][x].height : currentHeight;
+				heights[0][2] = y > 0 && x < width - 1 ? cells[y - 1][x + 1].height : currentHeight;
+				heights[1][0] = x > 0 ? cells[y][x - 1].height : currentHeight;
+				heights[1][1] = currentHeight;
+				heights[1][2] = x < width - 1 ? cells[y][x + 1].height : currentHeight;
+				heights[2][0] = y < heigth - 1 && x > 0 ? cells[y + 1][x - 1].height : currentHeight;
+				heights[2][1] = y < heigth - 1 ? cells[y + 1][x].height : currentHeight;
+				heights[2][2] = y < heigth -1 && x < width - 1 ? cells[y + 1][x + 1].height : currentHeight;
+				
+				
+				float topRightHeight = (heights[0][2] + heights[1][2] + heights[2][1] + heights[1][1]) / 4f;
+				float topLeftHeight = (heights[0][0] + heights[0][1] + heights[1][0] + heights[1][1]) / 4f;
+				float bottomRightHeight = (heights[2][1] + heights[2][2] + heights[1][2] + heights[1][1]) / 4f;
+				float bottomLeftHeight = (heights[0][2] + heights[1][2] + heights[0][1] + heights[1][1]) / 4f;
 				
 				GL11.glBegin(GL11.GL_TRIANGLES);
 				GL11.glTexCoord2d(0, 1);
-				GL11.glVertex2d(x, y);
+				GL11.glVertex3f(x, y, (heights[0][2] + heights[1][2] + heights[0][1] + heights[1][1]) / 4);
 				GL11.glTexCoord2d(1, 1);
-				GL11.glVertex2d(x + 1, y);
+				GL11.glVertex3f(x + 1, y, (heights[2][1] + heights[2][2] + heights[1][2] + heights[1][1]) / 4);
 				GL11.glTexCoord2d(0, 0);
-				GL11.glVertex2d(x, y + 1);
+				GL11.glVertex3f(x, y + 1, topLeftHeight);
 
 				GL11.glTexCoord2d(1, 1);
-				GL11.glVertex2d(x + 1, y);
+				GL11.glVertex3f(x + 1, y, bottomRightHeight);
 				GL11.glTexCoord2d(1, 0);
-				GL11.glVertex2d(x + 1, y + 1);
+				GL11.glVertex3f(x + 1, y + 1, topRightHeight);
 				GL11.glTexCoord2d(0, 0);
-				GL11.glVertex2d(x, y + 1);
+				GL11.glVertex3f(x, y + 1, topLeftHeight);
 
 				GL11.glEnd();
 			}
