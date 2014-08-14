@@ -105,22 +105,22 @@ public class Renderer {
 		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		waterTexture.bind();
-		GL11.glColor4f(1,  1,  1, 0.5f);
-		
+		GL11.glColor4f(1,  1,  1, 0.8f);
+		float cellCount = 10;
 		GL11.glBegin(GL11.GL_TRIANGLES);
-		GL11.glTexCoord2d(0, 1);
+		GL11.glTexCoord2d(0, cellCount);
 		GL11.glVertex3f(0, 0, 0);
-		GL11.glTexCoord2d(1, 1);
+		GL11.glTexCoord2d(cellCount, cellCount);
 		GL11.glVertex3f(width, 0, 0);
 		GL11.glTexCoord2d(0, 0);
 		GL11.glVertex3f(0, height, 0);
 
-		GL11.glTexCoord2d(1, 1);
+		GL11.glTexCoord2d(cellCount, cellCount);
 		GL11.glVertex3f(width, 0, 0);
-		GL11.glTexCoord2d(1, 0);
+		GL11.glTexCoord2d(cellCount, 0);
 		GL11.glVertex3f(width, height, 0);
 		GL11.glTexCoord2d(0, 0);
-		GL11.glVertex3f(height, 0, 0);
+		GL11.glVertex3f(0, height, 0);
 		GL11.glEnd();
 		
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
