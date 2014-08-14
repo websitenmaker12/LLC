@@ -13,12 +13,14 @@ public class GameState {
 	public int moveCount = 0;
 	
 	public boolean isGameOver = false;
+
+	public Player winner;
 	
 	public GameState(Grid grid) {
 		this.grid = grid;
 		
-		player1 = new Player(100);
-		player2 = new Player(100);
+		player1 = new Player(1, 100);
+		player2 = new Player(2, 100);
 		
 		setActivePlayer(player1);
 	}

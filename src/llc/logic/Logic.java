@@ -59,7 +59,6 @@ public class Logic {
 				moveSelectedEntity(clickX, clickY, true);
 			}
 		}
-		System.out.println(selectedEntity);
 	}
 
 	/**
@@ -88,10 +87,16 @@ public class Logic {
 				moveSelectedEntity(destX, destY, false);
 				gameState.getActivePlayer().addMinerals(25);
 				// if a base was destroyed, the game is over
-				if (destEntity instanceof EntityBuildingBase) gameState.isGameOver = true;
+				if (destEntity instanceof EntityBuildingBase) gameOver(gameState.getActivePlayer());
 			}
 		}
 		countMove();
+	}
+
+	private void gameOver(Player winner) {
+		gameState.isGameOver = true;
+		gameState.winner = winner;
+		System.out.println("Player " + winner.playerID + " won!");
 	}
 
 	/**
@@ -106,6 +111,8 @@ public class Logic {
 		selectedEntity.setX(destX);
 		selectedEntity.setY(destY);
 		if (countMove) countMove();
+		selectedEntity = null;
+		gameState.hoveredCell = null;
 	}
 	
 	/**
@@ -114,11 +121,11 @@ public class Logic {
 	 */
 	private void countMove() {
 		gameState.moveCount++;
-		if (gameState.moveCount >= 1) {
+		if (gameState.moveCount >= 4) {
+			System.out.println("Player " + gameState.getActivePlayer().playerID + "'s turn is now over!");
 			gameState.getActivePlayer().addMinerals(50);
 			gameState.setActivePlayer(gameState.getInActivePlayer());
 			gameState.moveCount = 0;
-			selectedEntity = null;
 			gameState.hoveredCell = null;
 		}
 	}
@@ -126,12 +133,13 @@ public class Logic {
 	public void buyEntity(Entity entity) {
 		Cell spawnCell = gameState.getGrid().getCellAt(gameState.getActivePlayerTownHallLocation().x + 1, gameState.getActivePlayerTownHallLocation().y);
 		
-		if (!spawnCell.containsEntity() && entity.getCost() > 0) {
+		if (!spawnCell.containsEntity() && entity.getCost() > 0 && gameState.getActivePlayer().getMinerals() >= entity.getCost()) {
 			gameState.getActivePlayer().removeMinerals(entity.getCost());
 			entity.setPlayer(gameState.activePlayer);
 			spawnCell.setEntity(entity);
 			entity.setX(spawnCell.x);
 			entity.setY(spawnCell.y);
+			clickCell(spawnCell.x,spawnCell.y);
 		}
 	}
 }

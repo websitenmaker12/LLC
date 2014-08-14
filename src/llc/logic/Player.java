@@ -13,15 +13,17 @@ public class Player {
 	/**
 	 * Initializes the player with 0 minerals.
 	 */
-	public Player() {
+	public Player(int playerID) {
 		this.minerals = 0;
+		this.playerID = playerID;
 	}
 	
 	/**
 	 * Initializes the player with given minerals.
 	 * @param startMinerals The amount of minerals that is given to the player at the beginning of a game.
 	 */
-	public Player(int startMinerals) {
+	public Player(int playerID, int startMinerals) {
+		this.playerID = playerID;
 		this.minerals = startMinerals;
 	}
 	
@@ -39,6 +41,7 @@ public class Player {
 	 */
 	public void setMinerals(int minerals) {
 		this.minerals = minerals;
+		System.out.println("Player " + this.playerID + " has " + this.minerals + " minerals left.");
 	}
 
 	/**
@@ -47,6 +50,7 @@ public class Player {
 	 */
 	public void addMinerals(int minerals) {
 		this.minerals += minerals;
+		System.out.println("Player " + this.playerID + " has " + this.minerals + " minerals left.");
 	}
 
 	/**
@@ -55,5 +59,6 @@ public class Player {
 	 */
 	public void removeMinerals(int minerals) {
 		this.minerals -= minerals;
+		System.out.println("Player " + this.playerID + " has " + this.minerals + " minerals left.");
 	}
 }
