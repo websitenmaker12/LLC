@@ -198,7 +198,9 @@ public class LLC implements IKeybindingListener {
 		this.oldDisplayMode = Display.getDisplayMode();
 		
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-	    Display.setDisplayMode(this.isFullscreen ? new DisplayMode(dim.width, dim.height) : this.oldDisplayMode);
+		DisplayMode fullscreen = new DisplayMode(dim.width, dim.height);
+		
+	    Display.setDisplayMode(this.isFullscreen ? fullscreen : this.oldDisplayMode);
 	    Display.setFullscreen(this.isFullscreen);
 	}
 	
