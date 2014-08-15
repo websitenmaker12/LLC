@@ -134,6 +134,9 @@ public class Renderer {
 	private int waterTexLoc;
 	private int gridTexLoc;
 	
+	private int viewportWidth;
+	private int viewportHeight;
+	
 	List<GradientPoint> colors = new ArrayList<GradientPoint>();
 
 	public Renderer() {
@@ -240,6 +243,9 @@ public class Renderer {
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glViewport(0, 0, width, height);
+		
+		viewportWidth = width;
+		viewportHeight = height;
 	}
 
 	/**
@@ -301,7 +307,7 @@ public class Renderer {
 		waterProg.bind();
 		glUniform1i(waterTexLoc, 0);
 		glUniform1i(gridTexLoc, 1);
-		glUniform2f(viewportDimLoc, width, height);
+		glUniform2f(viewportDimLoc, viewportWidth, viewportHeight);
 
 		glColor4f(1,  1,  1, 0.8f);
 		float cellCount = 10;

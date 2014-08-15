@@ -13,6 +13,4 @@ void main() {
 	vec4 gridColor = texture2D(gridTex, gridCoord);
 	
 	gl_FragColor = vec4((waterColor * gridColor).rgb, waterAlpha);
-	
-	gl_FragColor = gridColor;
 }
