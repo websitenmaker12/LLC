@@ -91,6 +91,7 @@ public class Input {
 	 * Raycasts a given mouse position into the scene and calculates the
 	 * intersected cell on the XY layer (z == 0)
 	 */
+	@SuppressWarnings("unused")
 	private Vector2f rayCastZ0(Vector3f rayDirection) {
 
 		// System.out.println("ray: " + rayDirection);

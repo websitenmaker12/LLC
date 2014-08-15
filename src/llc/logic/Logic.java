@@ -7,7 +7,6 @@ import llc.entity.EntityMovable;
 import llc.entity.IAttacking;
 import llc.input.Input;
 import llc.input.Input.Direction;
-import llc.loading.GameLoader;
 
 /**
  * Logic class
@@ -82,12 +81,10 @@ public class Logic {
 	private void clickCell(int clickX, int clickY) {
 		if (0 <= clickY && clickY < gameState.getGrid().getHeigth() && 0 <= clickX && clickX < gameState.getGrid().getWidth()) {
 			Cell clickedCell = gameState.getGrid().getCellAt(clickX, clickY);
-			System.out.println("Clicked cell (" + clickedCell.x + "|" + clickedCell.y + "). Height: " + clickedCell.height + " (Status: " + clickedCell.getType() + "). hasEntity: " + clickedCell.containsEntity());
 			if (clickedCell.containsEntity()) {
 				if (clickedCell.getEntity().getPlayer() == gameState.activePlayer) {
 					// select
 					selectEntity(clickedCell.getEntity());
-					System.out.println(GameLoader.getEntityDebugInformation(clickedCell.getEntity()));
 					gameState.selectedCell = clickedCell;
 				} else if (selectedEntity instanceof IAttacking && selectedEntity.isCellInRange(clickX, clickY)) {
 					// attack

@@ -15,8 +15,9 @@ import org.newdawn.slick.Color;
 
 public class GUIIngame extends GUI {
 
-	private Logic logic;
+	@SuppressWarnings("unused")
 	private GameLoader gameLoader;
+	private Logic logic;
 	
 	private Texture left;
 	private Texture middle;
