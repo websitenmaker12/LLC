@@ -299,16 +299,14 @@ public class Renderer {
 	}
 
 	private void drawCell(Cell c, int y, int x, boolean allowColor) {
-		if (c.getEntity() == null) {
-			float h = c.getHeight();
-			// Render terrain texture
-			if (h < -sandRegion)
-				waterTexture.bind();
-			else if (h > sandRegion)
-				grassTexture.bind();
-			else 
-				sandTexture.bind();
-		} 
+		float h = c.getHeight();
+		// Render terrain texture
+		if (h < -sandRegion)
+			waterTexture.bind();
+		else if (h > sandRegion)
+			grassTexture.bind();
+		else 
+			sandTexture.bind();
 		
 		Triangle[] ts = triangles[y][x];
 		GL11.glBegin(GL11.GL_TRIANGLES);
