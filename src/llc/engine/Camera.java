@@ -29,4 +29,9 @@ public class Camera {
 		
 	}
 	
+	public void zoom(int dir) {
+		this.pos.y -= 2F * dir * this.scrollSpeed * 2;
+		this.pos.z += 1F * dir * this.scrollSpeed * 2;
+	}
+	
 }

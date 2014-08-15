@@ -63,7 +63,7 @@ public class EntityInstanceCreator implements JsonDeserializer<Entity>, JsonSeri
 		else if (entity instanceof EntityBuildingBase) {
 			e.getAsJsonObject().addProperty("type", "base");
 		}
-		System.out.println("Deserizaler:" + e);
+		System.out.println("Serializer:" + e);
 		return e;
 	}
 }

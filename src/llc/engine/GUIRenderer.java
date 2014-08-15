@@ -57,10 +57,14 @@ public class GUIRenderer {
 	public void openGUI(GUI gui) {
 		this.closeCurrentGUI();
 		this.currentGUI = gui;
-		this.currentGUI.onOpen();
 		
-		this.input.guiChange(this.currentGUI);
-		this.currentGUI.audioEngine = this.audioEngine;
+		if(gui != null) {
+			this.currentGUI.onOpen();
+			this.input.guiChange(this.currentGUI);
+			this.currentGUI.audioEngine = this.audioEngine;
+		} else {
+			this.input.guiChange(null);
+		}
 	}
 	
 	/**
@@ -78,6 +82,13 @@ public class GUIRenderer {
 	 */
 	public void handleDisplayResize(int width, int height) {
 		if(this.currentGUI != null) this.currentGUI.onOpen();
+	}
+
+	/**
+	 * Returns the current GUI
+	 */
+	public GUI getGUI() {
+		return this.currentGUI;
 	}
 	
 }

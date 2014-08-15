@@ -34,18 +34,6 @@ public class GUIIngame extends GUI {
 			}
 		});
 		
-		this.elements.add(new GUIButton(this, Display.getWidth() - 220, Display.getHeight() - 110, 200, 35, "Save") {
-			public void onClick(int x, int y) {
-				gameLoader.saveToFile(logic.getGameState(), "save.llcsav");
-			}
-		});
-		
-		this.elements.add(new GUIButton(this, Display.getWidth() - 220, Display.getHeight() - 55, 200, 35, "Load") {
-			public void onClick(int x, int y) {
-				logic.setGameState(gameLoader.loadFromFile("save.llcsav"));
-			}
-		});
-		
 		this.elements.add(new GUIText(this, 20, 20, "Gold: ", Color.orange) {
 			@Override
 			public void update(int x, int y) {
