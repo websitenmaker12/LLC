@@ -40,6 +40,7 @@ vec4 phongShade()
 
 void main() {
 	vec4 texColor = texture2D(tex, texCoord);
-	gl_FragColor = texColor * vertColor * phongShade();
+	//gl_FragColor = texColor * vertColor * phongShade();
 	//gl_FragColor = normal;
+	gl_FragData[0] = texColor * vertColor * phongShade();
 }

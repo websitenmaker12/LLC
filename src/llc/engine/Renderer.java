@@ -205,6 +205,9 @@ public class Renderer {
 		
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glPopAttrib();
+		
+		if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+			System.err.println("Error: custom framebuffer is not complete after rendering");
 	}
 
 	private void drawWaterSurface(int width, int height) {
@@ -401,9 +404,7 @@ public class Renderer {
 	}
 
 	private void drawGrid(GameState state, int width, int height) {
-		glEnable(GL_TEXTURE_2D);
 		this.shaderProg.bind();
-		glColor3f(1, 1, 1);
 		
 		Cell[][] cells = state.getGrid().getCells();
 		for (int y = 0; y < height; y++) 
@@ -416,7 +417,6 @@ public class Renderer {
 		}
 		
 		RenderUtil.unbindShader();
-		glDisable(GL_TEXTURE_2D);
 	}
 
 	private void drawCell(Cell c, int y, int x, boolean allowColor) {
