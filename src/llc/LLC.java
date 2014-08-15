@@ -219,4 +219,11 @@ public class LLC implements IKeybindingListener {
 		}
 	}
 	
+	/**
+	 * Closes the Game
+	 */
+	public void closeGame() {
+		this.isRunning = false;
+	}
+	
 }
