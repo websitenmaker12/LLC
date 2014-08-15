@@ -34,6 +34,8 @@ import static org.lwjgl.util.glu.GLU.*;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import sun.security.ec.ECDHKeyAgreement;
+
 public class Renderer {
 	
 	private static final float sandRegion = 0.15f;
@@ -362,6 +364,14 @@ public class Renderer {
 						glCallList(this.minerId);
 					}
 					glPopMatrix();
+					float EntityX = e.getX();
+					float EntityY = e.getY();
+					float healthBarLength = e.health / 100f;
+					glBegin(GL_LINES);
+					glColor3f(0, 0, 1);
+					glVertex3f(EntityX , EntityY, c.height + 2.5f);
+					glVertex3f(EntityX + healthBarLength, EntityY, c.height + 2.5f);
+					glEnd();
 				}
 			}
 		}
