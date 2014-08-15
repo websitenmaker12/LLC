@@ -38,8 +38,8 @@ public class Camera {
 	public void focusCell(Cell cell) {
 		Vector3f b = cell.getCenterPos();
 		float t = (this.pos.z - b.z) / this.viewDir.z;
-		b = (Vector3f)new Vector3f(this.viewDir).scale(t);
-		Vector3f c = Vector3f.add(b, this.viewDir, null);
+		Vector3f baseTrans = (Vector3f)new Vector3f(this.viewDir).scale(t);
+		Vector3f c = Vector3f.add(b, baseTrans, null);
 		
 		this.pos = c;
 	}

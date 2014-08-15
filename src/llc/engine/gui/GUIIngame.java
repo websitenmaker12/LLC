@@ -1,12 +1,16 @@
 package llc.engine.gui;
 
 
+import llc.engine.GUIRenderer;
+import llc.engine.res.Texture;
 import llc.entity.EntityWarrior;
 import llc.entity.EntityWorker;
 import llc.loading.GameLoader;
 import llc.logic.Logic;
+import llc.util.RenderUtil;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 
 public class GUIIngame extends GUI {
@@ -14,9 +18,17 @@ public class GUIIngame extends GUI {
 	private Logic logic;
 	private GameLoader gameLoader;
 	
+	private Texture left;
+	private Texture middle;
+	private Texture right;
+	
 	public GUIIngame(Logic logic, GameLoader gameLoader) {
 		this.logic = logic;
 		this.gameLoader = gameLoader;
+		
+		left = new Texture("res/gui/ingame_left.png");
+		middle = new Texture("res/gui/ingame_middle.png");
+		right = new Texture("res/gui/ingame_right.png");
 	}
 	
 	@Override
@@ -55,5 +67,19 @@ public class GUIIngame extends GUI {
 				setText("Turns left: " + (logic.subTurns - logic.getGameState().moveCount) + "/" + logic.subTurns);
 			}
 		});
+	}
+	
+	@Override
+	public void render(GUIRenderer renderer, int x, int y) {
+		GL11.glPushMatrix();
+		
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		left.bind();
+		
+		RenderUtil.drawTexturedQuad(0, Display.getHeight() - 348 / 1920 * Display.getWidth(), 386 / 1920 * Display.getWidth(), 348 / 1920 * Display.getHeight());
+		
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glPopMatrix();
+		super.render(renderer, x, y);
 	}
 }

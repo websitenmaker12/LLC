@@ -1,5 +1,85 @@
 package llc.engine;
 
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_COMPILE_AND_EXECUTE;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_LEQUAL;
+import static org.lwjgl.opengl.GL11.GL_LINES;
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_NEAREST;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.GL_RGB;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_S;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_T;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
+import static org.lwjgl.opengl.GL11.GL_VERSION;
+import static org.lwjgl.opengl.GL11.GL_VIEWPORT_BIT;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
+import static org.lwjgl.opengl.GL11.glCallList;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glDepthFunc;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glEndList;
+import static org.lwjgl.opengl.GL11.glGenLists;
+import static org.lwjgl.opengl.GL11.glGenTextures;
+import static org.lwjgl.opengl.GL11.glGetString;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glNewList;
+import static org.lwjgl.opengl.GL11.glNormal3f;
+import static org.lwjgl.opengl.GL11.glOrtho;
+import static org.lwjgl.opengl.GL11.glPopAttrib;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushAttrib;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glTexCoord2d;
+import static org.lwjgl.opengl.GL11.glTexCoord2f;
+import static org.lwjgl.opengl.GL11.glTexImage2D;
+import static org.lwjgl.opengl.GL11.glTexParameteri;
+import static org.lwjgl.opengl.GL11.glTranslatef;
+import static org.lwjgl.opengl.GL11.glVertex3f;
+import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE2;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL14.GL_MIRRORED_REPEAT;
+import static org.lwjgl.opengl.GL20.glDrawBuffers;
+import static org.lwjgl.opengl.GL20.glGetUniformLocation;
+import static org.lwjgl.opengl.GL20.glUniform1f;
+import static org.lwjgl.opengl.GL20.glUniform1i;
+import static org.lwjgl.opengl.GL20.glUniform2f;
+import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT0;
+import static org.lwjgl.opengl.GL30.GL_DEPTH_ATTACHMENT;
+import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
+import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_COMPLETE;
+import static org.lwjgl.opengl.GL30.GL_RENDERBUFFER;
+import static org.lwjgl.opengl.GL30.glBindFramebuffer;
+import static org.lwjgl.opengl.GL30.glBindRenderbuffer;
+import static org.lwjgl.opengl.GL30.glCheckFramebufferStatus;
+import static org.lwjgl.opengl.GL30.glFramebufferRenderbuffer;
+import static org.lwjgl.opengl.GL30.glFramebufferTexture2D;
+import static org.lwjgl.opengl.GL30.glGenFramebuffers;
+import static org.lwjgl.opengl.GL30.glGenRenderbuffers;
+import static org.lwjgl.opengl.GL30.glRenderbufferStorage;
+import static org.lwjgl.util.glu.GLU.gluLookAt;
+import static org.lwjgl.util.glu.GLU.gluPerspective;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -22,18 +102,9 @@ import llc.logic.GameState;
 import llc.logic.Player;
 import llc.util.RenderUtil;
 
-
- 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
-
-import static org.lwjgl.opengl.GL14.*;
-import static org.lwjgl.opengl.GL30.*;
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.util.glu.GLU.*;
-
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -213,24 +284,15 @@ public class Renderer {
 				+ camera.viewDir.x, camera.pos.y + camera.viewDir.y,
 				camera.pos.z + camera.viewDir.z, camera.up.x, camera.up.y,
 				camera.up.z);
-
+		
 		int width = gameState.getGrid().getWidth();
 		int height = gameState.getGrid().getHeigth();
 		
 		if(renderToTextureSupported)
 			drawGridTexture(gameState, width, height);
 		
-		drawCoordinateSystem();
-		
-		if(this.gridListID == -1) {
-			this.gridListID = glGenLists(1);
-			glNewList(this.gridListID, GL_COMPILE);
-			drawGrid(gameState, width, height);
-			glEndList();
-		}
-		
-		glCallList(this.gridListID);
-		
+//		drawCoordinateSystem();
+		drawGrid(gameState, width, height);
 		drawHoveredAndSelectedCells(gameState);
 		drawEntities(gameState, width, height);
 		drawWaterSurface(width, height);
@@ -395,11 +457,11 @@ public class Renderer {
 			drawCell(state.hoveredCell, state.hoveredCell.y, state.hoveredCell.x, false);
 			//System.out.println("hovered " + state.hoveredCell.x + " " + state.hoveredCell.y);
 		}
-		else if (state.selectedCell != null)
+		if (state.selectedCell != null)
 		{
-			glColor3f(0.5f, 0.5f, 1f);
+			glColor3f(0.3f, 1f, 0.3f);
 			drawCell(state.selectedCell, state.selectedCell.y, state.selectedCell.x, false);
-			//System.out.println("selected " + state.selectedCell.x + " " + state.selectedCell.y);
+			System.out.println("selected " + state.selectedCell.x + " " + state.selectedCell.y);
 		}
 		RenderUtil.unbindShader();
 		glDisable(GL_TEXTURE_2D);
@@ -472,19 +534,26 @@ public class Renderer {
 	}
 
 	private void drawGrid(GameState state, int width, int height) {
-		this.shaderProg.bind();
-		
-		Cell[][] cells = state.getGrid().getCells();
-		for (int y = 0; y < height; y++) 
-		{
-			for (int x = 0; x < width; x++) 
+		if(this.gridListID == -1) {
+			this.gridListID = glGenLists(1);
+			glNewList(this.gridListID, GL_COMPILE_AND_EXECUTE);
+			this.shaderProg.bind();
+			
+			Cell[][] cells = state.getGrid().getCells();
+			for (int y = 0; y < height; y++) 
 			{
-				Cell c = cells[y][x];
-				drawCell(c, y, x, true);
+				for (int x = 0; x < width; x++) 
+				{
+					Cell c = cells[y][x];
+					drawCell(c, y, x, true);
+				}
 			}
+			
+			RenderUtil.unbindShader();
+			glEndList();
+		} else {
+			GL11.glCallList(this.gridListID);
 		}
-		
-		RenderUtil.unbindShader();
 	}
 
 	private void drawCell(Cell c, int y, int x, boolean allowColor) {
