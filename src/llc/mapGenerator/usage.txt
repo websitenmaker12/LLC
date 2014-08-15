@@ -1,0 +1,15 @@
+create a new random map like this
+
+BufferedImage img = RandomMapGenerator.generateMap(200);
+
+
+use this image as input for the gameLoader
+
+usage in LLC.java 
+
+public LLC(){
+    ...
+    this.logic = new Logic(this.gameLoader.createNewGame(RandomMapGenerator.generateMap(200)), this.input);
+    ....	
+}
+
