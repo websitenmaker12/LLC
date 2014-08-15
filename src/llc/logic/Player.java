@@ -41,7 +41,6 @@ public class Player {
 	 */
 	public void setMinerals(int minerals) {
 		this.minerals = minerals;
-		System.out.println("Player " + this.playerID + " has " + this.minerals + " minerals left.");
 	}
 
 	/**
@@ -50,7 +49,6 @@ public class Player {
 	 */
 	public void addMinerals(int minerals) {
 		this.minerals += minerals;
-		System.out.println("Player " + this.playerID + " has " + this.minerals + " minerals left.");
 	}
 
 	/**
@@ -59,6 +57,5 @@ public class Player {
 	 */
 	public void removeMinerals(int minerals) {
 		this.minerals -= minerals;
-		System.out.println("Player " + this.playerID + " has " + this.minerals + " minerals left.");
 	}
 }

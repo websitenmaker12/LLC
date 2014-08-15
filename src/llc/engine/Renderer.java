@@ -427,7 +427,7 @@ public class Renderer {
 				
 				if(e != null) {
 					glPushMatrix();
-					glTranslatef(x + 0.5F, y + 0.5F, c.height + 1);
+					glTranslatef(x + 0.5F, y + 0.5F, (c.height*terrainScale));
 					glColor3f(1, 1, 1);
 					if(e instanceof EntityBuildingBase) {
 						bindModelTexture(baseModel);
@@ -451,17 +451,17 @@ public class Renderer {
 					healthBar.bind();
 					glBegin(GL_TRIANGLES);
 					glTexCoord2f(0, 0);
-					glVertex3f(EntityX - (healthBarLength / 2) + 0.5f, EntityY, c.height + 2.5f);
+					glVertex3f(EntityX - (healthBarLength / 2) + 0.5f, EntityY, c.height*terrainScale + 1.5f);
 					glTexCoord2f(0, 1);
-					glVertex3f(EntityX - (healthBarLength / 2) + 0.5f, EntityY, c.height + 2.8f);
+					glVertex3f(EntityX - (healthBarLength / 2) + 0.5f, EntityY, c.height*terrainScale + 1.8f);
 					glTexCoord2f(1, 0);
-					glVertex3f(EntityX + (healthBarLength / 2) + 0.5f, EntityY, c.height + 2.5f);
+					glVertex3f(EntityX + (healthBarLength / 2) + 0.5f, EntityY, c.height*terrainScale + 1.5f);
 					glTexCoord2f(0, 1);
-					glVertex3f(EntityX - (healthBarLength / 2) + 0.5f, EntityY, c.height + 2.8f);
+					glVertex3f(EntityX - (healthBarLength / 2) + 0.5f, EntityY, c.height*terrainScale + 1.8f);
 					glTexCoord2f(1, 1);
-					glVertex3f(EntityX + (healthBarLength / 2) + 0.5f, EntityY, c.height + 2.8f);
+					glVertex3f(EntityX + (healthBarLength / 2) + 0.5f, EntityY, c.height*terrainScale + 1.8f);
 					glTexCoord2f(1, 0);
-					glVertex3f(EntityX + (healthBarLength / 2) + 0.5f, EntityY, c.height + 2.5f);
+					glVertex3f(EntityX + (healthBarLength / 2) + 0.5f, EntityY, c.height*terrainScale + 1.5f);
 					glEnd();
 					
 				}
