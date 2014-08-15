@@ -61,12 +61,14 @@ public class Renderer {
 	
 	private Program shaderProg;
 	private Program waterProg;
+	private int waterTexLoc;
+	private int gridTexLoc;
 	
 	List<GradientPoint> colors = new ArrayList<GradientPoint>();
 
 	public Renderer() {
 		System.out.println("OpenGL version: " + glGetString(GL_VERSION));
-		
+
 		// OpenGL setup
 		glClearColor(0F, 0F, 0F, 1F);
 
@@ -84,7 +86,7 @@ public class Renderer {
 		waterTexture = new Texture("res/texture/water.png");
 		grassTexture = new Texture("res/texture/grass.png");
 		sandTexture = new Texture("res/texture/sand.png");
-		
+
 		// meshes
 		try {
 			baseModel = ObjLoader.loadTexturedModel(new File("res/entity/base/Medieval_House.obj"));
@@ -104,14 +106,14 @@ public class Renderer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		// gradient
 		colors.add(new GradientPoint(-1f, new Vector3f(0f, 0f, 1f)));
 		colors.add(new GradientPoint(-0.25f,new Vector3f(1f, 1f, 1f)));
 		colors.add(new GradientPoint(0.15f,new Vector3f(1f, 1f, 1f)));
 		colors.add(new GradientPoint(0.25f,new Vector3f(0.5f, 1f, 1f)));
 		colors.add(new GradientPoint(0.5f,new Vector3f(1f, 1f, 1f)));
-		
+
 		// shader
 		this.shaderProg = new Program();
 		this.shaderProg.addShader(new Shader("res/shaders/test.vert", Shader.vertexShader));
@@ -123,34 +125,34 @@ public class Renderer {
 		waterProg.addShader(new Shader("res/shaders/water.frag", Shader.fragmentShader));
 		waterProg.validate();
 
-		glUniform1i(glGetUniformLocation(waterProg.getId(), "waterTex"), 0);
-		glUniform1i(glGetUniformLocation(waterProg.getId(), "gridTex"), 1);
-		
+		waterTexLoc = glGetUniformLocation(waterProg.getId(), "waterTex");
+		gridTexLoc = glGetUniformLocation(waterProg.getId(), "gridTex");
+
 		// FBO for render to texture, from: http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
 		renderToTextureSupported = GLContext.getCapabilities().GL_EXT_framebuffer_object;
-		
+
 		if(renderToTextureSupported) {
 			frameBufferId = glGenFramebuffers();
 			glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
-			
+
 			renderedTextureId  = glGenTextures();
 			glBindTexture(GL_TEXTURE_2D, renderedTextureId);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1024, 768, 0, GL_RGB, GL_UNSIGNED_BYTE, (ByteBuffer)null); // empty
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); // have to use nearest when rendering to
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			
+
 			int depthRenderBufferId = glGenRenderbuffers();
 			glBindRenderbuffer(GL_RENDERBUFFER, depthRenderBufferId);
 			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1024, 768); // must be the same as the rendered texture's size
 			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRenderBufferId);
-			
-			GL30.glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTextureId, 0, 0);
-			 
-			GL20.glDrawBuffers(GL_COLOR_ATTACHMENT0);
-			
+
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderedTextureId, 0);
+
+			glDrawBuffers(GL_COLOR_ATTACHMENT0);
+	
 			if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 				System.err.println("Error: custom framebuffer is not complete");
-			
+
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 	}
@@ -198,6 +200,7 @@ public class Renderer {
 		glViewport(0,0,1024,768);
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
 		
+		glClear ( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 		drawGrid(state, width, height);
 		
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -211,6 +214,8 @@ public class Renderer {
 		glBindTexture(GL_TEXTURE_2D, renderedTextureId);
 		
 		waterProg.bind();
+		glUniform1i(waterTexLoc, 0);
+		glUniform1i(gridTexLoc, 1);
 
 		glColor4f(1,  1,  1, 0.8f);
 		float cellCount = 10;
