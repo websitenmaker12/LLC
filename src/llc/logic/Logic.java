@@ -1,7 +1,5 @@
 package llc.logic;
 
-import java.util.Random;
-
 import llc.entity.Entity;
 import llc.entity.EntityBuildingBase;
 import llc.entity.EntityMovable;

@@ -1,12 +1,10 @@
 package llc.engine.audio;
 
-import java.io.IOException;
+import llc.engine.res.Music;
+import llc.engine.res.Sound;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.openal.AL;
-
-import llc.engine.res.Music;
-import llc.engine.res.Sound;
 
 /**
  * The sound engine. This is used to play sounds... obvious
