@@ -15,6 +15,8 @@ public class GUIIngameMenu extends GUI{
 	private GameLoader gameLoader;
 	private Logic logic;
 	
+	GUIRenderer renderer;
+	
 	public GUIIngameMenu(GameLoader gameLoader, Logic logic) {
 		this.gameLoader = gameLoader; 
 		this.logic = logic;
@@ -26,7 +28,7 @@ public class GUIIngameMenu extends GUI{
 		
 		this.elements.add(new GUIButton(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2 - 165, 300, 40, "Back to game") {
 			public void onClick(int x, int y) {
-				
+				LLC.getLLC().togglePauseMenu();
 			}
 		});
 		

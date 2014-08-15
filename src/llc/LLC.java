@@ -214,7 +214,7 @@ public class LLC implements IKeybindingListener {
 	    Display.setFullscreen(this.isFullscreen);
 	}
 	
-	private void togglePauseMenu() {
+	public void togglePauseMenu() {
 		this.isGamePaused = !this.isGamePaused;
 		if(this.isGamePaused) {
 			this.prevGui = this.guiRenderer.getGUI();
