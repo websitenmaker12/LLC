@@ -289,7 +289,7 @@ public class Renderer {
 //		drawCoordinateSystem();
 		drawGrid(gameState, width, height);
 		drawHoveredAndSelectedCells(gameState);
-		drawEntities(gameState, width, height);
+		drawEntities(gameState, width, height, delta);
 		drawWaterSurface(width, height);
 	}
 	
@@ -445,7 +445,7 @@ public class Renderer {
 		}
 	}
 	
-	private void drawEntities(GameState state, int width, int height) {
+	private void drawEntities(GameState state, int width, int height, int delta) {
 		this.shaderProg.bind();
 		
 		Cell[][] cells = state.getGrid().getCells();
@@ -457,16 +457,17 @@ public class Renderer {
 				
 				if(e != null) {
 					glPushMatrix();
+					e.update(delta);
 					
 					float f = -terrainScale;
-					for(Triangle triangle : this.triangles[y][x]) {
+					for(Triangle triangle : this.triangles[(int)e.getY()][(int)e.getX()]) {
 						for(Vertex vert : triangle.vertices) {
 							f = Math.max(f, vert.position.z);
 						}
 					}
 					
-					glTranslatef(x + 0.5F, y + 0.5F, f);
-					glColor3f(1, 1, 1);
+					glTranslatef(e.getX() + 0.5F, e.getY() + 0.5F, f);
+					RenderUtil.clearColor();
 					if(e instanceof EntityBuildingBase) {
 						bindModelTexture(baseModel);
 						glCallList(this.baseId);

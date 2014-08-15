@@ -1,5 +1,10 @@
 package llc.entity;
 
+import java.util.List;
+
+import llc.logic.Cell;
+import llc.logic.Logic;
+
 /**
  * The entity base class.
  * Contains player and health.
@@ -14,6 +19,13 @@ public abstract class Entity {
 	private float y;
 	
 	private int player;
+	
+	// Vars for move animation
+	private Logic logic;
+	private List<Cell> path;
+	private int currentPos;
+	private long timeout;
+	private int origX, origY;
 
 	/**
 	 * @return cost to pay for an Entity of this type
@@ -81,5 +93,35 @@ public abstract class Entity {
 	 */
 	public void setY(float y) {
 		this.y = y;
+	}
+	
+	/**
+	 * Starts the move animation
+	 */
+	public void initMoveRoutine(Logic logic, List<Cell> path) {
+		this.logic = logic;
+		this.path = path;
+		this.currentPos = -1;
+		this.timeout = 0L;
+		this.origX = (int)this.x;
+		this.origY = (int)this.y;
+	}
+	
+	/**
+	 * Updates the entity
+	 */
+	public void update(int delta) {
+		if(this.logic == null || this.path == null) return;
+		
+		if((this.timeout += delta) % 4L == 0L) {
+			this.currentPos++;
+			if(this.currentPos >= this.path.size()) {
+				this.logic.finishEntityMove(this.origX, this.origY, true);
+				this.logic = null;
+				return;
+			}
+			this.x = this.path.get(this.currentPos).x;
+			this.y = this.path.get(this.currentPos).y;
+		}
 	}
 }

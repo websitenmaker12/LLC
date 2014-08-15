@@ -7,6 +7,7 @@ import llc.entity.EntityMovable;
 import llc.entity.IAttacking;
 import llc.input.Input;
 import llc.input.Input.Direction;
+import llc.util.PathFinder;
 
 /**
  * Logic class
@@ -144,10 +145,13 @@ public class Logic {
 	 * @param countMove Does the move count as player action.
 	 */
 	private void moveSelectedEntity(int destX, int destY, boolean countMove) {
-		gameState.getGrid().getCellAt(destX, destY).setEntity(selectedEntity);
-		gameState.getGrid().getCellAt((int) selectedEntity.getX(), (int) selectedEntity.getY()).setEntity(null);
-		selectedEntity.setX(destX);
-		selectedEntity.setY(destY);
+		this.selectedEntity.initMoveRoutine(this, PathFinder.findPath(this.gameState.getGrid(),
+				this.gameState.getGrid().getCellAt((int)selectedEntity.getX(), (int)selectedEntity.getY()), this.gameState.getGrid().getCellAt(destX, destY)));
+	}
+	
+	public void finishEntityMove(int origX, int origY, boolean countMove) {
+		gameState.getGrid().getCellAt(origX, origY).setEntity(null);
+		gameState.getGrid().getCellAt((int) selectedEntity.getX(), (int) selectedEntity.getY()).setEntity(selectedEntity);
 		if (countMove) countMove();
 		selectedEntity = null;
 		gameState.selectedCell = null;

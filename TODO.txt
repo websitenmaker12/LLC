@@ -1,3 +1,5 @@
 - Slide animations
 - UI
 - Remove System.out.println's
+- Can't damage base
+- Range check by movement
