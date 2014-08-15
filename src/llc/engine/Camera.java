@@ -1,6 +1,7 @@
 package llc.engine;
 
 import llc.input.Input;
+import llc.logic.Cell;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -32,6 +33,15 @@ public class Camera {
 	public void zoom(int dir) {
 		this.pos.y -= 2F * dir * this.scrollSpeed * 2;
 		this.pos.z += 1F * dir * this.scrollSpeed * 2;
+	}
+
+	public void focusCell(Cell cell) {
+		Vector3f b = cell.getCenterPos();
+		float t = (this.pos.z - b.z) / this.viewDir.z;
+		b = (Vector3f)new Vector3f(this.viewDir).scale(t);
+		Vector3f c = Vector3f.add(b, this.viewDir, null);
+		
+		this.pos = c;
 	}
 	
 }
