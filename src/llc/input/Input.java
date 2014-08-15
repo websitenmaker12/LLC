@@ -141,7 +141,7 @@ public class Input {
 		if (y > h - scrollFrameBorder)
 			FireScrollEvent(Direction.down);
 
-		Vector2f hoveredCell = rayCastZ0(x, y);
+		Vector2f hoveredCell = rayCast(x, y);
 		if (hoveredCell != lastHoveredCell) {
 			lastHoveredCell = hoveredCell;
 			FireNewCellHoveredEvent((int) hoveredCell.x, (int) hoveredCell.y);
