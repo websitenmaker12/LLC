@@ -200,9 +200,11 @@ public class Renderer {
 
 	/**
 	 * Is called each Display-Tick to render the game
-	 * @param delta 
+	 * @param delta Time since last render call in milliseconds
 	 */
 	public void render(Camera camera, GameState gameState, int delta) {
+		currentTime += delta / 1000.0f;
+		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Apply camera transformation
@@ -257,7 +259,8 @@ public class Renderer {
 		glActiveTexture(GL_TEXTURE2);
 		glBindTexture(GL_TEXTURE_2D, renderedTextureId);
 		
-		float cellCount = 10;
+		final float cellCount = 10;
+		final float waterSpeed = 10; // in seconds per cell
 		
 		waterProg.bind();
 		glUniform1i(waterTexLoc, 0);
@@ -265,7 +268,7 @@ public class Renderer {
 		glUniform1i(gridTexLoc, 2);
 		glUniform2f(viewportDimLoc, viewportWidth, viewportHeight);
 		glUniform1f(waterCellCountLoc, cellCount);
-		glUniform1f(waterTimeLoc, currentTime % 1.0f);
+		glUniform1f(waterTimeLoc, (currentTime / waterSpeed) % 1f);
 
 		glColor3f(1,  1,  1);
 		
