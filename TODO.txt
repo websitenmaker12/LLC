@@ -1,5 +1,4 @@
-- Raycast fix
-- Mapgen
 - Slide animations
 - UI
 - Remove System.out.println's
+- Health bar rewrite

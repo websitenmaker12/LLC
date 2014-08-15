@@ -180,10 +180,6 @@ public class LLC implements IKeybindingListener {
 			if(error != GL_NO_ERROR) System.out.println("GLError " + error + ": " + GLU.gluErrorString(error));
 		
 			this.timing.updateFPS();
-			
-			if (logic.getGameState().isGameOver) {
-				this.guiRenderer.openGUI(new GUIGameOver());
-			}
 		}
 		
 		if(Display.isCreated()) Display.destroy();
@@ -221,12 +217,15 @@ public class LLC implements IKeybindingListener {
 	}
 	
 	public void togglePauseMenu() {
-		this.isGamePaused = !this.isGamePaused;
-		if(this.isGamePaused) {
-			this.prevGui = this.guiRenderer.getGUI();
-			this.guiRenderer.openGUI(new GUIIngameMenu(this.gameLoader, this.logic));
-		} else {
-			this.guiRenderer.openGUI(this.prevGui);
+		if (!logic.getGameState().isGameOver) {
+			this.isGamePaused = !this.isGamePaused;
+			
+			if(this.isGamePaused) {
+				this.prevGui = this.guiRenderer.getGUI();
+				this.guiRenderer.openGUI(new GUIIngameMenu(this.gameLoader, this.logic));
+			} else {
+				this.guiRenderer.openGUI(this.prevGui);
+			}
 		}
 	}
 	
@@ -242,6 +241,11 @@ public class LLC implements IKeybindingListener {
 	 */
 	public static LLC getLLC() {
 		return instance;
+	}
+	
+	public void openGameOverGUI() {
+		this.guiRenderer.openGUI(new GUIGameOver());
+		this.isGamePaused = true;
 	}
 	
 }

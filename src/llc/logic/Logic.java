@@ -1,5 +1,6 @@
 package llc.logic;
 
+import llc.LLC;
 import llc.entity.Entity;
 import llc.entity.EntityBuildingBase;
 import llc.entity.EntityMovable;
@@ -127,6 +128,7 @@ public class Logic {
 				// if a base was destroyed, the game is over
 				if (destEntity instanceof EntityBuildingBase) {
 					gameOver(gameState.getActivePlayer());
+					LLC.getLLC().openGameOverGUI();
 				}
 			}
 		}
