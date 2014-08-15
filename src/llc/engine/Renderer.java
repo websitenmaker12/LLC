@@ -489,7 +489,15 @@ public class Renderer {
 				
 				if(e != null) {
 					glPushMatrix();
-					glTranslatef(x + 0.5F, y + 0.5F, c.height * terrainScale + 0.5F);
+					
+					float f = -terrainScale;
+					for(Triangle triangle : this.triangles[y][x]) {
+						for(Vertex vert : triangle.vertices) {
+							f = Math.max(f, vert.position.z);
+						}
+					}
+					
+					glTranslatef(x + 0.5F, y + 0.5F, f);
 					glColor3f(1, 1, 1);
 					if(e instanceof EntityBuildingBase) {
 						bindModelTexture(baseModel);
