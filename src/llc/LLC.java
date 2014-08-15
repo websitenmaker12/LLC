@@ -9,6 +9,7 @@ import llc.engine.Renderer;
 import llc.engine.Timing;
 import llc.engine.audio.AudioEngine;
 import llc.engine.gui.GUI;
+import llc.engine.gui.GUIGameOver;
 import llc.engine.gui.GUIIngame;
 import llc.engine.gui.GUIIngameMenu;
 import llc.input.IKeybindingListener;
@@ -179,6 +180,10 @@ public class LLC implements IKeybindingListener {
 			if(error != GL_NO_ERROR) System.out.println("GLError " + error + ": " + GLU.gluErrorString(error));
 		
 			this.timing.updateFPS();
+			
+			if (logic.getGameState().isGameOver) {
+				this.guiRenderer.openGUI(new GUIGameOver());
+			}
 		}
 		
 		if(Display.isCreated()) Display.destroy();

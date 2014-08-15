@@ -125,7 +125,9 @@ public class Logic {
 				moveSelectedEntity(destX, destY, false);
 				gameState.getActivePlayer().addMinerals(25);
 				// if a base was destroyed, the game is over
-				if (destEntity instanceof EntityBuildingBase) gameOver(gameState.getActivePlayer());
+				if (destEntity instanceof EntityBuildingBase) {
+					gameOver(gameState.getActivePlayer());
+				}
 			}
 		}
 		countMove();

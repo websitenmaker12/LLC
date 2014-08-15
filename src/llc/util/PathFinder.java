@@ -16,7 +16,7 @@ import llc.logic.Grid;
 public class PathFinder {
 	private static final int CONST_COST = 10;
 	
-	public List<Cell> findPath(Grid grid, Cell from, Cell to) {
+	public static List<Cell> findPath(Grid grid, Cell from, Cell to) {
 		
 		List<Cell> openCells = new ArrayList<Cell>();
 		List<Cell> closedCells = new ArrayList<Cell>();
@@ -80,7 +80,7 @@ public class PathFinder {
 	 * @param grid
 	 * @return finalCells as List<Cell>
 	 */
-	private List<Cell> getNeighbours(Cell cell, Grid grid) {
+	private static List<Cell> getNeighbours(Cell cell, Grid grid) {
 		Cell[] startCells = new Cell[4];
 		List<Cell> finalCells = new ArrayList<Cell>();
 		
@@ -109,7 +109,7 @@ public class PathFinder {
 	 * @param to
 	 * @return distFinal as int (final manhattan distance)
 	 */
-	private int manhattanDistance(Cell from, Cell to) {
+	private static int manhattanDistance(Cell from, Cell to) {
 		int distFinal = Math.abs(from.x - to.x) + Math.abs(from.y - to.y);
 		
 		return distFinal;

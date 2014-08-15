@@ -19,6 +19,9 @@ public abstract class GUIText extends GUIElement {
 	public void render(GUIRenderer renderer, int x, int y) {
 		renderer.font.drawString(this.posX, this.posY, this.getText(), this.color);
 	}
+	
+	@Override
+	public void update(int x, int y) {}
 
 	public String getText() {
 		return text;
