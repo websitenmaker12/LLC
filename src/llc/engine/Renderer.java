@@ -572,7 +572,6 @@ public class Renderer {
 			this.color = color;
 		}
 	}
-		
 	
 	private Vector3f getTerrainColorFromHeight(float height) {
 		
@@ -597,5 +596,8 @@ public class Renderer {
 		}
 		else return upperColor.color;
 	}
-	
+
+	public Triangle[][][] getGridGeometry() {
+		return this.triangles;
+	}
 }

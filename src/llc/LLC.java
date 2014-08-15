@@ -106,6 +106,7 @@ public class LLC implements IKeybindingListener {
 		this.profiler.endStart("Setup OpenGL");
 		this.renderer = new Renderer();
 		this.renderer.generateGridGeometry(this.logic.getGameState());
+		this.input.setGridGeometry(this.renderer.getGridGeometry());
 		this.profiler.endStart("Setup GUI Renderer");
 		this.guiRenderer = new GUIRenderer(this.input, this.audioEngine);
 		this.guiRenderer.openGUI(new GUIIngame(this.logic, gameLoader));
