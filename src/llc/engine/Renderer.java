@@ -193,8 +193,9 @@ public class Renderer {
 
 	/**
 	 * Is called each Display-Tick to render the game
+	 * @param delta 
 	 */
-	public void render(Camera camera, GameState gameState) {
+	public void render(Camera camera, GameState gameState, int delta) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Apply camera transformation
