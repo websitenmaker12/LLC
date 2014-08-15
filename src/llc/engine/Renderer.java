@@ -445,13 +445,7 @@ public class Renderer {
 		// highlight hovered cell
 		glEnable(GL_TEXTURE_2D);
 		this.shaderProg.bind();
-		if(state.hoveredCell != null && state.selectedCell == state.hoveredCell)
-		{
-			glColor3f(1, 0.5f, 1);
-			drawCell(state.hoveredCell, state.hoveredCell.y, state.hoveredCell.x, false);
-			//System.out.println("hovered and selected" + state.hoveredCell.x + " " + state.hoveredCell.y);
-		}
-		else if (state.hoveredCell != null)
+		if (state.hoveredCell != null)
 		{
 			glColor3f(1, 0.5f, 0.5f);
 			drawCell(state.hoveredCell, state.hoveredCell.y, state.hoveredCell.x, false);
@@ -462,6 +456,12 @@ public class Renderer {
 			glColor3f(0.3f, 1f, 0.3f);
 			drawCell(state.selectedCell, state.selectedCell.y, state.selectedCell.x, false);
 			System.out.println("selected " + state.selectedCell.x + " " + state.selectedCell.y);
+		}
+		if(state.hoveredCell != null && state.selectedCell == state.hoveredCell)
+		{
+			glColor3f(1, 0.5f, 1);
+			drawCell(state.hoveredCell, state.hoveredCell.y, state.hoveredCell.x, false);
+			//System.out.println("hovered and selected" + state.hoveredCell.x + " " + state.hoveredCell.y);
 		}
 		RenderUtil.unbindShader();
 		glDisable(GL_TEXTURE_2D);
@@ -489,7 +489,15 @@ public class Renderer {
 				
 				if(e != null) {
 					glPushMatrix();
-					glTranslatef(x + 0.5F, y + 0.5F, c.height * terrainScale + 0.5F);
+					
+					float f = -terrainScale;
+					for(Triangle triangle : this.triangles[y][x]) {
+						for(Vertex vert : triangle.vertices) {
+							f = Math.max(f, vert.position.z);
+						}
+					}
+					
+					glTranslatef(x + 0.5F, y + 0.5F, f);
 					glColor3f(1, 1, 1);
 					if(e instanceof EntityBuildingBase) {
 						bindModelTexture(baseModel);

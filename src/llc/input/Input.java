@@ -171,7 +171,7 @@ public class Input {
 
 	public void mouseClick(int x, int y) {
 		Vector2f Ray = rayCast(x, y);
-		FireCellClickedEvent((int) Ray.x, (int) Ray.y);
+		if(!isMouseOverGUI(x, y)) FireCellClickedEvent((int) Ray.x, (int) Ray.y);
 	}
 
 	public void mousePos(int x, int y) {
@@ -179,23 +179,26 @@ public class Input {
 		int h = LLC_ref.height;
 		int w = LLC_ref.width;
 
-		if (x < scrollFrameBorder)
-			FireScrollEvent(Direction.left);
-		if (x > w - scrollFrameBorder)
-			FireScrollEvent(Direction.right);
-
-		if (y < scrollFrameBorder)
-			FireScrollEvent(Direction.up);
-		if (y > h - scrollFrameBorder)
-			FireScrollEvent(Direction.down);
-
-		Vector2f hoveredCell = rayCast(x, y);
-		if (hoveredCell != lastHoveredCell) {
-			lastHoveredCell = hoveredCell;
-			FireNewCellHoveredEvent((int) hoveredCell.x, (int) hoveredCell.y);
+		if(!isMouseOverGUI(x, y)) {
+			if (x < scrollFrameBorder) FireScrollEvent(Direction.left);
+			if (x > w - scrollFrameBorder) FireScrollEvent(Direction.right);
+	
+			if (y < scrollFrameBorder) FireScrollEvent(Direction.up);
+			if (y > h - scrollFrameBorder) FireScrollEvent(Direction.down);
+	
+			Vector2f hoveredCell = rayCast(x, y);
+			if (hoveredCell != lastHoveredCell) {
+				lastHoveredCell = hoveredCell;
+				FireNewCellHoveredEvent((int) hoveredCell.x, (int) hoveredCell.y);
+			}
 		}
 	}
 
+	private boolean isMouseOverGUI(int x, int y) {
+		for(GUIElement element : this.guiElements) if(element.isHovered(x, y)) return true;
+		return false;
+	}
+	
 	public void guiChange(GUI gui) {
 		this.guiElements = gui.getElements();
 	}
