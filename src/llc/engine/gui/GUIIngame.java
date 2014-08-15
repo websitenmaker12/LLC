@@ -71,8 +71,8 @@ public class GUIIngame extends GUI {
 	
 	@Override
 	public void render(GUIRenderer renderer, int x, int y) {
-		float scaleX = (640 / (float)Display.getWidth());
-		float scaleY = (480 / (float)Display.getHeight());
+		float scaleX = 1f - (640 / (float)Display.getWidth());
+		float scaleY = 1f - (480 / (float)Display.getHeight());
 		
 		GL11.glPushMatrix();
 		
