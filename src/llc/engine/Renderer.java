@@ -199,7 +199,7 @@ public class Renderer {
 		}
 
 		// gradient
-		colors.add(new GradientPoint(-1f, new Vector3f(0f, 0f, 1f)));
+		colors.add(new GradientPoint(-1f, new Vector3f(0.5f, 0.5f, 1f)));
 		colors.add(new GradientPoint(-0.25f,new Vector3f(1f, 1f, 1f)));
 		colors.add(new GradientPoint(0.15f,new Vector3f(1f, 1f, 1f)));
 		colors.add(new GradientPoint(0.25f,new Vector3f(0.5f, 1f, 1f)));
