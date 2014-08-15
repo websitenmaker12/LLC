@@ -23,6 +23,7 @@ import llc.util.RenderUtil;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GLContext;
 
 import static org.lwjgl.opengl.GL30.*;
@@ -132,7 +133,7 @@ public class Renderer {
 			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1024, 768); // must be the same as the rendered texture's size
 			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRenderBufferId);
 			
-			glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTextureId, 0);
+			GL30.glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTextureId, 0, 0);
 			 
 			GL20.glDrawBuffers(GL_COLOR_ATTACHMENT0);
 			
