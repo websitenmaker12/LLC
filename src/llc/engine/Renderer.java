@@ -133,6 +133,7 @@ public class Renderer {
 	private Program waterProg;
 	private int waterTexLoc;
 	private int gridTexLoc;
+	private int waterCellCountLoc;
 	
 	private int viewportWidth;
 	private int viewportHeight;
@@ -203,6 +204,7 @@ public class Renderer {
 		waterTexLoc = glGetUniformLocation(waterProg.getId(), "waterTex");
 		gridTexLoc = glGetUniformLocation(waterProg.getId(), "gridTex");
 		viewportDimLoc = glGetUniformLocation(waterProg.getId(), "viewportDim");
+		waterCellCountLoc = glGetUniformLocation(waterProg.getId(), "waterCellCount");
 
 		// FBO for render to texture, from: http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
 		renderToTextureSupported = GLContext.getCapabilities().GL_EXT_framebuffer_object;
@@ -304,36 +306,33 @@ public class Renderer {
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, renderedTextureId);
 		
+		float cellCount = 10;
+		
 		waterProg.bind();
 		glUniform1i(waterTexLoc, 0);
 		glUniform1i(gridTexLoc, 1);
 		glUniform2f(viewportDimLoc, viewportWidth, viewportHeight);
+		glUniform1f(waterCellCountLoc, cellCount);
 
 		glColor4f(1,  1,  1, 0.8f);
-		float cellCount = 10;
+		
 		glBegin(GL_TRIANGLES);
-		glMultiTexCoord2f(GL_TEXTURE0, 0, cellCount);
-		glMultiTexCoord2f(GL_TEXTURE1, 0, 1);
+		glTexCoord2f(0, 1);
 		glVertex3f(0, 0, 0);
 		
-		glMultiTexCoord2f(GL_TEXTURE0, cellCount, cellCount);
-		glMultiTexCoord2f(GL_TEXTURE1, 1, 1);
+		glTexCoord2f(1, 1);
 		glVertex3f(width, 0, 0);
 		
-		glMultiTexCoord2f(GL_TEXTURE0, 0, 0);
-		glMultiTexCoord2f(GL_TEXTURE1, 0, 0);
+		glTexCoord2f(0, 0);
 		glVertex3f(0, height, 0);
 
-		glMultiTexCoord2f(GL_TEXTURE0, cellCount, cellCount);
-		glMultiTexCoord2f(GL_TEXTURE1, 1, 1);
+		glTexCoord2f(1, 1);
 		glVertex3f(width, 0, 0);
 		
-		glMultiTexCoord2f(GL_TEXTURE0, cellCount, 0);
-		glMultiTexCoord2f(GL_TEXTURE1, 1, 0);
+		glTexCoord2f(1, 0);
 		glVertex3f(width, height, 0);
 
-		glMultiTexCoord2f(GL_TEXTURE0, 0, 0);
-		glMultiTexCoord2f(GL_TEXTURE1, 0, 0);
+		glTexCoord2f(0, 0);
 		glVertex3f(0, height, 0);
 		glEnd();
 		
