@@ -1,11 +1,8 @@
-varying vec2 waterCoord;
-varying vec2 gridCoord;
+varying vec2 texCoord;
 varying float waterAlpha;
 
 void main() {
 	gl_Position = ftransform();
 	
-	waterCoord = gl_MultiTexCoord0.st;
-	gridCoord = gl_MultiTexCoord1.st;
-	waterAlpha = gl_Color.a;
+	texCoord = gl_MultiTexCoord0.st;
 }

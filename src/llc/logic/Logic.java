@@ -13,6 +13,7 @@ import llc.loading.GameLoader;
  * handles changes to the gamestate
  * @author PetaByteBoy
  * @author erdlof
+ * @author websitenmaker12
  */
 public class Logic {
 
@@ -133,7 +134,6 @@ public class Logic {
 	private void gameOver(Player winner) {
 		gameState.isGameOver = true;
 		gameState.winner = winner;
-		System.out.println("Player " + winner.playerID + " won!");
 	}
 
 	/**
@@ -159,11 +159,11 @@ public class Logic {
 	private void countMove() {
 		gameState.moveCount++;
 		if (gameState.moveCount >= subTurns) {
-			System.out.println("Player " + gameState.getActivePlayer().playerID + "'s turn is now over!");
 			gameState.getActivePlayer().addMinerals(50);
 			gameState.setActivePlayer(gameState.getInActivePlayer());
 			gameState.moveCount = 0;
 			gameState.selectedCell = null;
+			selectedEntity = null;
 		}
 	}
 
@@ -181,7 +181,7 @@ public class Logic {
 		}
 		
 		if (spawnCell != null && !spawnCell.containsEntity() && entity.getCost() > 0 && gameState.getActivePlayer().getMinerals() >= entity.getCost()) {
-			//gameState.getActivePlayer().removeMinerals(entity.getCost());
+			gameState.getActivePlayer().removeMinerals(entity.getCost());
 			entity.setPlayer(gameState.activePlayer);
 			spawnCell.setEntity(entity);
 			entity.setX(spawnCell.x);

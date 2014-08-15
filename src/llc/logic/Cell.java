@@ -1,5 +1,7 @@
 package llc.logic;
 
+import org.lwjgl.util.vector.Vector3f;
+
 import llc.entity.Entity;
 
 /**
@@ -78,5 +80,12 @@ public class Cell {
 	}
 	public float getHeight() {
 		return height;
+	}
+
+	/**
+	 * Returns the center point of the cell
+	 */
+	public Vector3f getCenterPos() {
+		return new Vector3f(this.x + 0.5F, this.y + 0.5F, this.height);
 	}
 }

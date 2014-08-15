@@ -2,6 +2,7 @@ package llc.engine;
 
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_COMPILE_AND_EXECUTE;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
@@ -16,6 +17,8 @@ import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_S;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_T;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
 import static org.lwjgl.opengl.GL11.GL_VERSION;
@@ -27,15 +30,17 @@ import static org.lwjgl.opengl.GL11.glCallList;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glColor4f;
 import static org.lwjgl.opengl.GL11.glDepthFunc;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glEndList;
+import static org.lwjgl.opengl.GL11.glGenLists;
 import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL11.glGetString;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glNewList;
 import static org.lwjgl.opengl.GL11.glNormal3f;
 import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glPopAttrib;
@@ -43,11 +48,22 @@ import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushAttrib;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glTexCoord2d;
+import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glTexImage2D;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import static org.lwjgl.opengl.GL11.glVertex3f;
 import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE2;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL14.GL_MIRRORED_REPEAT;
+import static org.lwjgl.opengl.GL20.glDrawBuffers;
+import static org.lwjgl.opengl.GL20.glGetUniformLocation;
+import static org.lwjgl.opengl.GL20.glUniform1f;
+import static org.lwjgl.opengl.GL20.glUniform1i;
+import static org.lwjgl.opengl.GL20.glUniform2f;
 import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT0;
 import static org.lwjgl.opengl.GL30.GL_DEPTH_ATTACHMENT;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
@@ -57,6 +73,7 @@ import static org.lwjgl.opengl.GL30.glBindFramebuffer;
 import static org.lwjgl.opengl.GL30.glBindRenderbuffer;
 import static org.lwjgl.opengl.GL30.glCheckFramebufferStatus;
 import static org.lwjgl.opengl.GL30.glFramebufferRenderbuffer;
+import static org.lwjgl.opengl.GL30.glFramebufferTexture2D;
 import static org.lwjgl.opengl.GL30.glGenFramebuffers;
 import static org.lwjgl.opengl.GL30.glGenRenderbuffers;
 import static org.lwjgl.opengl.GL30.glRenderbufferStorage;
@@ -82,20 +99,12 @@ import llc.entity.EntityWarrior;
 import llc.entity.EntityWorker;
 import llc.logic.Cell;
 import llc.logic.GameState;
+import llc.logic.Player;
 import llc.util.RenderUtil;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GLContext;
-
-import static org.lwjgl.opengl.GL30.*;
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.util.glu.GLU.*;
-
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -106,9 +115,10 @@ public class Renderer {
 	
 	private Texture loadingScreen;
 	
-	private Texture waterTexture;
 	private Texture grassTexture;
 	private Texture sandTexture;
+	private Texture waterTexture;
+	private Texture waterNormalsTexture;
 	
 	private Texture healthBar;
 	
@@ -124,13 +134,23 @@ public class Renderer {
 	private boolean renderToTextureSupported;
 	private int frameBufferId;
 	private int renderedTextureId;
+	private int viewportDimLoc;
 
 	private int gridListID = -1;
 	
 	private Program shaderProg;
 	private Program waterProg;
 	private int waterTexLoc;
+	private int waterNormalsTexLoc;
 	private int gridTexLoc;
+	private int waterCellCountLoc;
+	private int waterTimeLoc;
+	
+	private int viewportWidth;
+	private int viewportHeight;
+	
+	/// time in seconds since the game started
+	private float currentTime;
 	
 	List<GradientPoint> colors = new ArrayList<GradientPoint>();
 
@@ -151,9 +171,10 @@ public class Renderer {
 		this.drawLoadingScreen(Display.getWidth(), Display.getHeight());
 		
 		// textures
-		waterTexture = new Texture("res/texture/water.png");
 		grassTexture = new Texture("res/texture/grass.png");
 		sandTexture = new Texture("res/texture/sand.png");
+		waterTexture = new Texture("res/texture/water.png");
+		waterNormalsTexture = new Texture("res/texture/waternormals.jpg");
 
 		healthBar = new Texture("res/gui/healthBar.png");
 		
@@ -178,7 +199,7 @@ public class Renderer {
 		}
 
 		// gradient
-		colors.add(new GradientPoint(-1f, new Vector3f(0f, 0f, 1f)));
+		colors.add(new GradientPoint(-1f, new Vector3f(0.5f, 0.5f, 1f)));
 		colors.add(new GradientPoint(-0.25f,new Vector3f(1f, 1f, 1f)));
 		colors.add(new GradientPoint(0.15f,new Vector3f(1f, 1f, 1f)));
 		colors.add(new GradientPoint(0.25f,new Vector3f(0.5f, 1f, 1f)));
@@ -196,7 +217,11 @@ public class Renderer {
 		waterProg.validate();
 
 		waterTexLoc = glGetUniformLocation(waterProg.getId(), "waterTex");
+		waterNormalsTexLoc = glGetUniformLocation(waterProg.getId(), "waterNormalsTex");
 		gridTexLoc = glGetUniformLocation(waterProg.getId(), "gridTex");
+		viewportDimLoc = glGetUniformLocation(waterProg.getId(), "viewportDim");
+		waterCellCountLoc = glGetUniformLocation(waterProg.getId(), "waterCellCount");
+		waterTimeLoc = glGetUniformLocation(waterProg.getId(), "waterTime");
 
 		// FBO for render to texture, from: http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
 		renderToTextureSupported = GLContext.getCapabilities().GL_EXT_framebuffer_object;
@@ -208,6 +233,8 @@ public class Renderer {
 			renderedTextureId  = glGenTextures();
 			glBindTexture(GL_TEXTURE_2D, renderedTextureId);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1024, 768, 0, GL_RGB, GL_UNSIGNED_BYTE, (ByteBuffer)null); // empty
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); // have to use nearest when rendering to
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
@@ -237,12 +264,18 @@ public class Renderer {
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glViewport(0, 0, width, height);
+		
+		viewportWidth = width;
+		viewportHeight = height;
 	}
 
 	/**
 	 * Is called each Display-Tick to render the game
+	 * @param delta Time since last render call in milliseconds
 	 */
-	public void render(Camera camera, GameState gameState) {
+	public void render(Camera camera, GameState gameState, int delta) {
+		currentTime += delta / 1000.0f;
+		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Apply camera transformation
@@ -251,24 +284,15 @@ public class Renderer {
 				+ camera.viewDir.x, camera.pos.y + camera.viewDir.y,
 				camera.pos.z + camera.viewDir.z, camera.up.x, camera.up.y,
 				camera.up.z);
-
+		
 		int width = gameState.getGrid().getWidth();
 		int height = gameState.getGrid().getHeigth();
 		
 		if(renderToTextureSupported)
 			drawGridTexture(gameState, width, height);
 		
-		drawCoordinateSystem();
-		
-		if(this.gridListID == -1) {
-			this.gridListID = GL11.glGenLists(1);
-			GL11.glNewList(this.gridListID, GL11.GL_COMPILE);
+//		drawCoordinateSystem();
 		drawGrid(gameState, width, height);
-			GL11.glEndList();
-		}
-		
-		GL11.glCallList(this.gridListID);
-		
 		drawHoveredAndSelectedCells(gameState);
 		drawEntities(gameState, width, height);
 		drawWaterSurface(width, height);
@@ -293,37 +317,40 @@ public class Renderer {
 		glActiveTexture(GL_TEXTURE0);
 		waterTexture.bind();
 		glActiveTexture(GL_TEXTURE1);
+		waterNormalsTexture.bind();
+		glActiveTexture(GL_TEXTURE2);
 		glBindTexture(GL_TEXTURE_2D, renderedTextureId);
+		
+		final float cellCount = 10;
+		final float waterSpeed = 10; // in seconds per cell
 		
 		waterProg.bind();
 		glUniform1i(waterTexLoc, 0);
-		glUniform1i(gridTexLoc, 1);
+		glUniform1i(waterNormalsTexLoc, 1);
+		glUniform1i(gridTexLoc, 2);
+		glUniform2f(viewportDimLoc, viewportWidth, viewportHeight);
+		glUniform1f(waterCellCountLoc, cellCount);
+		glUniform1f(waterTimeLoc, (currentTime / waterSpeed) % 1f);
 
-		glColor4f(1,  1,  1, 0.8f);
-		float cellCount = 10;
+		glColor3f(1,  1,  1);
+		
 		glBegin(GL_TRIANGLES);
-		glMultiTexCoord2f(GL_TEXTURE0, 0, cellCount);
-		glMultiTexCoord2f(GL_TEXTURE1, 0, 1);
+		glTexCoord2f(0, 1);
 		glVertex3f(0, 0, 0);
 		
-		glMultiTexCoord2f(GL_TEXTURE0, cellCount, cellCount);
-		glMultiTexCoord2f(GL_TEXTURE1, 1, 1);
+		glTexCoord2f(1, 1);
 		glVertex3f(width, 0, 0);
 		
-		glMultiTexCoord2f(GL_TEXTURE0, 0, 0);
-		glMultiTexCoord2f(GL_TEXTURE1, 0, 0);
+		glTexCoord2f(0, 0);
 		glVertex3f(0, height, 0);
 
-		glMultiTexCoord2f(GL_TEXTURE0, cellCount, cellCount);
-		glMultiTexCoord2f(GL_TEXTURE1, 1, 1);
+		glTexCoord2f(1, 1);
 		glVertex3f(width, 0, 0);
 		
-		glMultiTexCoord2f(GL_TEXTURE0, cellCount, 0);
-		glMultiTexCoord2f(GL_TEXTURE1, 1, 0);
+		glTexCoord2f(1, 0);
 		glVertex3f(width, height, 0);
 
-		glMultiTexCoord2f(GL_TEXTURE0, 0, 0);
-		glMultiTexCoord2f(GL_TEXTURE1, 0, 0);
+		glTexCoord2f(0, 0);
 		glVertex3f(0, height, 0);
 		glEnd();
 		
@@ -430,11 +457,11 @@ public class Renderer {
 			drawCell(state.hoveredCell, state.hoveredCell.y, state.hoveredCell.x, false);
 			//System.out.println("hovered " + state.hoveredCell.x + " " + state.hoveredCell.y);
 		}
-		else if (state.selectedCell != null)
+		if (state.selectedCell != null)
 		{
-			glColor3f(0.5f, 0.5f, 1f);
+			glColor3f(0.3f, 1f, 0.3f);
 			drawCell(state.selectedCell, state.selectedCell.y, state.selectedCell.x, false);
-			//System.out.println("selected " + state.selectedCell.x + " " + state.selectedCell.y);
+			System.out.println("selected " + state.selectedCell.x + " " + state.selectedCell.y);
 		}
 		RenderUtil.unbindShader();
 		glDisable(GL_TEXTURE_2D);
@@ -462,7 +489,15 @@ public class Renderer {
 				
 				if(e != null) {
 					glPushMatrix();
-					glTranslatef(x + 0.5F, y + 0.5F, c.height + 1);
+					
+					float f = -terrainScale;
+					for(Triangle triangle : this.triangles[y][x]) {
+						for(Vertex vert : triangle.vertices) {
+							f = Math.max(f, vert.position.z);
+						}
+					}
+					
+					glTranslatef(x + 0.5F, y + 0.5F, f);
 					glColor3f(1, 1, 1);
 					if(e instanceof EntityBuildingBase) {
 						bindModelTexture(baseModel);
@@ -480,21 +515,23 @@ public class Renderer {
 					float EntityX = e.getX();
 					float EntityY = e.getY();
 					float healthBarLength = e.health / 100f;
+					Player p = state.getActivePlayer();
+					if (p.playerID == e.getPlayer()) glColor3f(0, 1, 0);
+					else glColor3f(1, 0, 0);
 					healthBar.bind();
 					glBegin(GL_TRIANGLES);
-					GL11.glColor3f(1, 0, 0);
-					GL11.glTexCoord2f(0, 0);
-					glVertex3f(EntityX - (healthBarLength / 2) + 0.5f, EntityY, c.height + 2.5f);
-					GL11.glTexCoord2f(0, 1);
-					glVertex3f(EntityX - (healthBarLength / 2) + 0.5f, EntityY, c.height + 2.8f);
-					GL11.glTexCoord2f(1, 0);
-					glVertex3f(EntityX + (healthBarLength / 2) + 0.5f, EntityY, c.height + 2.5f);
-					GL11.glTexCoord2f(0, 1);
-					glVertex3f(EntityX - (healthBarLength / 2) + 0.5f, EntityY, c.height + 2.8f);
-					GL11.glTexCoord2f(1, 1);
-					glVertex3f(EntityX + (healthBarLength / 2) + 0.5f, EntityY, c.height + 2.8f);
-					GL11.glTexCoord2f(1, 0);
-					glVertex3f(EntityX + (healthBarLength / 2) + 0.5f, EntityY, c.height + 2.5f);
+					glTexCoord2f(0, 0);
+					glVertex3f(EntityX - (healthBarLength / 2) + 0.5f, EntityY, c.height*terrainScale + 1.5f);
+					glTexCoord2f(0, 1);
+					glVertex3f(EntityX - (healthBarLength / 2) + 0.5f, EntityY, c.height*terrainScale + 1.8f);
+					glTexCoord2f(1, 0);
+					glVertex3f(EntityX + (healthBarLength / 2) + 0.5f, EntityY, c.height*terrainScale + 1.5f);
+					glTexCoord2f(0, 1);
+					glVertex3f(EntityX - (healthBarLength / 2) + 0.5f, EntityY, c.height*terrainScale + 1.8f);
+					glTexCoord2f(1, 1);
+					glVertex3f(EntityX + (healthBarLength / 2) + 0.5f, EntityY, c.height*terrainScale + 1.8f);
+					glTexCoord2f(1, 0);
+					glVertex3f(EntityX + (healthBarLength / 2) + 0.5f, EntityY, c.height*terrainScale + 1.5f);
 					glEnd();
 					
 				}
@@ -505,19 +542,26 @@ public class Renderer {
 	}
 
 	private void drawGrid(GameState state, int width, int height) {
-		this.shaderProg.bind();
-		
-		Cell[][] cells = state.getGrid().getCells();
-		for (int y = 0; y < height; y++) 
-		{
-			for (int x = 0; x < width; x++) 
+		if(this.gridListID == -1) {
+			this.gridListID = glGenLists(1);
+			glNewList(this.gridListID, GL_COMPILE_AND_EXECUTE);
+			this.shaderProg.bind();
+			
+			Cell[][] cells = state.getGrid().getCells();
+			for (int y = 0; y < height; y++) 
 			{
-				Cell c = cells[y][x];
-				drawCell(c, y, x, true);
+				for (int x = 0; x < width; x++) 
+				{
+					Cell c = cells[y][x];
+					drawCell(c, y, x, true);
+				}
 			}
+			
+			RenderUtil.unbindShader();
+			glEndList();
+		} else {
+			GL11.glCallList(this.gridListID);
 		}
-		
-		RenderUtil.unbindShader();
 	}
 
 	private void drawCell(Cell c, int y, int x, boolean allowColor) {
@@ -605,7 +649,6 @@ public class Renderer {
 			this.color = color;
 		}
 	}
-		
 	
 	private Vector3f getTerrainColorFromHeight(float height) {
 		
@@ -630,5 +673,8 @@ public class Renderer {
 		}
 		else return upperColor.color;
 	}
-	
+
+	public Triangle[][][] getGridGeometry() {
+		return this.triangles;
+	}
 }

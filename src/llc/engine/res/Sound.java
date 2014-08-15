@@ -1,21 +1,20 @@
 package llc.engine.res;
 
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
+import java.io.IOException;
 
-import org.lwjgl.BufferUtils;
-import org.lwjgl.openal.AL10;
-import org.lwjgl.util.WaveData;
+import org.newdawn.slick.openal.Audio;
+import org.newdawn.slick.openal.AudioLoader;
+import org.newdawn.slick.util.ResourceLoader;
 
 /**
  * @author MaxiHoeve14
  */
 public class Sound {
 
-	IntBuffer buffer = BufferUtils.createIntBuffer(1);
-	IntBuffer source = BufferUtils.createIntBuffer(1);
-	public static WaveData data;
 	String path;
+	
+	Audio audio;
+	
 	public Sound(String path) {
 		this.path = path;
 	}
@@ -24,6 +23,11 @@ public class Sound {
 	 * This function is used to load the sound.
 	 */
 	public Sound loadSound() {
+		try {
+			audio = AudioLoader.getAudio("OGG", ResourceLoader.getResourceAsStream(path));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return this;
 	}
 	
@@ -32,51 +36,16 @@ public class Sound {
 	 * @param posX The source x pos.
 	 * @param posY The source y pos.
 	 * @param posZ The source z pos.
-	 * @param lPosX The listener x pos.
-	 * @param lPosY The listener y pos.
-	 * @param lPosZ The listener z pos.
+	 * @param flag PlayAtCamera
 	 */
-	public void playSound(float posX, float posY, float posZ, float lPosX, float lPosY, float lPosZ) {
-//		FloatBuffer sourcePos = BufferUtils.createFloatBuffer(3).put(new float[] { posX, posY, posZ });
-//		FloatBuffer listenerPos = BufferUtils.createFloatBuffer(3).put(new float[] { lPosX, lPosY, lPosZ });
-		
-		AL10.alGenBuffers(buffer);
-		
-		data = WaveData.create(path);
-		AL10.alBufferData(buffer.get(0), data.format, data.data, data.samplerate);
-		data.dispose();
-		
-		FloatBuffer sourcePos = BufferUtils.createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f });
-		FloatBuffer listenerPos = BufferUtils.createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f });
-		FloatBuffer sourceVel = BufferUtils.createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f });
-		FloatBuffer listenerVel = BufferUtils.createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f });
-		FloatBuffer listenerOri = BufferUtils.createFloatBuffer(6).put(new float[] { 0.0f, 0.0f, -1.0f,  0.0f, 1.0f, 0.0f });  
-		  
-		
-	    sourcePos.flip();
-	    sourceVel.flip();
-	    listenerPos.flip();
-	    listenerVel.flip();
-	    listenerOri.flip();
-		
-	    AL10.alSourcei(source.get(0), AL10.AL_BUFFER,   buffer.get(0) );
-	    AL10.alSourcef(source.get(0), AL10.AL_PITCH,    1.0f          );
-	    AL10.alSourcef(source.get(0), AL10.AL_GAIN,     1.0f          );
-	    AL10.alSource (source.get(0), AL10.AL_POSITION, sourcePos     );
-	    AL10.alSource (source.get(0), AL10.AL_VELOCITY, sourceVel     );
-		
-	    AL10.alListener(AL10.AL_POSITION,    listenerPos);
-	    AL10.alListener(AL10.AL_VELOCITY,    listenerVel);
-	    AL10.alListener(AL10.AL_ORIENTATION, listenerOri);
-		
-		AL10.alSourcePlay(source.get(0));
+	public void playSound(float posX, float posY, float posZ, boolean flag) {
+		if(flag) audio.playAsSoundEffect(1.0f, 1.0f, false, posX, posY, posZ);
+		else audio.playAsSoundEffect(1.0f, 1.0f, false);
 	}
 	
 	/**
 	 * This function is used to free the sounds memory.
 	 */
 	public void dispose() {
-		AL10.alDeleteSources(source);
-		AL10.alDeleteBuffers(buffer);
 	}
 }

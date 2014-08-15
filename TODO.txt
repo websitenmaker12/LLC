@@ -1,1 +1,6 @@
-- Render health bars above entitys
+- Raycast fix
+- Mapgen
+- Pathfinding
+- Slide animations
+- UI
+- Remove System.out.println's

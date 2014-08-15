@@ -121,7 +121,7 @@ public class ObjLoader {
 	public static int[] createVBO(Model model) {
 		int vboVertexHandle = glGenBuffers();
 		int vboNormalHandle = glGenBuffers();
-		// TODO: Implement materials with VBOs
+
 		FloatBuffer vertices = reserveData(model.getFaces().size() * 9);
 		FloatBuffer normals = reserveData(model.getFaces().size() * 9);
 		for (Model.Face face : model.getFaces()) {

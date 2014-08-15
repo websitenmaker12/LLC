@@ -30,6 +30,8 @@ import org.lwjgl.util.vector.Vector3f;
 public class LLC implements IKeybindingListener {
 
 	public static final String VERSION = "0.1 INDEV";
+
+	private static LLC instance;
 	private boolean isRunning = false;
 	
 	private Profiler profiler = new Profiler();
@@ -56,10 +58,12 @@ public class LLC implements IKeybindingListener {
 	private boolean isGamePaused = false;
 	
 	public LLC() {
+		instance = this;
+		
 		this.camera = new Camera(new Vector3f(4, 4, 10), new Vector3f(0, 1.5f, -1), new Vector3f(0, 0, 1));
 		this.input = new Input(this, this.camera);
 		this.gameLoader = new GameLoader();
-		this.logic = new Logic(this.gameLoader.createNewGame("res/maps/areas/map-2_areas.png"), this.input);
+		this.logic = new Logic(this.gameLoader.createNewGame("res/maps/areas/miniMap_areas.png", this.camera), this.input);
 		
 		this.input.addFireListener(new Input.LogicListener() {
 
@@ -102,6 +106,7 @@ public class LLC implements IKeybindingListener {
 		this.profiler.endStart("Setup OpenGL");
 		this.renderer = new Renderer();
 		this.renderer.generateGridGeometry(this.logic.getGameState());
+		this.input.setGridGeometry(this.renderer.getGridGeometry());
 		this.profiler.endStart("Setup GUI Renderer");
 		this.guiRenderer = new GUIRenderer(this.input, this.audioEngine);
 		this.guiRenderer.openGUI(new GUIIngame(this.logic, gameLoader));
@@ -131,13 +136,9 @@ public class LLC implements IKeybindingListener {
 	private void beginLoop() {
 		this.isRunning = true;
 		
-		// TODO Remove
-//		this.audioEngine.playMusic(EnumMusic.MUSIC1);
-		
 		this.timing.init();
 		while(this.isRunning) {
 			int delta = this.timing.getDelta();
-			Display.setTitle("FPS " + String.valueOf(this.timing.getFPS())); // TODO Remove
 			
 			this.handleDisplayResize();
 			if(Display.isCloseRequested()) this.isRunning = false;
@@ -146,14 +147,19 @@ public class LLC implements IKeybindingListener {
 			this.profiler.start("Mouse updates");
 			this.mouseX = Mouse.getX();
 			this.mouseY = this.height - Mouse.getY();
-			this.input.mousePos(this.mouseX, this.mouseY);
-			if(Mouse.isButtonDown(0) && !this.lastButtonState) this.input.mouseClick(this.mouseX, this.mouseY);
-			this.lastButtonState = Mouse.isButtonDown(0);
+			
+			if(!this.isGamePaused) {
+				this.input.mousePos(this.mouseX, this.mouseY);
+				if(Mouse.isButtonDown(0) && !this.lastButtonState) this.input.mouseClick(this.mouseX, this.mouseY);
+				this.lastButtonState = Mouse.isButtonDown(0);
+			}
 			
 			// Scrolling
-			int scroll = Mouse.getDWheel();
-			if(scroll > 0) this.camera.zoom(-1);
-			else if(scroll < 0) this.camera.zoom(1);
+			if(!this.isGamePaused) {
+				int scroll = Mouse.getDWheel();
+				if(scroll > 0) this.camera.zoom(-1);
+				else if(scroll < 0) this.camera.zoom(1);
+			}
 			
 			// Keyboard updates
 			this.profiler.endStart("Keyboard updates");
@@ -161,7 +167,7 @@ public class LLC implements IKeybindingListener {
 			
 			// Rendering
 			this.profiler.endStart("Render game");
-			this.renderer.render(this.camera, this.logic.getGameState());
+			this.renderer.render(this.camera, this.logic.getGameState(), delta);
 			this.profiler.endStart("Render GUI");
 			this.guiRenderer.render(this.width, this.height, this.mouseX, this.mouseY);
 			this.profiler.end();
@@ -209,7 +215,7 @@ public class LLC implements IKeybindingListener {
 	    Display.setFullscreen(this.isFullscreen);
 	}
 	
-	private void togglePauseMenu() {
+	public void togglePauseMenu() {
 		this.isGamePaused = !this.isGamePaused;
 		if(this.isGamePaused) {
 			this.prevGui = this.guiRenderer.getGUI();
@@ -217,6 +223,20 @@ public class LLC implements IKeybindingListener {
 		} else {
 			this.guiRenderer.openGUI(this.prevGui);
 		}
+	}
+	
+	/**
+	 * Closes the Game
+	 */
+	public void closeGame() {
+		this.isRunning = false;
+	}
+	
+	/**
+	 * Returns the LLC instance
+	 */
+	public static LLC getLLC() {
+		return instance;
 	}
 	
 }

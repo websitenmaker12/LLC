@@ -43,7 +43,7 @@ public class GUIRenderer {
 		
 		if(this.currentGUI != null) {
 			this.currentGUI.update(x, y);
-			this.currentGUI.render(this, x, y);
+			if(this.currentGUI != null) this.currentGUI.render(this, x, y);
 		}
 
 		glMatrixMode(GL_PROJECTION);

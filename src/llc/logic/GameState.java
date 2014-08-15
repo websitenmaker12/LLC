@@ -1,8 +1,11 @@
 package llc.logic;
 
+import llc.engine.Camera;
+
 public class GameState {
 
 	private Grid grid;
+	private Camera camera;
 	
 	private Player player1, player2;
 	private Cell townHall1, townHall2;
@@ -16,13 +19,12 @@ public class GameState {
 
 	public Player winner;
 	
-	public GameState(Grid grid) {
+	public GameState(Grid grid, Camera camera) {
 		this.grid = grid;
+		this.camera = camera;
 		
 		player1 = new Player(1, 100);
 		player2 = new Player(2, 100);
-		
-		setActivePlayer(player1);
 	}
 	
 	public Grid getGrid() {
@@ -37,6 +39,8 @@ public class GameState {
 		} else {
 			throw new IllegalArgumentException("Given Player argument does not exist");
 		}
+		
+		this.camera.focusCell(this.getActivePlayerTownHallLocation());
 	}
 
 	public Player getPlayer1() {
