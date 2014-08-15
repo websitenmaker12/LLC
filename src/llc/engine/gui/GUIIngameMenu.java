@@ -1,9 +1,12 @@
 package llc.engine.gui;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
 
+import llc.engine.GUIRenderer;
 import llc.loading.GameLoader;
 import llc.logic.Logic;
+import llc.util.RenderUtil;
 
 public class GUIIngameMenu extends GUI{
 	
@@ -19,7 +22,7 @@ public class GUIIngameMenu extends GUI{
 	public void onOpen() {
 		super.onOpen();
 		
-		this.elements.add(new GUIButton(this, Display.getWidth() / 2 - 100, Display.getHeight() / 2 - 165, 200, 35, "Save") {
+		this.elements.add(new GUIButton(this, Display.getWidth() / 2 - 100, Display.getHeight() / 2 - 165, 200, 35, "Back to game") {
 			public void onClick(int x, int y) {
 			}
 		});
@@ -36,5 +39,13 @@ public class GUIIngameMenu extends GUI{
 			}
 		});
 	}
-
+	
+	@Override
+	public void render(GUIRenderer renderer, int x, int y) {
+		GL11.glPushMatrix();
+		GL11.glColor3f(0.5F, 0.5F, 0.5F);
+		RenderUtil.drawQuad(0, 0, Display.getWidth(), Display.getHeight());
+		GL11.glPopMatrix();
+		super.render(renderer, x, y);
+	}
 }
