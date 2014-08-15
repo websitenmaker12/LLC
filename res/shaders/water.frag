@@ -13,7 +13,7 @@ void main() {
 	vec4 waterColor = texture2D(waterTex, texCoord * waterCellCount);
 	
 	// fetch normal vector on water from normal texture
-	vec3 waterNormal = texture2D(waterNormalsTex, texCoord * waterCellCount + waterTime).xyz;
+	vec3 waterNormal = texture2D(waterNormalsTex, texCoord * waterCellCount + waterTime).xyz - 0.5f;
 	
 	// derive grid coord from fragment coord
 	vec2 gridCoord = gl_FragCoord.xy / viewportDim;
