@@ -455,7 +455,7 @@ public class Renderer {
 		{
 			glColor3f(0.3f, 1f, 0.3f);
 			drawCell(state.selectedCell, state.selectedCell.y, state.selectedCell.x, false);
-			System.out.println("selected " + state.selectedCell.x + " " + state.selectedCell.y);
+			//System.out.println("selected " + state.selectedCell.x + " " + state.selectedCell.y);
 		}
 		if(state.hoveredCell != null && state.selectedCell == state.hoveredCell)
 		{
