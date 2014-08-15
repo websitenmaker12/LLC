@@ -71,12 +71,18 @@ public class GUIIngame extends GUI {
 	
 	@Override
 	public void render(GUIRenderer renderer, int x, int y) {
+		float scaleX;
+		float scaleY;
+		
+		scaleX = 640 * Display.getWidth();
+		scaleY = 480 * Display.getHeight();
+		
 		GL11.glPushMatrix();
 		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		left.bind();
 		
-		RenderUtil.drawTexturedQuad(0, Display.getHeight() - 348 / 1920 * Display.getWidth(), 386 / 1920 * Display.getWidth(), 348 / 1920 * Display.getHeight());
+		RenderUtil.drawTexturedQuad(0, Display.getHeight(), 386 * scaleX, 348 * scaleY);
 		
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glPopMatrix();
