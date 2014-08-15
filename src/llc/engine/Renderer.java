@@ -22,9 +22,8 @@ import llc.logic.GameState;
 import llc.logic.Player;
 import llc.util.RenderUtil;
 
-
- 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 
 import static org.lwjgl.opengl.GL14.*;
@@ -220,17 +219,8 @@ public class Renderer {
 		if(renderToTextureSupported)
 			drawGridTexture(gameState, width, height);
 		
-		drawCoordinateSystem();
-		
-		if(this.gridListID == -1) {
-			this.gridListID = glGenLists(1);
-			glNewList(this.gridListID, GL_COMPILE);
-			drawGrid(gameState, width, height);
-			glEndList();
-		}
-		
-		glCallList(this.gridListID);
-		
+//		drawCoordinateSystem();
+		drawGrid(gameState, width, height);
 		drawHoveredAndSelectedCells(gameState);
 		drawEntities(gameState, width, height);
 		drawWaterSurface(width, height);
@@ -472,19 +462,26 @@ public class Renderer {
 	}
 
 	private void drawGrid(GameState state, int width, int height) {
-		this.shaderProg.bind();
-		
-		Cell[][] cells = state.getGrid().getCells();
-		for (int y = 0; y < height; y++) 
-		{
-			for (int x = 0; x < width; x++) 
+		if(this.gridListID == -1) {
+			this.gridListID = glGenLists(1);
+			glNewList(this.gridListID, GL_COMPILE_AND_EXECUTE);
+			this.shaderProg.bind();
+			
+			Cell[][] cells = state.getGrid().getCells();
+			for (int y = 0; y < height; y++) 
 			{
-				Cell c = cells[y][x];
-				drawCell(c, y, x, true);
+				for (int x = 0; x < width; x++) 
+				{
+					Cell c = cells[y][x];
+					drawCell(c, y, x, true);
+				}
 			}
+			
+			RenderUtil.unbindShader();
+			glEndList();
+		} else {
+			GL11.glCallList(this.gridListID);
 		}
-		
-		RenderUtil.unbindShader();
 	}
 
 	private void drawCell(Cell c, int y, int x, boolean allowColor) {
