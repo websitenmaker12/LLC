@@ -2,6 +2,7 @@ package llc.engine;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +22,13 @@ import llc.logic.GameState;
 import llc.util.RenderUtil;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL20;
+
+import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL32.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.util.glu.GLU.*;
+
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -46,11 +52,16 @@ public class Renderer {
 	private Model warriorModel;
 	private int warriorId;
 	
+	private int frameBufferId;
+	
 	private Program shaderProg;
 	
 	List<GradientPoint> colors = new ArrayList<GradientPoint>();
 
 	public Renderer() {
+		System.out.println("OpenGL version: " + glGetString(GL_VERSION));
+		
+		// OpenGL setup
 		glClearColor(0F, 0F, 0F, 1F);
 
 		glEnable(GL_BLEND);
@@ -59,13 +70,16 @@ public class Renderer {
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 
+		// loading screen
 		this.loadingScreen = new Texture("res/gui/logo.png");
 		this.drawLoadingScreen(Display.getWidth(), Display.getHeight());
 		
+		// textures
 		waterTexture = new Texture("res/texture/water.png");
 		grassTexture = new Texture("res/texture/grass.png");
 		sandTexture = new Texture("res/texture/sand.png");
 		
+		// meshes
 		try {
 			baseModel = ObjLoader.loadTexturedModel(new File("res/entity/base/Medieval_House.obj"));
 			baseId = ObjLoader.createTexturedDisplayList(baseModel);
@@ -85,16 +99,42 @@ public class Renderer {
 			e.printStackTrace();
 		}
 		
+		// gradient
 		colors.add(new GradientPoint(-1f, new Vector3f(0f, 0f, 1f)));
 		colors.add(new GradientPoint(-0.25f,new Vector3f(1f, 1f, 1f)));
 		colors.add(new GradientPoint(0.15f,new Vector3f(1f, 1f, 1f)));
 		colors.add(new GradientPoint(0.25f,new Vector3f(0.5f, 1f, 1f)));
 		colors.add(new GradientPoint(0.5f,new Vector3f(1f, 1f, 1f)));
 		
+		// shader
 		this.shaderProg = new Program();
 		this.shaderProg.addShader(new Shader("res/shaders/test.vert", Shader.vertexShader));
 		this.shaderProg.addShader(new Shader("res/shaders/test.frag", Shader.fragmentShader));
 		this.shaderProg.validate();
+		
+		// FBO for render to texture, from: http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
+		frameBufferId = glGenFramebuffers();
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
+		
+		int renderedTextureId  = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, renderedTextureId);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1024, 768, 0, GL_RGB, GL_UNSIGNED_BYTE, (ByteBuffer)null); // empty
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); // have to use nearest when rendering to
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		
+		int depthRenderBufferId = glGenRenderbuffers();
+		glBindRenderbuffer(GL_RENDERBUFFER, depthRenderBufferId);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1024, 768); // must be the same as the rendered texture's size
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRenderBufferId);
+		
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTextureId, 0);
+		 
+		GL20.glDrawBuffers(GL_COLOR_ATTACHMENT0);
+		
+		if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+			System.err.println("Error: custom framebuffer is not complete");
+		
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	/**
@@ -125,11 +165,25 @@ public class Renderer {
 		int width = gameState.getGrid().getWidth();
 		int height = gameState.getGrid().getHeigth();
 		
+		drawGridTexture(gameState, width, height);
+		
 		drawCoordinateSystem();
 		drawGrid(gameState, width, height);
 		drawHoveredAndSelectedCells(gameState);
 		drawEntities(gameState, width, height);
 		drawWaterSurface(width, height);
+	}
+	
+	private void drawGridTexture(GameState state, int width, int height) {
+		glPushAttrib(GL_VIEWPORT_BIT);
+		glViewport(0,0,1024,768);
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
+		
+		
+		drawGrid(state, width, height);
+		
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glPopAttrib();
 	}
 
 	private void drawWaterSurface(int width, int height) {
