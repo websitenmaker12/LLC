@@ -103,6 +103,8 @@ public class Renderer {
 	private Texture grassTexture;
 	private Texture sandTexture;
 	
+	private Texture healthBar;
+	
 	private Triangle[][][] triangles;
 	
 	private Model baseModel;
@@ -140,6 +142,8 @@ public class Renderer {
 		waterTexture = new Texture("res/texture/water.png");
 		grassTexture = new Texture("res/texture/grass.png");
 		sandTexture = new Texture("res/texture/sand.png");
+		
+		healthBar = new Texture("res/gui/healthBar.png");
 		
 		// meshes
 		try {
@@ -430,14 +434,28 @@ public class Renderer {
 						glCallList(this.minerId);
 					}
 					glPopMatrix();
+					
+					//Health Bar
 					float EntityX = e.getX();
 					float EntityY = e.getY();
 					float healthBarLength = e.health / 100f;
-					glBegin(GL_LINES);
-					glColor3f(0, 0, 1);
+					healthBar.bind();
+					glBegin(GL_TRIANGLES);
+					GL11.glColor3f(1, 0, 0);
+					GL11.glTexCoord2f(0, 0);
 					glVertex3f(EntityX , EntityY, c.height + 2.5f);
+					GL11.glTexCoord2f(0, 1);
+					glVertex3f(EntityX , EntityY, c.height + 2.8f);
+					GL11.glTexCoord2f(1, 0);
+					glVertex3f(EntityX + healthBarLength, EntityY, c.height + 2.5f);
+					GL11.glTexCoord2f(0, 1);
+					glVertex3f(EntityX , EntityY, c.height + 2.8f);
+					GL11.glTexCoord2f(1, 1);
+					glVertex3f(EntityX + healthBarLength, EntityY, c.height + 2.8f);
+					GL11.glTexCoord2f(1, 0);
 					glVertex3f(EntityX + healthBarLength, EntityY, c.height + 2.5f);
 					glEnd();
+					
 				}
 			}
 		}
