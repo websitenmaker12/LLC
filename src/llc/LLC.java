@@ -30,6 +30,8 @@ import org.lwjgl.util.vector.Vector3f;
 public class LLC implements IKeybindingListener {
 
 	public static final String VERSION = "0.1 INDEV";
+
+	private static LLC instance;
 	private boolean isRunning = false;
 	
 	private Profiler profiler = new Profiler();
@@ -56,6 +58,8 @@ public class LLC implements IKeybindingListener {
 	private boolean isGamePaused = false;
 	
 	public LLC() {
+		instance = this;
+		
 		this.camera = new Camera(new Vector3f(4, 4, 10), new Vector3f(0, 1.5f, -1), new Vector3f(0, 0, 1));
 		this.input = new Input(this, this.camera);
 		this.gameLoader = new GameLoader();
@@ -229,6 +233,13 @@ public class LLC implements IKeybindingListener {
 	 */
 	public void closeGame() {
 		this.isRunning = false;
+	}
+	
+	/**
+	 * Returns the LLC instance
+	 */
+	public static LLC getLLC() {
+		return instance;
 	}
 	
 }
