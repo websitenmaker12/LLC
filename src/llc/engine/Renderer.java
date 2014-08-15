@@ -27,8 +27,9 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GLContext;
 
 import static org.lwjgl.opengl.GL30.*;
-import static org.lwjgl.opengl.GL32.*;
+import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.util.glu.GLU.*;
 
 import org.lwjgl.util.vector.Vector2f;
@@ -56,8 +57,10 @@ public class Renderer {
 	
 	private boolean renderToTextureSupported;
 	private int frameBufferId;
+	private int renderedTextureId;
 	
 	private Program shaderProg;
+	private Program waterProg;
 	
 	List<GradientPoint> colors = new ArrayList<GradientPoint>();
 
@@ -115,6 +118,14 @@ public class Renderer {
 		this.shaderProg.addShader(new Shader("res/shaders/test.frag", Shader.fragmentShader));
 		this.shaderProg.validate();
 		
+		waterProg = new Program();
+		waterProg.addShader(new Shader("res/shaders/water.vert", Shader.vertexShader));
+		waterProg.addShader(new Shader("res/shaders/water.frag", Shader.fragmentShader));
+		waterProg.validate();
+
+		glUniform1i(glGetUniformLocation(waterProg.getId(), "waterTex"), 0);
+		glUniform1i(glGetUniformLocation(waterProg.getId(), "gridTex"), 1);
+		
 		// FBO for render to texture, from: http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
 		renderToTextureSupported = GLContext.getCapabilities().GL_EXT_framebuffer_object;
 		
@@ -122,7 +133,7 @@ public class Renderer {
 			frameBufferId = glGenFramebuffers();
 			glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
 			
-			int renderedTextureId  = glGenTextures();
+			renderedTextureId  = glGenTextures();
 			glBindTexture(GL_TEXTURE_2D, renderedTextureId);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1024, 768, 0, GL_RGB, GL_UNSIGNED_BYTE, (ByteBuffer)null); // empty
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); // have to use nearest when rendering to
@@ -187,7 +198,6 @@ public class Renderer {
 		glViewport(0,0,1024,768);
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
 		
-		
 		drawGrid(state, width, height);
 		
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -195,28 +205,44 @@ public class Renderer {
 	}
 
 	private void drawWaterSurface(int width, int height) {
-		
-		glEnable(GL_TEXTURE_2D);
+		glActiveTexture(GL_TEXTURE0);
 		waterTexture.bind();
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, renderedTextureId);
+		
+		waterProg.bind();
+
 		glColor4f(1,  1,  1, 0.8f);
 		float cellCount = 10;
 		glBegin(GL_TRIANGLES);
-		glTexCoord2d(0, cellCount);
+		glMultiTexCoord2f(GL_TEXTURE0, 0, cellCount);
+		glMultiTexCoord2f(GL_TEXTURE1, 0, 1);
 		glVertex3f(0, 0, 0);
-		glTexCoord2d(cellCount, cellCount);
+		
+		glMultiTexCoord2f(GL_TEXTURE0, cellCount, cellCount);
+		glMultiTexCoord2f(GL_TEXTURE1, 1, 1);
 		glVertex3f(width, 0, 0);
-		glTexCoord2d(0, 0);
+		
+		glMultiTexCoord2f(GL_TEXTURE0, 0, 0);
+		glMultiTexCoord2f(GL_TEXTURE1, 0, 0);
 		glVertex3f(0, height, 0);
 
-		glTexCoord2d(cellCount, cellCount);
+		glMultiTexCoord2f(GL_TEXTURE0, cellCount, cellCount);
+		glMultiTexCoord2f(GL_TEXTURE1, 1, 1);
 		glVertex3f(width, 0, 0);
-		glTexCoord2d(cellCount, 0);
+		
+		glMultiTexCoord2f(GL_TEXTURE0, cellCount, 0);
+		glMultiTexCoord2f(GL_TEXTURE1, 1, 0);
 		glVertex3f(width, height, 0);
-		glTexCoord2d(0, 0);
+
+		glMultiTexCoord2f(GL_TEXTURE0, 0, 0);
+		glMultiTexCoord2f(GL_TEXTURE1, 0, 0);
 		glVertex3f(0, height, 0);
 		glEnd();
 		
-		glDisable(GL_TEXTURE_2D);
+		RenderUtil.unbindShader();
+
+		glActiveTexture(GL_TEXTURE0);
 	}
 	
 	public void generateGridGeometry (GameState state)
