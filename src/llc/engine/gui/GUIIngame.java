@@ -35,13 +35,13 @@ public class GUIIngame extends GUI {
 	public void onOpen() {
 		super.onOpen();
 		
-		this.elements.add(new GUIButton(this, 20, Display.getHeight() - 55, 200, 35, "Buy Warrior") {
+		this.elements.add(new GUIButton(this, Display.getWidth() - 212, Display.getHeight() - 55, 200, 35, "Buy Warrior") {
 			public void onClick(int x, int y) {
 				logic.buyEntity(new EntityWarrior());
 			}
 		});
 		
-		this.elements.add(new GUIButton(this, 20, Display.getHeight() - 110, 200, 35, "Buy Worker") {
+		this.elements.add(new GUIButton(this, Display.getWidth() - 212, Display.getHeight() - 110, 200, 35, "Buy Worker") {
 			public void onClick(int x, int y) {
 				logic.buyEntity(new EntityWorker());
 			}
@@ -71,18 +71,21 @@ public class GUIIngame extends GUI {
 	
 	@Override
 	public void render(GUIRenderer renderer, int x, int y) {
-		float scaleX;
-		float scaleY;
-		
-		scaleX = 640 * Display.getWidth();
-		scaleY = 480 * Display.getHeight();
+		float scaleX = (640 / (float)Display.getWidth());
+		float scaleY = (480 / (float)Display.getHeight());
 		
 		GL11.glPushMatrix();
 		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		left.bind();
 		
-		RenderUtil.drawTexturedQuad(0, Display.getHeight(), 386 * scaleX, 348 * scaleY);
+		middle.bind();
+		RenderUtil.drawTexturedQuad(368 * scaleX, Display.getHeight() - 252 * scaleY, Display.getWidth() - ((386 * scaleX) + (702 * scaleX)) + 15, 252 * scaleY);
+		
+		left.bind();
+		RenderUtil.drawTexturedQuad(0, Display.getHeight() - 348 * scaleY, 386 * scaleX, 348 * scaleY);
+		
+		right.bind();
+		RenderUtil.drawTexturedQuad(Display.getWidth() - 702 * scaleX, Display.getHeight() - 348 * scaleY, 702 * scaleX, 348 * scaleY);
 		
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glPopMatrix();
