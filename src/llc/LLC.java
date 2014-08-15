@@ -150,6 +150,14 @@ public class LLC implements IKeybindingListener {
 			if(Mouse.isButtonDown(0) && !this.lastButtonState) this.input.mouseClick(this.mouseX, this.mouseY);
 			this.lastButtonState = Mouse.isButtonDown(0);
 			
+			// Scrolling
+			int scroll = Mouse.getDWheel();
+			if(scroll > 0) {
+				this.camera.zoom(-4F);
+			} else if(scroll < 0) {
+				this.camera.zoom(4F);
+			}
+			
 			// Keyboard updates
 			this.profiler.endStart("Keyboard updates");
 			this.keyboardListener.update();
@@ -192,7 +200,7 @@ public class LLC implements IKeybindingListener {
 	public void onKeyBindingUpdate(KeyBinding keyBinding, boolean isPressed) {
 		try {
 			if(keyBinding.name.equals("func.fullscreen")) this.toggleFullscreen();
-			else if(keyBinding.name.equals("gui.pause")) this.togglePauseMenu();
+			else if(keyBinding.name.equals("gui.pause") && isPressed) this.togglePauseMenu();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
