@@ -489,7 +489,7 @@ public class Renderer {
 				
 				if(e != null) {
 					glPushMatrix();
-					glTranslatef(x + 0.5F, y + 0.5F, (c.height*terrainScale));
+					glTranslatef(x + 0.5F, y + 0.5F, c.height * terrainScale + 0.5F);
 					glColor3f(1, 1, 1);
 					if(e instanceof EntityBuildingBase) {
 						bindModelTexture(baseModel);
