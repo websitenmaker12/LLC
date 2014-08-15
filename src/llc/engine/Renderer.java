@@ -1,68 +1,5 @@
 package llc.engine;
 
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_LEQUAL;
-import static org.lwjgl.opengl.GL11.GL_LINES;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_NEAREST;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.GL_RGB;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
-import static org.lwjgl.opengl.GL11.GL_VERSION;
-import static org.lwjgl.opengl.GL11.GL_VIEWPORT_BIT;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glCallList;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glColor4f;
-import static org.lwjgl.opengl.GL11.glDepthFunc;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glGenTextures;
-import static org.lwjgl.opengl.GL11.glGetString;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glNormal3f;
-import static org.lwjgl.opengl.GL11.glOrtho;
-import static org.lwjgl.opengl.GL11.glPopAttrib;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushAttrib;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glTexCoord2d;
-import static org.lwjgl.opengl.GL11.glTexImage2D;
-import static org.lwjgl.opengl.GL11.glTexParameteri;
-import static org.lwjgl.opengl.GL11.glTranslatef;
-import static org.lwjgl.opengl.GL11.glVertex3f;
-import static org.lwjgl.opengl.GL11.glViewport;
-import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT0;
-import static org.lwjgl.opengl.GL30.GL_DEPTH_ATTACHMENT;
-import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
-import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_COMPLETE;
-import static org.lwjgl.opengl.GL30.GL_RENDERBUFFER;
-import static org.lwjgl.opengl.GL30.glBindFramebuffer;
-import static org.lwjgl.opengl.GL30.glBindRenderbuffer;
-import static org.lwjgl.opengl.GL30.glCheckFramebufferStatus;
-import static org.lwjgl.opengl.GL30.glFramebufferRenderbuffer;
-import static org.lwjgl.opengl.GL30.glGenFramebuffers;
-import static org.lwjgl.opengl.GL30.glGenRenderbuffers;
-import static org.lwjgl.opengl.GL30.glRenderbufferStorage;
-import static org.lwjgl.util.glu.GLU.gluLookAt;
-import static org.lwjgl.util.glu.GLU.gluPerspective;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -86,11 +23,9 @@ import llc.logic.Player;
 import llc.util.RenderUtil;
 
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GLContext;
 
+import static org.lwjgl.opengl.GL14.*;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -107,9 +42,10 @@ public class Renderer {
 	
 	private Texture loadingScreen;
 	
-	private Texture waterTexture;
 	private Texture grassTexture;
 	private Texture sandTexture;
+	private Texture waterTexture;
+	private Texture waterNormalsTexture;
 	
 	private Texture healthBar;
 	
@@ -132,6 +68,7 @@ public class Renderer {
 	private Program shaderProg;
 	private Program waterProg;
 	private int waterTexLoc;
+	private int waterNormalsTexLoc;
 	private int gridTexLoc;
 	private int waterCellCountLoc;
 	
@@ -157,9 +94,10 @@ public class Renderer {
 		this.drawLoadingScreen(Display.getWidth(), Display.getHeight());
 		
 		// textures
-		waterTexture = new Texture("res/texture/water.png");
 		grassTexture = new Texture("res/texture/grass.png");
 		sandTexture = new Texture("res/texture/sand.png");
+		waterTexture = new Texture("res/texture/water.png");
+		waterNormalsTexture = new Texture("res/texture/waternormals.jpg");
 
 		healthBar = new Texture("res/gui/healthBar.png");
 		
@@ -202,6 +140,7 @@ public class Renderer {
 		waterProg.validate();
 
 		waterTexLoc = glGetUniformLocation(waterProg.getId(), "waterTex");
+		waterNormalsTexLoc = glGetUniformLocation(waterProg.getId(), "waterNormalsTex");
 		gridTexLoc = glGetUniformLocation(waterProg.getId(), "gridTex");
 		viewportDimLoc = glGetUniformLocation(waterProg.getId(), "viewportDim");
 		waterCellCountLoc = glGetUniformLocation(waterProg.getId(), "waterCellCount");
@@ -216,6 +155,8 @@ public class Renderer {
 			renderedTextureId  = glGenTextures();
 			glBindTexture(GL_TEXTURE_2D, renderedTextureId);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1024, 768, 0, GL_RGB, GL_UNSIGNED_BYTE, (ByteBuffer)null); // empty
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); // have to use nearest when rendering to
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
@@ -272,13 +213,13 @@ public class Renderer {
 		drawCoordinateSystem();
 		
 		if(this.gridListID == -1) {
-			this.gridListID = GL11.glGenLists(1);
-			GL11.glNewList(this.gridListID, GL11.GL_COMPILE);
-		drawGrid(gameState, width, height);
-			GL11.glEndList();
+			this.gridListID = glGenLists(1);
+			glNewList(this.gridListID, GL_COMPILE);
+			drawGrid(gameState, width, height);
+			glEndList();
 		}
 		
-		GL11.glCallList(this.gridListID);
+		glCallList(this.gridListID);
 		
 		drawHoveredAndSelectedCells(gameState);
 		drawEntities(gameState, width, height);
@@ -304,13 +245,16 @@ public class Renderer {
 		glActiveTexture(GL_TEXTURE0);
 		waterTexture.bind();
 		glActiveTexture(GL_TEXTURE1);
+		waterNormalsTexture.bind();
+		glActiveTexture(GL_TEXTURE2);
 		glBindTexture(GL_TEXTURE_2D, renderedTextureId);
 		
 		float cellCount = 10;
 		
 		waterProg.bind();
 		glUniform1i(waterTexLoc, 0);
-		glUniform1i(gridTexLoc, 1);
+		glUniform1i(waterNormalsTexLoc, 1);
+		glUniform1i(gridTexLoc, 2);
 		glUniform2f(viewportDimLoc, viewportWidth, viewportHeight);
 		glUniform1f(waterCellCountLoc, cellCount);
 
@@ -490,21 +434,21 @@ public class Renderer {
 					float EntityY = e.getY();
 					float healthBarLength = e.health / 100f;
 					Player p = state.getActivePlayer();
-					if (p.playerID == e.getPlayer()) GL11.glColor3f(0, 1, 0);
-					else GL11.glColor3f(1, 0, 0);
+					if (p.playerID == e.getPlayer()) glColor3f(0, 1, 0);
+					else glColor3f(1, 0, 0);
 					healthBar.bind();
 					glBegin(GL_TRIANGLES);
-					GL11.glTexCoord2f(0, 0);
+					glTexCoord2f(0, 0);
 					glVertex3f(EntityX - (healthBarLength / 2) + 0.5f, EntityY, c.height + 2.5f);
-					GL11.glTexCoord2f(0, 1);
+					glTexCoord2f(0, 1);
 					glVertex3f(EntityX - (healthBarLength / 2) + 0.5f, EntityY, c.height + 2.8f);
-					GL11.glTexCoord2f(1, 0);
+					glTexCoord2f(1, 0);
 					glVertex3f(EntityX + (healthBarLength / 2) + 0.5f, EntityY, c.height + 2.5f);
-					GL11.glTexCoord2f(0, 1);
+					glTexCoord2f(0, 1);
 					glVertex3f(EntityX - (healthBarLength / 2) + 0.5f, EntityY, c.height + 2.8f);
-					GL11.glTexCoord2f(1, 1);
+					glTexCoord2f(1, 1);
 					glVertex3f(EntityX + (healthBarLength / 2) + 0.5f, EntityY, c.height + 2.8f);
-					GL11.glTexCoord2f(1, 0);
+					glTexCoord2f(1, 0);
 					glVertex3f(EntityX + (healthBarLength / 2) + 0.5f, EntityY, c.height + 2.5f);
 					glEnd();
 					
