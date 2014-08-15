@@ -165,6 +165,7 @@ public class Logic {
 			gameState.setActivePlayer(gameState.getInActivePlayer());
 			gameState.moveCount = 0;
 			gameState.selectedCell = null;
+			selectedEntity = null;
 		}
 	}
 
