@@ -1,5 +1,7 @@
 package llc.engine.audio;
 
+import java.io.IOException;
+
 import llc.engine.res.Music;
 import llc.engine.res.Sound;
 
@@ -24,7 +26,7 @@ public class AudioEngine {
 	 * @throws LWJGLException 
 	 */
 	public void initAudioEngine() throws LWJGLException {
-		AL.create();
+		//if(!AL.isCreated()) AL.create();
 		loadSounds();
 	}
 	
@@ -33,7 +35,11 @@ public class AudioEngine {
 	 */
 	private void loadSounds() {
 		buttonClick.loadSound();
-//		music_1 = new Music("/res/sound/music_1.ogg").loadMusic();
+		try {
+			music_1 = new Music("/res/sound/music_1.ogg").loadMusic();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**

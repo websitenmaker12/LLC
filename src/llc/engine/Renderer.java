@@ -1,5 +1,68 @@
 package llc.engine;
 
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_LEQUAL;
+import static org.lwjgl.opengl.GL11.GL_LINES;
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_NEAREST;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.GL_RGB;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
+import static org.lwjgl.opengl.GL11.GL_VERSION;
+import static org.lwjgl.opengl.GL11.GL_VIEWPORT_BIT;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
+import static org.lwjgl.opengl.GL11.glCallList;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glColor4f;
+import static org.lwjgl.opengl.GL11.glDepthFunc;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glGenTextures;
+import static org.lwjgl.opengl.GL11.glGetString;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glNormal3f;
+import static org.lwjgl.opengl.GL11.glOrtho;
+import static org.lwjgl.opengl.GL11.glPopAttrib;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushAttrib;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glTexCoord2d;
+import static org.lwjgl.opengl.GL11.glTexImage2D;
+import static org.lwjgl.opengl.GL11.glTexParameteri;
+import static org.lwjgl.opengl.GL11.glTranslatef;
+import static org.lwjgl.opengl.GL11.glVertex3f;
+import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT0;
+import static org.lwjgl.opengl.GL30.GL_DEPTH_ATTACHMENT;
+import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
+import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_COMPLETE;
+import static org.lwjgl.opengl.GL30.GL_RENDERBUFFER;
+import static org.lwjgl.opengl.GL30.glBindFramebuffer;
+import static org.lwjgl.opengl.GL30.glBindRenderbuffer;
+import static org.lwjgl.opengl.GL30.glCheckFramebufferStatus;
+import static org.lwjgl.opengl.GL30.glFramebufferRenderbuffer;
+import static org.lwjgl.opengl.GL30.glGenFramebuffers;
+import static org.lwjgl.opengl.GL30.glGenRenderbuffers;
+import static org.lwjgl.opengl.GL30.glRenderbufferStorage;
+import static org.lwjgl.util.glu.GLU.gluLookAt;
+import static org.lwjgl.util.glu.GLU.gluPerspective;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -22,6 +85,7 @@ import llc.logic.GameState;
 import llc.util.RenderUtil;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GLContext;
@@ -46,6 +110,8 @@ public class Renderer {
 	private Texture grassTexture;
 	private Texture sandTexture;
 	
+	private Texture healthBar;
+	
 	private Triangle[][][] triangles;
 	
 	private Model baseModel;
@@ -58,6 +124,8 @@ public class Renderer {
 	private boolean renderToTextureSupported;
 	private int frameBufferId;
 	private int renderedTextureId;
+
+	private int gridListID = -1;
 	
 	private Program shaderProg;
 	private Program waterProg;
@@ -87,6 +155,8 @@ public class Renderer {
 		grassTexture = new Texture("res/texture/grass.png");
 		sandTexture = new Texture("res/texture/sand.png");
 
+		healthBar = new Texture("res/gui/healthBar.png");
+		
 		// meshes
 		try {
 			baseModel = ObjLoader.loadTexturedModel(new File("res/entity/base/Medieval_House.obj"));
@@ -163,7 +233,7 @@ public class Renderer {
 	public void handleDisplayResize(int width, int height) {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluPerspective(45, (float) width / (float) height, 0.1F, 100F);
+		gluPerspective(45, (float) width / (float) height, 0.1F, 300F);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glViewport(0, 0, width, height);
@@ -189,7 +259,16 @@ public class Renderer {
 			drawGridTexture(gameState, width, height);
 		
 		drawCoordinateSystem();
+		
+		if(this.gridListID == -1) {
+			this.gridListID = GL11.glGenLists(1);
+			GL11.glNewList(this.gridListID, GL11.GL_COMPILE);
 		drawGrid(gameState, width, height);
+			GL11.glEndList();
+		}
+		
+		GL11.glCallList(this.gridListID);
+		
 		drawHoveredAndSelectedCells(gameState);
 		drawEntities(gameState, width, height);
 		drawWaterSurface(width, height);
@@ -396,6 +475,28 @@ public class Renderer {
 						glCallList(this.minerId);
 					}
 					glPopMatrix();
+					
+					//Health Bar
+					float EntityX = e.getX();
+					float EntityY = e.getY();
+					float healthBarLength = e.health / 100f;
+					healthBar.bind();
+					glBegin(GL_TRIANGLES);
+					GL11.glColor3f(1, 0, 0);
+					GL11.glTexCoord2f(0, 0);
+					glVertex3f(EntityX - (healthBarLength / 2) + 0.5f, EntityY, c.height + 2.5f);
+					GL11.glTexCoord2f(0, 1);
+					glVertex3f(EntityX - (healthBarLength / 2) + 0.5f, EntityY, c.height + 2.8f);
+					GL11.glTexCoord2f(1, 0);
+					glVertex3f(EntityX + (healthBarLength / 2) + 0.5f, EntityY, c.height + 2.5f);
+					GL11.glTexCoord2f(0, 1);
+					glVertex3f(EntityX - (healthBarLength / 2) + 0.5f, EntityY, c.height + 2.8f);
+					GL11.glTexCoord2f(1, 1);
+					glVertex3f(EntityX + (healthBarLength / 2) + 0.5f, EntityY, c.height + 2.8f);
+					GL11.glTexCoord2f(1, 0);
+					glVertex3f(EntityX + (healthBarLength / 2) + 0.5f, EntityY, c.height + 2.5f);
+					glEnd();
+					
 				}
 			}
 		}
