@@ -22,6 +22,8 @@ import llc.logic.GameState;
 import llc.logic.Player;
 import llc.util.RenderUtil;
 
+
+ 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GLContext;
 
@@ -71,9 +73,13 @@ public class Renderer {
 	private int waterNormalsTexLoc;
 	private int gridTexLoc;
 	private int waterCellCountLoc;
+	private int waterTimeLoc;
 	
 	private int viewportWidth;
 	private int viewportHeight;
+	
+	/// time in seconds since the game started
+	private float currentTime;
 	
 	List<GradientPoint> colors = new ArrayList<GradientPoint>();
 
@@ -144,6 +150,7 @@ public class Renderer {
 		gridTexLoc = glGetUniformLocation(waterProg.getId(), "gridTex");
 		viewportDimLoc = glGetUniformLocation(waterProg.getId(), "viewportDim");
 		waterCellCountLoc = glGetUniformLocation(waterProg.getId(), "waterCellCount");
+		waterTimeLoc = glGetUniformLocation(waterProg.getId(), "waterTime");
 
 		// FBO for render to texture, from: http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
 		renderToTextureSupported = GLContext.getCapabilities().GL_EXT_framebuffer_object;
@@ -257,8 +264,9 @@ public class Renderer {
 		glUniform1i(gridTexLoc, 2);
 		glUniform2f(viewportDimLoc, viewportWidth, viewportHeight);
 		glUniform1f(waterCellCountLoc, cellCount);
+		glUniform1f(waterTimeLoc, currentTime % 1.0f);
 
-		glColor4f(1,  1,  1, 0.8f);
+		glColor3f(1,  1,  1);
 		
 		glBegin(GL_TRIANGLES);
 		glTexCoord2f(0, 1);
