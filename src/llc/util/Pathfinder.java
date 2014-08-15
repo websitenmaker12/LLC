@@ -98,7 +98,7 @@ public class Pathfinder {
 		}
 		return open;
 	}
-	private Cell[] getNeighbors(Cell c) {
+	private Cell[] getNeighbors(Cell c, Grid g) {
 		System.out.println("Finding neighbors for (" + c.x + "|" + c.y + ")");
 		//Is the cell at the border?
 		int width = g.getWidth()-1;

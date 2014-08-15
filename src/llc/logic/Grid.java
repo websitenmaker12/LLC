@@ -35,6 +35,7 @@ public class Grid {
 	 * @return the cell
 	 */
 	public Cell getCellAt(int x, int y) {
+		if(x < 0 || y < 0 || x >= this.width || y >= this.heigth) return null;
 		return cells[y][x];
 	}
 	
