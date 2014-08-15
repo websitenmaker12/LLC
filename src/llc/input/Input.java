@@ -91,8 +91,8 @@ public class Input {
 	 * Raycasts a given mouse position into the scene and calculates the
 	 * intersected cell on the XY layer (z == 0)
 	 */
-	private Vector2f rayCastZ0(int x, int y) {
-		Vector3f rayDirection = rayDirectionFromMousePos(x, y);
+	private Vector2f rayCastZ0(Vector3f rayDirection) {
+
 		// System.out.println("ray: " + rayDirection);
 		float t = (0 - Cam.pos.z) / rayDirection.z; // z of the grid is 0
 
@@ -114,11 +114,15 @@ public class Input {
 	 * intersected cell (taking cell heights into account)
 	 */
 	private Vector2f rayCast(int x, int y) {
-		return null;
+		Vector3f rayDirection = rayDirectionFromMousePos(x, y);
+		
+		Vector2f z0CellPos = rayCastZ0(rayDirection);
+		
+		return z0CellPos;
 	}
 
 	public void mouseClick(int x, int y) {
-		Vector2f Ray = rayCastZ0(x, y);
+		Vector2f Ray = rayCast(x, y);
 		FireCellClickedEvent((int) Ray.x, (int) Ray.y);
 	}
 
