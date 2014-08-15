@@ -26,7 +26,7 @@ public class AudioEngine {
 	 * @throws LWJGLException 
 	 */
 	public void initAudioEngine() throws LWJGLException {
-		AL.create();
+		//if(!AL.isCreated()) AL.create();
 		loadSounds();
 	}
 	
