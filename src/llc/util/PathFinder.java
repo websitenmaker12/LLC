@@ -1,8 +1,8 @@
 package llc.util;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
 import llc.logic.Cell;
 import llc.logic.CellType;
@@ -15,9 +15,9 @@ import llc.logic.Grid;
 
 public class PathFinder {
 	private static final int CONST_COST = 10;
+	private static final int CONST_COST_DIAGONAL = 14;
 	
 	public static List<Cell> findPath(Grid grid, Cell from, Cell to) {
-		
 		List<Cell> openCells = new ArrayList<Cell>();
 		List<Cell> closedCells = new ArrayList<Cell>();
 		
@@ -28,29 +28,18 @@ public class PathFinder {
 		openCells.add(from);
 		
 		while (true) {
-			Cell lowestFValue;
-			
-			if (openCells.size() > 1) {
-				lowestFValue = openCells.get(0);
-				
-				for (Cell cell : openCells) {
-					if (cell.pathfFValue < lowestFValue.pathfFValue) {
-						lowestFValue = cell;
-					}
-				}
-			} else {
-				lowestFValue = openCells.get(0);
-			}
+			if(openCells.size() == 0) break;
+
+			Cell lowestFValue = openCells.get(0);
+			if(openCells.size() > 1) for(Cell cell : openCells) if(cell.pathfFValue < lowestFValue.pathfFValue && !closedCells.contains(cell)) lowestFValue = cell;
 			
 			for (Cell cell : getNeighbours(lowestFValue, grid)) {
 				if (!openCells.contains(cell) && !closedCells.contains(cell)) {
 					cell.pathfOriginCell = lowestFValue;
 					cell.counter = lowestFValue.counter + 1;
-					cell.pathfFValue = manhattanDistance(cell, to) + CONST_COST*cell.counter;
+					cell.pathfFValue = manhattanDistance(cell, to) + (isDiagonalNeighbour(lowestFValue, cell) ? CONST_COST_DIAGONAL : CONST_COST) * cell.counter;
 				
 					openCells.add(cell);
-					openCells.remove(lowestFValue);
-					closedCells.add(lowestFValue);
 					
 					if (cell == to) {
 						List<Cell> finalPath = new ArrayList<Cell>();
@@ -60,18 +49,19 @@ public class PathFinder {
 						do {
 							finalPath.add(node);
 							node = node.pathfOriginCell;
-						} while (node == from);
+						} while (node != from);
 						
 						Collections.reverse(finalPath);
 						return finalPath;
 					}
 				}
 			}
-			
-			
+
+			openCells.remove(lowestFValue);
+			closedCells.add(lowestFValue);
 		}
 		
-		
+		return null;
 	}
 	
 	/**
@@ -81,26 +71,21 @@ public class PathFinder {
 	 * @return finalCells as List<Cell>
 	 */
 	private static List<Cell> getNeighbours(Cell cell, Grid grid) {
-		Cell[] startCells = new Cell[4];
 		List<Cell> finalCells = new ArrayList<Cell>();
 		
-		startCells[0] = grid.getCellAt(cell.x, cell.y + 1);
-		startCells[1] = grid.getCellAt(cell.x + 1, cell.y);
-		startCells[2] = grid.getCellAt(cell.x, cell.y - 1);
-		startCells[3] = grid.getCellAt(cell.x - 1, cell.y);
-
-		for (int i = 0; i <= startCells.length - 1; i++) {
-			if (startCells[i] != null) {
-				int x = startCells[i].x;
-				int y = startCells[i].y;
-				CellType isWalkable = startCells[i].getType();
-				if (x >= 0 && y >= 0 && y < grid.getHeigth() && x < grid.getWidth() && isWalkable == CellType.WALKABLE) {
-					finalCells.add(startCells[i]);
-				}
+		for(int x = -1; x <= 1; x++) {
+			for(int y = -1; y <= 1; y++) {
+				Cell iCell = grid.getCellAt(cell.x + x, cell.y + y);
+				if(iCell != cell && iCell != null && iCell.x >= 0 && iCell.y >= 0 && iCell.y < grid.getHeigth() && iCell.x < grid.getWidth()
+						&& iCell.getType() == CellType.WALKABLE && !iCell.containsEntity()) finalCells.add(iCell);
 			}
 		}
-		
+
 		return finalCells;
+	}
+	
+	private static boolean isDiagonalNeighbour(Cell cell, Cell neighbourCell) {
+		return (cell.x != neighbourCell.x && cell.y != neighbourCell.y);
 	}
 	
 	/**

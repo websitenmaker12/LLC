@@ -99,7 +99,7 @@ import llc.entity.EntityWarrior;
 import llc.entity.EntityWorker;
 import llc.logic.Cell;
 import llc.logic.GameState;
-import llc.logic.Player;
+import llc.util.PathFinder;
 import llc.util.RenderUtil;
 
 import org.lwjgl.opengl.Display;
@@ -107,6 +107,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.newdawn.slick.Color;
 
 public class Renderer {
 	
@@ -119,8 +120,6 @@ public class Renderer {
 	private Texture sandTexture;
 	private Texture waterTexture;
 	private Texture waterNormalsTexture;
-	
-	private Texture healthBar;
 	
 	private Triangle[][][] triangles;
 	
@@ -152,10 +151,7 @@ public class Renderer {
 	/// time in seconds since the game started
 	private float currentTime;
 	
-	// TODO REMOVE
-	private List<Cell> cells;
-	
-	List<GradientPoint> colors = new ArrayList<GradientPoint>();
+	private List<GradientPoint> colors = new ArrayList<GradientPoint>();
 
 	public Renderer() {
 		System.out.println("OpenGL version: " + glGetString(GL_VERSION));
@@ -179,8 +175,6 @@ public class Renderer {
 		waterTexture = new Texture("res/texture/water.png");
 		waterNormalsTexture = new Texture("res/texture/waternormals.jpg");
 
-		healthBar = new Texture("res/gui/healthBar.png");
-		
 		// meshes
 		try {
 			baseModel = ObjLoader.loadTexturedModel(new File("res/entity/base/Medieval_House.obj"));
@@ -250,8 +244,7 @@ public class Renderer {
 
 			glDrawBuffers(GL_COLOR_ATTACHMENT0);
 	
-			if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-				System.err.println("Error: custom framebuffer is not complete");
+			if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) System.err.println("Error: custom framebuffer is not complete");
 
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
@@ -291,8 +284,7 @@ public class Renderer {
 		int width = gameState.getGrid().getWidth();
 		int height = gameState.getGrid().getHeigth();
 		
-		if(renderToTextureSupported)
-			drawGridTexture(gameState, width, height);
+		if(renderToTextureSupported) drawGridTexture(gameState, width, height);
 		
 //		drawCoordinateSystem();
 		drawGrid(gameState, width, height);
@@ -306,7 +298,7 @@ public class Renderer {
 		glViewport(0,0,1024,768);
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
 		
-		glClear ( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		drawGrid(state, width, height);
 		
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -335,7 +327,7 @@ public class Renderer {
 		glUniform1f(waterCellCountLoc, cellCount);
 		glUniform1f(waterTimeLoc, (currentTime / waterSpeed) % 1f);
 
-		glColor3f(1,  1,  1);
+		glColor3f(1, 1, 1);
 		
 		glBegin(GL_TRIANGLES);
 		glTexCoord2f(0, 1);
@@ -362,16 +354,13 @@ public class Renderer {
 		glActiveTexture(GL_TEXTURE0);
 	}
 	
-	public void generateGridGeometry (GameState state)
-	{
+	public void generateGridGeometry(GameState state) {
 		int width = state.getGrid().getWidth();
 		int height = state.getGrid().getHeigth();
 		Cell[][] cells = state.getGrid().getCells();
 		triangles = new Triangle[height][width][2];
-		for (int y = 0; y < height; y++) 
-		{
-			for (int x = 0; x < width; x++) 
-			{
+		for(int y = 0; y < height; y++) {
+			for(int x = 0; x < width; x++) {
 				//Generating heigth coordinates
 				float currentHeight = cells[y][x].height;
 				float[][] heights = new float [3][3];
@@ -406,59 +395,34 @@ public class Renderer {
 				Vector3f bottomRightNormal = calcNormal(x + 1, y + 1, heights[1][0], heights[1][1], heights[2][1], heights[2][0]);
 				
 				triangles[y][x][0] = new Triangle(
-						new Vertex(
-								topLeft,
-								topLeftNormal,
-								new Vector2f(0, 1)
-								),
-						new Vertex(
-								topRight,
-								topRightNormal,
-								new Vector2f(1, 1)
-								),
-						new Vertex(
-								bottomLeft,
-								bottomLeftNormal,
-								new Vector2f(0, 0)
-								)
-						);
+						new Vertex(topLeft, topLeftNormal, new Vector2f(0, 1)),
+						new Vertex(topRight, topRightNormal, new Vector2f(1, 1)),
+						new Vertex(bottomLeft, bottomLeftNormal, new Vector2f(0, 0))
+				);
 				triangles[y][x][1] = new Triangle(
-						new Vertex(
-								topRight,
-								topRightNormal,
-								new Vector2f(1, 1)
-								),
-						new Vertex(
-								bottomRight,
-								bottomRightNormal,
-								new Vector2f(1, 0)
-								),
-						new Vertex(
-								bottomLeft,
-								bottomLeftNormal,
-								new Vector2f(0, 0)
-								)
-						);
+						new Vertex(topRight, topRightNormal, new Vector2f(1, 1)),
+						new Vertex(bottomRight, bottomRightNormal, new Vector2f(1, 0)),
+						new Vertex(bottomLeft, bottomLeftNormal, new Vector2f(0, 0))
+				);
 			}
 		}
 	}
 	
-	private void drawHoveredAndSelectedCells(GameState state)
-	{
+	private void drawHoveredAndSelectedCells(GameState state) {
 		// highlight hovered cell
 		glEnable(GL_TEXTURE_2D);
 		this.shaderProg.bind();
 		
-		if (state.hoveredCell != null) {
+		if(state.hoveredCell != null) {
 			glColor3f(1, 0.5f, 0.5f);
 			drawCell(state.hoveredCell, state.hoveredCell.y, state.hoveredCell.x, false);
-			
-//			if(cells == null) cells = PathFinder.findPath(state.getGrid(), state.getGrid().getCellAt(10, 10), state.getGrid().getCellAt(18, 3));
-//			for(Cell cell : cells) {
-//				this.drawCell(cell, cell.y, cell.x, false);
-//			}
+
+			if(state.selectedCell != null) {
+				List<Cell> cells = PathFinder.findPath(state.getGrid(), state.selectedCell, state.hoveredCell);
+				if(cells != null) for(Cell cell : cells) this.drawCell(cell, cell.y, cell.x, false);
+			}
 		}
-		if (state.selectedCell != null) {
+		if(state.selectedCell != null) {
 			glColor3f(0.3f, 1f, 0.3f);
 			drawCell(state.selectedCell, state.selectedCell.y, state.selectedCell.x, false);
 		}
@@ -515,29 +479,15 @@ public class Renderer {
 					}
 					glPopMatrix();
 					
-					//Health Bar
-					float EntityX = e.getX();
-					float EntityY = e.getY();
-					float healthBarLength = e.health / 100f;
-					Player p = state.getActivePlayer();
-					if (p.playerID == e.getPlayer()) glColor3f(0, 1, 0);
-					else glColor3f(1, 0, 0);
-					healthBar.bind();
-					glBegin(GL_TRIANGLES);
-					glTexCoord2f(0, 0);
-					glVertex3f(EntityX - (healthBarLength / 2) + 0.5f, EntityY, c.height*terrainScale + 1.5f);
-					glTexCoord2f(0, 1);
-					glVertex3f(EntityX - (healthBarLength / 2) + 0.5f, EntityY, c.height*terrainScale + 1.8f);
-					glTexCoord2f(1, 0);
-					glVertex3f(EntityX + (healthBarLength / 2) + 0.5f, EntityY, c.height*terrainScale + 1.5f);
-					glTexCoord2f(0, 1);
-					glVertex3f(EntityX - (healthBarLength / 2) + 0.5f, EntityY, c.height*terrainScale + 1.8f);
-					glTexCoord2f(1, 1);
-					glVertex3f(EntityX + (healthBarLength / 2) + 0.5f, EntityY, c.height*terrainScale + 1.8f);
-					glTexCoord2f(1, 0);
-					glVertex3f(EntityX + (healthBarLength / 2) + 0.5f, EntityY, c.height*terrainScale + 1.5f);
-					glEnd();
-					
+					// Health Bar
+					GL11.glPushMatrix();
+					GL11.glTranslatef(0, 0, f + 1.25F);
+					Color.black.bind();
+					RenderUtil.drawQuad(e.getX(), e.getY(), e.maxHealth / 160F, 0.1F);
+					if(state.getActivePlayer().playerID == e.getPlayer()) Color.green.bind();
+					else Color.red.bind();
+					RenderUtil.drawQuad(e.getX(), e.getY(), e.health / 160F, 0.1F);
+					GL11.glPopMatrix();
 				}
 			}
 		}
@@ -552,10 +502,8 @@ public class Renderer {
 			this.shaderProg.bind();
 			
 			Cell[][] cells = state.getGrid().getCells();
-			for (int y = 0; y < height; y++) 
-			{
-				for (int x = 0; x < width; x++) 
-				{
+			for(int y = 0; y < height; y++) {
+				for(int x = 0; x < width; x++) {
 					Cell c = cells[y][x];
 					drawCell(c, y, x, true);
 				}
@@ -570,13 +518,11 @@ public class Renderer {
 
 	private void drawCell(Cell c, int y, int x, boolean allowColor) {
 		float h = c.getHeight();
+		
 		// Render terrain texture
-		if (h < -sandRegion)
-			waterTexture.bind();
-		else if (h > sandRegion)
-			grassTexture.bind();
-		else 
-			sandTexture.bind();
+		if(h < -sandRegion) waterTexture.bind();
+		else if(h > sandRegion) grassTexture.bind();
+		else sandTexture.bind();
 		
 		Triangle[] ts = triangles[y][x];
 		glBegin(GL_TRIANGLES);
@@ -608,6 +554,7 @@ public class Renderer {
 		return normal;
 	}
 
+	@SuppressWarnings("unused")
 	private void drawCoordinateSystem() {
 		glDisable(GL_TEXTURE_2D); // someone leaves textures enabled, fix this
 		
@@ -659,8 +606,7 @@ public class Renderer {
 		// find gradient colors around height
 		int upper;
 		for(upper = 0; upper < colors.size(); upper++) {
-			if(colors.get(upper).height > height)
-				break;
+			if(colors.get(upper).height > height) break;
 		}
 		
 		GradientPoint upperColor = colors.get(Math.min(upper, colors.size() - 1));
