@@ -1,11 +1,12 @@
 uniform sampler2D waterTex;
 uniform sampler2D gridTex;
+uniform vec2 viewportDim;
 
 varying vec2 waterCoord;
-varying vec2 gridCoord;
 varying float waterAlpha;
 
 void main() {
+	vec2 gridCoord = gl_FragCoord.xy / viewportDim;
 
 
 	vec4 waterColor = texture2D(waterTex, waterCoord);

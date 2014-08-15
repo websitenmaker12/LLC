@@ -124,6 +124,7 @@ public class Renderer {
 	private boolean renderToTextureSupported;
 	private int frameBufferId;
 	private int renderedTextureId;
+	private int viewportDimLoc;
 
 	private int gridListID = -1;
 	
@@ -197,6 +198,7 @@ public class Renderer {
 
 		waterTexLoc = glGetUniformLocation(waterProg.getId(), "waterTex");
 		gridTexLoc = glGetUniformLocation(waterProg.getId(), "gridTex");
+		viewportDimLoc = glGetUniformLocation(waterProg.getId(), "viewportDim");
 
 		// FBO for render to texture, from: http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
 		renderToTextureSupported = GLContext.getCapabilities().GL_EXT_framebuffer_object;
@@ -298,6 +300,7 @@ public class Renderer {
 		waterProg.bind();
 		glUniform1i(waterTexLoc, 0);
 		glUniform1i(gridTexLoc, 1);
+		glUniform2f(viewportDimLoc, width, height);
 
 		glColor4f(1,  1,  1, 0.8f);
 		float cellCount = 10;
