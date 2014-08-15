@@ -1,12 +1,16 @@
 package llc;
 
+import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
+import static org.lwjgl.opengl.GL11.glGetError;
 import llc.engine.Camera;
 import llc.engine.GUIRenderer;
 import llc.engine.Profiler;
 import llc.engine.Renderer;
 import llc.engine.Timing;
 import llc.engine.audio.AudioEngine;
+import llc.engine.gui.GUI;
 import llc.engine.gui.GUIIngame;
+import llc.engine.gui.GUIIngameMenu;
 import llc.input.IKeybindingListener;
 import llc.input.Input;
 import llc.input.KeyBinding;
@@ -20,7 +24,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -48,6 +51,9 @@ public class LLC implements IKeybindingListener {
 	
 	private boolean isFullscreen = false;
 	private final DisplayMode standartDisplayMode = new DisplayMode(640, 480);
+	
+	private GUI prevGui = null;
+	private boolean isGamePaused = false;
 	
 	public LLC() {
 		this.camera = new Camera(new Vector3f(4, 4, 10), new Vector3f(0, 1.5f, -1), new Vector3f(0, 0, 1));
@@ -84,6 +90,7 @@ public class LLC implements IKeybindingListener {
 		this.keyboardListener = new KeyboardListener();
 		this.keyboardListener.registerEventHandler(this);
 		this.keyboardListener.registerKeyBinding(new KeyBinding("func.fullscreen", Keyboard.KEY_F11, false));
+		this.keyboardListener.registerKeyBinding(new KeyBinding("gui.pause", Keyboard.KEY_ESCAPE, false));
 	}
 	
 	/**
@@ -143,6 +150,11 @@ public class LLC implements IKeybindingListener {
 			if(Mouse.isButtonDown(0) && !this.lastButtonState) this.input.mouseClick(this.mouseX, this.mouseY);
 			this.lastButtonState = Mouse.isButtonDown(0);
 			
+			// Scrolling
+			int scroll = Mouse.getDWheel();
+			if(scroll > 0) this.camera.zoom(-1);
+			else if(scroll < 0) this.camera.zoom(1);
+			
 			// Keyboard updates
 			this.profiler.endStart("Keyboard updates");
 			this.keyboardListener.update();
@@ -185,18 +197,26 @@ public class LLC implements IKeybindingListener {
 	public void onKeyBindingUpdate(KeyBinding keyBinding, boolean isPressed) {
 		try {
 			if(keyBinding.name.equals("func.fullscreen")) this.toggleFullscreen();
+			else if(keyBinding.name.equals("gui.pause") && isPressed) this.togglePauseMenu();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	/**
-	 * Toggles the window in Fullscreen- and Normal-Display-Mode
-	 */
 	private void toggleFullscreen() throws LWJGLException {
 		this.isFullscreen = !this.isFullscreen;
 	    Display.setDisplayMode(this.isFullscreen ? Display.getDesktopDisplayMode() : this.standartDisplayMode);
 	    Display.setFullscreen(this.isFullscreen);
+	}
+	
+	private void togglePauseMenu() {
+		this.isGamePaused = !this.isGamePaused;
+		if(this.isGamePaused) {
+			this.prevGui = this.guiRenderer.getGUI();
+			this.guiRenderer.openGUI(new GUIIngameMenu(this.gameLoader, this.logic));
+		} else {
+			this.guiRenderer.openGUI(this.prevGui);
+		}
 	}
 	
 }
