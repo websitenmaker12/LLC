@@ -82,6 +82,7 @@ import llc.entity.EntityWarrior;
 import llc.entity.EntityWorker;
 import llc.logic.Cell;
 import llc.logic.GameState;
+import llc.logic.Player;
 import llc.util.RenderUtil;
 
 import org.lwjgl.opengl.Display;
@@ -483,9 +484,11 @@ public class Renderer {
 					float EntityX = e.getX();
 					float EntityY = e.getY();
 					float healthBarLength = e.health / 100f;
+					Player p = state.getActivePlayer();
+					if (p.playerID == e.getPlayer()) GL11.glColor3f(0, 1, 0);
+					else GL11.glColor3f(1, 0, 0);
 					healthBar.bind();
 					glBegin(GL_TRIANGLES);
-					GL11.glColor3f(1, 0, 0);
 					GL11.glTexCoord2f(0, 0);
 					glVertex3f(EntityX - (healthBarLength / 2) + 0.5f, EntityY, c.height + 2.5f);
 					GL11.glTexCoord2f(0, 1);
