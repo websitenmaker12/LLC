@@ -43,7 +43,7 @@ public class GUIIngameMenu extends GUI{
 	@Override
 	public void render(GUIRenderer renderer, int x, int y) {
 		GL11.glPushMatrix();
-		GL11.glColor3f(0.5F, 0.5F, 0.5F);
+		GL11.glColor4f(0.5F, 0.5F, 0.5F, 0.5f);
 		RenderUtil.drawQuad(0, 0, Display.getWidth(), Display.getHeight());
 		GL11.glPopMatrix();
 		super.render(renderer, x, y);
