@@ -100,6 +100,7 @@ import llc.entity.EntityWorker;
 import llc.logic.Cell;
 import llc.logic.GameState;
 import llc.logic.Player;
+import llc.util.PathFinder;
 import llc.util.RenderUtil;
 
 import org.lwjgl.opengl.Display;
@@ -151,6 +152,9 @@ public class Renderer {
 	
 	/// time in seconds since the game started
 	private float currentTime;
+	
+	// TODO REMOVE
+	private List<Cell> cells;
 	
 	List<GradientPoint> colors = new ArrayList<GradientPoint>();
 
@@ -445,24 +449,25 @@ public class Renderer {
 		// highlight hovered cell
 		glEnable(GL_TEXTURE_2D);
 		this.shaderProg.bind();
-		if (state.hoveredCell != null)
-		{
+		
+		if (state.hoveredCell != null) {
 			glColor3f(1, 0.5f, 0.5f);
 			drawCell(state.hoveredCell, state.hoveredCell.y, state.hoveredCell.x, false);
-			//System.out.println("hovered " + state.hoveredCell.x + " " + state.hoveredCell.y);
+			
+//			if(cells == null) cells = PathFinder.findPath(state.getGrid(), state.getGrid().getCellAt(10, 10), state.getGrid().getCellAt(18, 3));
+//			for(Cell cell : cells) {
+//				this.drawCell(cell, cell.y, cell.x, false);
+//			}
 		}
-		if (state.selectedCell != null)
-		{
+		if (state.selectedCell != null) {
 			glColor3f(0.3f, 1f, 0.3f);
 			drawCell(state.selectedCell, state.selectedCell.y, state.selectedCell.x, false);
-			System.out.println("selected " + state.selectedCell.x + " " + state.selectedCell.y);
 		}
-		if(state.hoveredCell != null && state.selectedCell == state.hoveredCell)
-		{
+		if(state.hoveredCell != null && state.selectedCell == state.hoveredCell) {
 			glColor3f(1, 0.5f, 1);
 			drawCell(state.hoveredCell, state.hoveredCell.y, state.hoveredCell.x, false);
-			//System.out.println("hovered and selected" + state.hoveredCell.x + " " + state.hoveredCell.y);
 		}
+		
 		RenderUtil.unbindShader();
 		glDisable(GL_TEXTURE_2D);
 	}
