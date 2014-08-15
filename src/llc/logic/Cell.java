@@ -13,6 +13,10 @@ public class Cell {
 	private Entity entity;
 	private CellType type;
 	
+	public Cell pathfOriginCell;
+	public int pathfFValue;
+	public int counter;
+	
 	public final int x,y;
 	public final float height;
 	
