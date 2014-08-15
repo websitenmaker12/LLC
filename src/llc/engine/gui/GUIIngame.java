@@ -1,5 +1,7 @@
 package llc.engine.gui;
 
+import java.util.Date;
+
 import llc.entity.EntityWarrior;
 import llc.entity.EntityWorker;
 import llc.loading.GameLoader;
@@ -42,7 +44,11 @@ public class GUIIngame extends GUI {
 		
 		this.elements.add(new GUIButton(this, Display.getWidth() - 220, Display.getHeight() - 55, 200, 35, "Load") {
 			public void onClick(int x, int y) {
-				logic.setGameState(gameLoader.loadFromFile("save.llcsav"));
+				try {
+					logic.setGameState(gameLoader.loadFromFile("save.llcsav"));
+				} catch (IllegalStateException e) {
+					showErrorMessage("No saved game found!", 1.75f);
+				}
 			}
 		});
 		
@@ -67,5 +73,20 @@ public class GUIIngame extends GUI {
 			}
 		});
 	}
-	
+	private void showErrorMessage(String message, float seconds) {
+		GUIText t = new GUIText(this, Display.getWidth() / 2- 40, 50, message, Color.red) {
+			private long deathStamp = System.currentTimeMillis() + (long)(seconds * 1000);
+			@Override
+			public void update(int x, int y) {
+				if (System.currentTimeMillis() >= deathStamp)
+				gui.elements.remove(this);
+				try {
+					this.finalize();
+				} catch (Throwable e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		this.getElements().add(t);
+	}
 }
