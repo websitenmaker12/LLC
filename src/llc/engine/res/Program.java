@@ -26,4 +26,7 @@ public class Program {
 		ARBShaderObjects.glUseProgramObjectARB(this.programID);
 	}
 	
+	public int getId() {
+		return programID;
+	}
 }
