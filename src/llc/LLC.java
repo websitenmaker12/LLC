@@ -135,13 +135,9 @@ public class LLC implements IKeybindingListener {
 	private void beginLoop() {
 		this.isRunning = true;
 		
-		// TODO Remove
-//		this.audioEngine.playMusic(EnumMusic.MUSIC1);
-		
 		this.timing.init();
 		while(this.isRunning) {
 			int delta = this.timing.getDelta();
-			Display.setTitle("FPS " + String.valueOf(this.timing.getFPS())); // TODO Remove
 			
 			this.handleDisplayResize();
 			if(Display.isCloseRequested()) this.isRunning = false;
@@ -218,7 +214,7 @@ public class LLC implements IKeybindingListener {
 	    Display.setFullscreen(this.isFullscreen);
 	}
 	
-	private void togglePauseMenu() {
+	public void togglePauseMenu() {
 		this.isGamePaused = !this.isGamePaused;
 		if(this.isGamePaused) {
 			this.prevGui = this.guiRenderer.getGUI();

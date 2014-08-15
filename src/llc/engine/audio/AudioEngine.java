@@ -6,7 +6,6 @@ import llc.engine.res.Music;
 import llc.engine.res.Sound;
 
 import org.lwjgl.LWJGLException;
-import org.lwjgl.openal.AL;
 
 /**
  * The sound engine. This is used to play sounds... obvious
@@ -36,7 +35,7 @@ public class AudioEngine {
 	private void loadSounds() {
 		buttonClick.loadSound();
 		try {
-			music_1 = new Music("/res/sound/music_1.ogg").loadMusic();
+			music_1 = new Music("/res/sound/test.ogg").loadMusic();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -54,7 +53,7 @@ public class AudioEngine {
 	 * @param playerZ The player / camera z position.
 	 */
 	public void playSoundAt(EnumSounds sound, float x, float y, float z, float playerX, float playerY, float playerZ) {
-		if(sound == EnumSounds.BUTTONCLICK) buttonClick.playSound(x, y, z, playerX, playerY, playerZ);
+		if(sound == EnumSounds.BUTTONCLICK) buttonClick.playSound(x, y, z, true);
 	}
 	
 	/**
@@ -63,7 +62,7 @@ public class AudioEngine {
 	 * @param sound The {@link Sounds} to play.
 	 */
 	public void playSound(EnumSounds sound) {
-		if(sound == EnumSounds.BUTTONCLICK) buttonClick.playSound(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+		if(sound == EnumSounds.BUTTONCLICK) buttonClick.playSound(0.0f, 0.0f, 0.0f, false);
 	}
 	
 	/**
