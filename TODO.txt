@@ -4,6 +4,4 @@
 - Slide animations
 - Zoom to base by player change
 - UI
-- Check TODOs
 - Remove System.out.println's
-- Make ingame gui work
