@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import org.lwjgl.opengl.ARBFragmentShader;
 import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.ARBVertexShader;
-import org.lwjgl.opengl.GL11;
+import static org.lwjgl.opengl.GL11.*;
 
 public class Shader {
 
@@ -46,7 +46,7 @@ public class Shader {
 			ARBShaderObjects.glShaderSourceARB(this.shaderID, builder.toString());
 			ARBShaderObjects.glCompileShaderARB(this.shaderID);
 			
-			if(ARBShaderObjects.glGetObjectParameteriARB(this.shaderID, ARBShaderObjects.GL_OBJECT_COMPILE_STATUS_ARB) == GL11.GL_FALSE) {
+			if(ARBShaderObjects.glGetObjectParameteriARB(this.shaderID, ARBShaderObjects.GL_OBJECT_COMPILE_STATUS_ARB) == GL_FALSE) {
 				throw new RuntimeException("Error by creating shader: " + this.getLog(this.shaderID));
 			}
 		} catch(Exception e) {

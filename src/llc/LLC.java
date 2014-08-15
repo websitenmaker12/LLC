@@ -20,7 +20,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.GL11;
+import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -157,8 +157,8 @@ public class LLC implements IKeybindingListener {
 			Display.update();
 			Display.sync(60);
 			
-			int error = GL11.glGetError();
-			if(error != GL11.GL_NO_ERROR) System.out.println("GLError " + error + ": " + GLU.gluErrorString(error));
+			int error = glGetError();
+			if(error != GL_NO_ERROR) System.out.println("GLError " + error + ": " + GLU.gluErrorString(error));
 		
 			this.timing.updateFPS();
 		}

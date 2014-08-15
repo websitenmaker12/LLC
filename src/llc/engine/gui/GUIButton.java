@@ -1,12 +1,13 @@
 package llc.engine.gui;
 
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
 import llc.engine.GUIRenderer;
-import llc.engine.audio.EnumSounds;
 import llc.engine.res.Texture;
 import llc.util.RenderUtil;
 
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.TextureImpl;
 
@@ -47,7 +48,7 @@ public abstract class GUIButton extends GUIElement {
 
 	@Override
 	public void render(GUIRenderer renderer, int x, int y) {
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		glEnable(GL_TEXTURE_2D);
 		RenderUtil.clearColor();
 		
 		if(this.isClicked) buttonDown.bind();
@@ -55,7 +56,7 @@ public abstract class GUIButton extends GUIElement {
 		else button.bind();
 		
 		RenderUtil.drawTexturedQuad(this.posX, this.posY, this.width, this.height);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		glDisable(GL_TEXTURE_2D);
 		
 		TextureImpl.bindNone();
 		renderer.font.drawString(this.posX + this.width / 2 - renderer.font.getWidth(this.text) / 2,

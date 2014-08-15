@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.function.Function;
 
 import llc.engine.res.Model;
 import llc.engine.res.Model.Face;
@@ -23,8 +21,8 @@ import llc.logic.GameState;
 import llc.util.RenderUtil;
 
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.util.glu.GLU.*;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -53,13 +51,13 @@ public class Renderer {
 	List<GradientPoint> colors = new ArrayList<GradientPoint>();
 
 	public Renderer() {
-		GL11.glClearColor(0F, 0F, 0F, 1F);
+		glClearColor(0F, 0F, 0F, 1F);
 
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glDepthFunc(GL11.GL_LEQUAL);
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
 
 		this.loadingScreen = new Texture("res/gui/logo.png");
 		this.drawLoadingScreen(Display.getWidth(), Display.getHeight());
@@ -103,23 +101,23 @@ public class Renderer {
 	 * Handles the OpenGL-Part when the Display was resized
 	 */
 	public void handleDisplayResize(int width, int height) {
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glLoadIdentity();
-		GLU.gluPerspective(45, (float) width / (float) height, 0.1F, 100F);
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glLoadIdentity();
-		GL11.glViewport(0, 0, width, height);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluPerspective(45, (float) width / (float) height, 0.1F, 100F);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glViewport(0, 0, width, height);
 	}
 
 	/**
 	 * Is called each Display-Tick to render the game
 	 */
 	public void render(Camera camera, GameState gameState) {
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Apply camera transformation
-		GL11.glLoadIdentity();
-		GLU.gluLookAt(camera.pos.x, camera.pos.y, camera.pos.z, camera.pos.x
+		glLoadIdentity();
+		gluLookAt(camera.pos.x, camera.pos.y, camera.pos.z, camera.pos.x
 				+ camera.viewDir.x, camera.pos.y + camera.viewDir.y,
 				camera.pos.z + camera.viewDir.z, camera.up.x, camera.up.y,
 				camera.up.z);
@@ -136,27 +134,27 @@ public class Renderer {
 
 	private void drawWaterSurface(int width, int height) {
 		
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		glEnable(GL_TEXTURE_2D);
 		waterTexture.bind();
-		GL11.glColor4f(1,  1,  1, 0.8f);
+		glColor4f(1,  1,  1, 0.8f);
 		float cellCount = 10;
-		GL11.glBegin(GL11.GL_TRIANGLES);
-		GL11.glTexCoord2d(0, cellCount);
-		GL11.glVertex3f(0, 0, 0);
-		GL11.glTexCoord2d(cellCount, cellCount);
-		GL11.glVertex3f(width, 0, 0);
-		GL11.glTexCoord2d(0, 0);
-		GL11.glVertex3f(0, height, 0);
+		glBegin(GL_TRIANGLES);
+		glTexCoord2d(0, cellCount);
+		glVertex3f(0, 0, 0);
+		glTexCoord2d(cellCount, cellCount);
+		glVertex3f(width, 0, 0);
+		glTexCoord2d(0, 0);
+		glVertex3f(0, height, 0);
 
-		GL11.glTexCoord2d(cellCount, cellCount);
-		GL11.glVertex3f(width, 0, 0);
-		GL11.glTexCoord2d(cellCount, 0);
-		GL11.glVertex3f(width, height, 0);
-		GL11.glTexCoord2d(0, 0);
-		GL11.glVertex3f(0, height, 0);
-		GL11.glEnd();
+		glTexCoord2d(cellCount, cellCount);
+		glVertex3f(width, 0, 0);
+		glTexCoord2d(cellCount, 0);
+		glVertex3f(width, height, 0);
+		glTexCoord2d(0, 0);
+		glVertex3f(0, height, 0);
+		glEnd();
 		
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		glDisable(GL_TEXTURE_2D);
 	}
 	
 	public void generateGridGeometry (GameState state)
@@ -243,28 +241,28 @@ public class Renderer {
 	private void drawHoveredAndSelectedCells(GameState state)
 	{
 		// highlight hovered cell
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		glEnable(GL_TEXTURE_2D);
 		this.shaderProg.bind();
 		if(state.hoveredCell != null && state.selectedCell == state.hoveredCell)
 		{
-			GL11.glColor3f(1, 0.5f, 1);
+			glColor3f(1, 0.5f, 1);
 			drawCell(state.hoveredCell, state.hoveredCell.y, state.hoveredCell.x, false);
 			//System.out.println("hovered and selected" + state.hoveredCell.x + " " + state.hoveredCell.y);
 		}
 		else if (state.hoveredCell != null)
 		{
-			GL11.glColor3f(1, 0.5f, 0.5f);
+			glColor3f(1, 0.5f, 0.5f);
 			drawCell(state.hoveredCell, state.hoveredCell.y, state.hoveredCell.x, false);
 			//System.out.println("hovered " + state.hoveredCell.x + " " + state.hoveredCell.y);
 		}
 		else if (state.selectedCell != null)
 		{
-			GL11.glColor3f(0.5f, 0.5f, 1f);
+			glColor3f(0.5f, 0.5f, 1f);
 			drawCell(state.selectedCell, state.selectedCell.y, state.selectedCell.x, false);
 			//System.out.println("selected " + state.selectedCell.x + " " + state.selectedCell.y);
 		}
 		RenderUtil.unbindShader();
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		glDisable(GL_TEXTURE_2D);
 	}
 	
 	private void bindModelTexture(Model m) {
@@ -288,20 +286,20 @@ public class Renderer {
 				Entity e = c.getEntity();
 				
 				if(e != null) {
-					GL11.glPushMatrix();
-					GL11.glTranslatef(x + 0.5F, y + 0.5F, c.height + 1);
-					GL11.glColor3f(1, 1, 1);
+					glPushMatrix();
+					glTranslatef(x + 0.5F, y + 0.5F, c.height + 1);
+					glColor3f(1, 1, 1);
 					if(e instanceof EntityBuildingBase) {
 						bindModelTexture(baseModel);
-						GL11.glCallList(this.baseId);
+						glCallList(this.baseId);
 					} else if(e instanceof EntityWarrior) {
 						bindModelTexture(warriorModel);
-						GL11.glCallList(this.warriorId);
+						glCallList(this.warriorId);
 					} else if(e instanceof EntityWorker) {
 						bindModelTexture(minerModel);
-						GL11.glCallList(this.minerId);
+						glCallList(this.minerId);
 					}
-					GL11.glPopMatrix();
+					glPopMatrix();
 				}
 			}
 		}
@@ -310,9 +308,9 @@ public class Renderer {
 	}
 
 	private void drawGrid(GameState state, int width, int height) {
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		glEnable(GL_TEXTURE_2D);
 		this.shaderProg.bind();
-		GL11.glColor3f(1, 1, 1);
+		glColor3f(1, 1, 1);
 		
 		Cell[][] cells = state.getGrid().getCells();
 		for (int y = 0; y < height; y++) 
@@ -325,7 +323,7 @@ public class Renderer {
 		}
 		
 		RenderUtil.unbindShader();
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		glDisable(GL_TEXTURE_2D);
 	}
 
 	private void drawCell(Cell c, int y, int x, boolean allowColor) {
@@ -339,22 +337,22 @@ public class Renderer {
 			sandTexture.bind();
 		
 		Triangle[] ts = triangles[y][x];
-		GL11.glBegin(GL11.GL_TRIANGLES);
+		glBegin(GL_TRIANGLES);
 		
 		for (int t = 0; t < 2; t++) {
 			for (int i = 0; i < 3; i++) {
 				if(allowColor) {
 					Vector3f color = getTerrainColorFromHeight(ts[t].vertices[i].position.z / terrainScale);
-					GL11.glColor3f(color.x, color.y, color.z);
+					glColor3f(color.x, color.y, color.z);
 				}
 				
-				GL11.glTexCoord2d(ts[t].vertices[i].texCoord.x, ts[t].vertices[i].texCoord.y);
-				GL11.glNormal3f(ts[t].vertices[i].normal.x, ts[t].vertices[i].normal.y, ts[t].vertices[i].normal.z);
-				GL11.glVertex3f(ts[t].vertices[i].position.x, ts[t].vertices[i].position.y, ts[t].vertices[i].position.z);
+				glTexCoord2d(ts[t].vertices[i].texCoord.x, ts[t].vertices[i].texCoord.y);
+				glNormal3f(ts[t].vertices[i].normal.x, ts[t].vertices[i].normal.y, ts[t].vertices[i].normal.z);
+				glVertex3f(ts[t].vertices[i].position.x, ts[t].vertices[i].position.y, ts[t].vertices[i].position.z);
 			}
 		}
 
-		GL11.glEnd();
+		glEnd();
 	}
 
 	private Vector3f calcNormal(int x, int y, float topLeftHeight, float topRightHeight, float bottomLeftHeight, float bottomRightHeight) {
@@ -369,37 +367,37 @@ public class Renderer {
 	}
 
 	private void drawCoordinateSystem() {
-		GL11.glDisable(GL11.GL_TEXTURE_2D); // someone leaves textures enabled, fix this
+		glDisable(GL_TEXTURE_2D); // someone leaves textures enabled, fix this
 		
 		// Draw coordinate system
-		GL11.glBegin(GL11.GL_LINES);
-		GL11.glColor3f(1, 0, 0);
-		GL11.glVertex3f(0, 0, 0);
-		GL11.glVertex3f(10, 0, 0);
+		glBegin(GL_LINES);
+		glColor3f(1, 0, 0);
+		glVertex3f(0, 0, 0);
+		glVertex3f(10, 0, 0);
 
-		GL11.glColor3f(0, 1, 0);
-		GL11.glVertex3f(0, 0, 0);
-		GL11.glVertex3f(0, 10, 0);
+		glColor3f(0, 1, 0);
+		glVertex3f(0, 0, 0);
+		glVertex3f(0, 10, 0);
 
-		GL11.glColor3f(0, 0, 1);
-		GL11.glVertex3f(0, 0, 0);
-		GL11.glVertex3f(0, 0, 10);
-		GL11.glEnd();
+		glColor3f(0, 0, 1);
+		glVertex3f(0, 0, 0);
+		glVertex3f(0, 0, 10);
+		glEnd();
 	}
 	
 	private void drawLoadingScreen(int width, int height) {
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glLoadIdentity();
-		GL11.glOrtho(0, width, height, 0, -1, 1);
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glLoadIdentity();
-		GL11.glViewport(0, 0, width, height);
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, width, height, 0, -1, 1);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glViewport(0, 0, width, height);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		glEnable(GL_TEXTURE_2D);
 		this.loadingScreen.bind();
 		RenderUtil.drawTexturedQuad(0, 0, width, height);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		glDisable(GL_TEXTURE_2D);
 		
 		Display.update();
 	}

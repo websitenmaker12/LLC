@@ -6,7 +6,7 @@ import llc.engine.audio.AudioEngine;
 import llc.engine.gui.GUI;
 import llc.input.Input;
 
-import org.lwjgl.opengl.GL11;
+import static org.lwjgl.opengl.GL11.*;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.util.ResourceLoader;
 
@@ -33,22 +33,22 @@ public class GUIRenderer {
 	 * Renders the current GUI
 	 */
 	public void render(int width, int height, int x, int y) {
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glPushMatrix();
+		glMatrixMode(GL_PROJECTION);
+		glPushMatrix();
 		
-		GL11.glLoadIdentity();
-		GL11.glOrtho(0, width, height, 0, -1, 1);
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glLoadIdentity();
+		glLoadIdentity();
+		glOrtho(0, width, height, 0, -1, 1);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
 		
 		if(this.currentGUI != null) {
 			this.currentGUI.update(x, y);
 			this.currentGUI.render(this, x, y);
 		}
 
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glPopMatrix();
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		glMatrixMode(GL_PROJECTION);
+		glPopMatrix();
+		glMatrixMode(GL_MODELVIEW);
 	}
 	
 	/**
