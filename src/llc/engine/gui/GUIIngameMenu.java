@@ -15,7 +15,7 @@ public class GUIIngameMenu extends GUI{
 	private Logic logic;
 	
 	public GUIIngameMenu(GameLoader gameLoader, Logic logic) {
-		this.gameLoader = gameLoader;
+		this.gameLoader = gameLoader; 
 		this.logic = logic;
 	}
 	
