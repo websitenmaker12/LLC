@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import llc.engine.res.ObjLoader;
 import llc.engine.res.Program;
@@ -26,7 +25,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class Renderer {
 	
-	private static final float sandRegion = 0.1f;
+	private static final float sandRegion = 0.15f;
 	private static final float terrainScale = 5;
 	
 	private Texture loadingScreen;
@@ -238,12 +237,14 @@ public class Renderer {
 		if (state.hoveredCell != null)
 		{
 			GL11.glColor3f(1, 0.5f, 0.5f);
-			drawCell(state.hoveredCell, state.hoveredCell.y, state.hoveredCell.x);
+			drawCell(state.hoveredCell, state.hoveredCell.y, state.hoveredCell.x, false);
+			System.out.println("hovered " + state.hoveredCell.x + " " + state.hoveredCell.y);
 		}
 		if (state.selectedCell != null)
 		{
 			GL11.glColor3f(0.5f, 1, 0.8f);
-			drawCell(state.selectedCell, state.selectedCell.y, state.selectedCell.x);
+			drawCell(state.selectedCell, state.selectedCell.y, state.selectedCell.x, false);
+			System.out.println("selected " + state.selectedCell.x + " " + state.selectedCell.y);
 		}
 		RenderUtil.unbindShader();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -283,7 +284,7 @@ public class Renderer {
 			for (int x = 0; x < width; x++) 
 			{
 				Cell c = cells[y][x];
-				drawCell(c, y, x);
+				drawCell(c, y, x, true);
 			}
 		}
 		
@@ -291,9 +292,8 @@ public class Renderer {
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 	}
 
-	private void drawCell(Cell c, int y, int x) {
-		if (c.getEntity() == null) 
-		{
+	private void drawCell(Cell c, int y, int x, boolean allowColor) {
+		if (c.getEntity() == null) {
 			float h = c.getHeight();
 			// Render terrain texture
 			if (h < -sandRegion)
@@ -307,17 +307,12 @@ public class Renderer {
 		Triangle[] ts = triangles[y][x];
 		GL11.glBegin(GL11.GL_TRIANGLES);
 		
-		float colorR;
-		float colorG;
-		float colorB;
-		
-		for (int t = 0; t < 2; t++)
-		{
-			for (int i = 0; i < 3; i++)
-			{
-				Vector3f color = getTerrainColorFromHeight(ts[t].vertices[i].position.z / terrainScale);
-				
-				GL11.glColor3f(color.x, color.y, color.z);
+		for (int t = 0; t < 2; t++) {
+			for (int i = 0; i < 3; i++) {
+				if(allowColor) {
+					Vector3f color = getTerrainColorFromHeight(ts[t].vertices[i].position.z / terrainScale);
+					GL11.glColor3f(color.x, color.y, color.z);
+				}
 				
 				GL11.glTexCoord2d(ts[t].vertices[i].texCoord.x, ts[t].vertices[i].texCoord.y);
 				GL11.glNormal3f(ts[t].vertices[i].normal.x, ts[t].vertices[i].normal.y, ts[t].vertices[i].normal.z);
