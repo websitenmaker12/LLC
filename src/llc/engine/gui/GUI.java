@@ -17,7 +17,6 @@ public class GUI {
 	public void update(int x, int y) {
 		for(GUIElement element : this.elements) element.update(x, y);
 	}
-	
 	/**
 	 * Is called to render the GUI. Use this for rendering!
 	 */
