@@ -152,7 +152,7 @@ public class Renderer {
 	public void handleDisplayResize(int width, int height) {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluPerspective(45, (float) width / (float) height, 0.1F, 100F);
+		gluPerspective(45, (float) width / (float) height, 0.1F, 300F);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glViewport(0, 0, width, height);

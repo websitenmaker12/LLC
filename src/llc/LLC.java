@@ -152,11 +152,8 @@ public class LLC implements IKeybindingListener {
 			
 			// Scrolling
 			int scroll = Mouse.getDWheel();
-			if(scroll > 0) {
-				this.camera.zoom(-4F);
-			} else if(scroll < 0) {
-				this.camera.zoom(4F);
-			}
+			if(scroll > 0) this.camera.zoom(-1);
+			else if(scroll < 0) this.camera.zoom(1);
 			
 			// Keyboard updates
 			this.profiler.endStart("Keyboard updates");
