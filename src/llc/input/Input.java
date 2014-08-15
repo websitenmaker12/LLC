@@ -108,17 +108,65 @@ public class Input {
 		Vector2f cellPos = new Vector2f(cell_x, cell_y);
 		return cellPos;
 	}
-	
+
+	// / From paper: "Fast Minimum Storage Ray/Triangle Intersection"
+	private boolean intersectTriangle(Vector3f origin, Vector3f direction,
+			Triangle t) {
+		final float INTERSECTION_EPSILON = 0.0001f;
+
+		Vector3f vertex0 = t.vertices[0].position;
+		Vector3f edge1 = Vector3f.sub(t.vertices[1].position, vertex0, null);
+		Vector3f edge2 = Vector3f.sub(t.vertices[2].position, vertex0, null);
+
+		// begin calculating determinant - also used to calculate U parameter
+		Vector3f pvec = Vector3f.cross(direction, edge2, null);
+
+		// if determinant is near zero, ray lies in plane of triangle
+		float det = Vector3f.dot(edge1, pvec);
+
+		if (det > -INTERSECTION_EPSILON && det < INTERSECTION_EPSILON)
+			return false;
+		float invDet = 1.0f / det;
+
+		// calculate distance from vert0 to ray origin
+		Vector3f tvec = Vector3f.sub(origin, vertex0, null);
+
+		// calculate U parameter and test bounds
+		float u = Vector3f.dot(tvec, pvec) * invDet;
+		if (u < 0.0f || u > 1.0f)
+			return false;
+
+		// prepare to test V parameter
+		Vector3f qvec = Vector3f.cross(tvec, edge1, null);
+
+		// calculate V parameter and test bounds
+		float v = Vector3f.dot(direction, qvec) * invDet;
+		if (v < 0.0f || u + v > 1.0f)
+			return false;
+
+		// calculate distance, ray intersects triangle
+		//float distance = Vector3f.dot(edge2, qvec) * invDet;
+
+		return true;
+	}
+
 	/**
 	 * Raycasts a given mouse position into the scene and calculates the
 	 * intersected cell (taking cell heights into account)
 	 */
 	private Vector2f rayCast(int x, int y) {
 		Vector3f rayDirection = rayDirectionFromMousePos(x, y);
-		
-		Vector2f z0CellPos = rayCastZ0(rayDirection);
-		
-		return z0CellPos;
+
+		// Vector2f z0CellPos = rayCastZ0(rayDirection); // TODO: optimize: start triangle intersection at z0CellPos
+		int height = triangles.length;
+		int width = triangles[0].length;
+		for (int cellY = 0; cellY < height; cellY++)
+			for (int cellX = 0; cellX < width; cellX++)
+				for (Triangle t : triangles[cellY][cellX])
+					if (intersectTriangle(Cam.pos, rayDirection, t))
+						return new Vector2f(cellX, cellY);
+
+		return new Vector2f(-1, -1);
 	}
 
 	public void mouseClick(int x, int y) {
