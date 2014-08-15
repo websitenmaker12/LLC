@@ -26,7 +26,7 @@ void main() {
 	vec4 gridColor = texture2D(gridTex, refractedGridCoord);
 	
 	// mix water color and refracted grid color
-	gl_FragColor = waterColor * gridColor;
+	gl_FragColor = vec4((waterColor * gridColor).rgb, 0.7); // alpha for water
 	//gl_FragColor = gridColor;
 	//gl_FragColor = vec4(refractedGridCoord, 0.0, 1.0);
 }
