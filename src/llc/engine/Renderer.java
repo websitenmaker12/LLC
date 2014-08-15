@@ -385,11 +385,11 @@ public class Renderer {
 			drawCell(state.hoveredCell, state.hoveredCell.y, state.hoveredCell.x, false);
 			//System.out.println("hovered " + state.hoveredCell.x + " " + state.hoveredCell.y);
 		}
-		else if (state.selectedCell != null)
+		if (state.selectedCell != null)
 		{
-			glColor3f(0.5f, 0.5f, 1f);
+			glColor3f(0.3f, 1f, 0.3f);
 			drawCell(state.selectedCell, state.selectedCell.y, state.selectedCell.x, false);
-			//System.out.println("selected " + state.selectedCell.x + " " + state.selectedCell.y);
+			System.out.println("selected " + state.selectedCell.x + " " + state.selectedCell.y);
 		}
 		RenderUtil.unbindShader();
 		glDisable(GL_TEXTURE_2D);
