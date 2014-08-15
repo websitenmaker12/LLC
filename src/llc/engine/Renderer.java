@@ -4,7 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.function.Function;
 
+import llc.engine.res.Model;
+import llc.engine.res.Model.Face;
+import llc.engine.res.Model.Material;
 import llc.engine.res.ObjLoader;
 import llc.engine.res.Program;
 import llc.engine.res.Shader;
@@ -36,9 +41,12 @@ public class Renderer {
 	
 	private Triangle[][][] triangles;
 	
-	private int baseID;
-	private int workerID;
-	private int warriorID;
+	private Model baseModel;
+	private int baseId;
+	private Model minerModel;
+	private int minerId;
+	private Model warriorModel;
+	private int warriorId;
 	
 	private Program shaderProg;
 	
@@ -60,9 +68,24 @@ public class Renderer {
 		grassTexture = new Texture("res/texture/grass.png");
 		sandTexture = new Texture("res/texture/sand.png");
 		
-		this.baseID = this.loadModel("res/entity/base/base.obj");
-		this.workerID = this.loadModel("res/entity/base/base.obj");
-		this.warriorID = this.loadModel("res/entity/base/base.obj");
+		try {
+			baseModel = ObjLoader.loadTexturedModel(new File("res/entity/base/Medieval_House.obj"));
+			baseId = ObjLoader.createTexturedDisplayList(baseModel);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			warriorModel = ObjLoader.loadTexturedModel(new File("res/entity/moveable/warrior/knight.obj"));
+			warriorId = ObjLoader.createTexturedDisplayList(warriorModel);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			minerModel = ObjLoader.loadTexturedModel(new File("res/entity/moveable/miner/landlord.obj"));
+			minerId = ObjLoader.createTexturedDisplayList(minerModel);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 		colors.add(new GradientPoint(-1f, new Vector3f(0f, 0f, 1f)));
 		colors.add(new GradientPoint(-0.25f,new Vector3f(1f, 1f, 1f)));
@@ -76,18 +99,6 @@ public class Renderer {
 		this.shaderProg.validate();
 	}
 
-	/**
-	 * Loads a model into a Display list
-	 */
-	private int loadModel(String path) {
-		try {
-			return ObjLoader.createDisplayList(ObjLoader.loadModel(new File(path)));
-		} catch (IOException e) {
-			e.printStackTrace();
-			return 0;
-		}
-	}
-	
 	/**
 	 * Handles the OpenGL-Part when the Display was resized
 	 */
@@ -238,26 +249,39 @@ public class Renderer {
 		{
 			GL11.glColor3f(1, 0.5f, 1);
 			drawCell(state.hoveredCell, state.hoveredCell.y, state.hoveredCell.x, false);
-			System.out.println("hovered and selected" + state.hoveredCell.x + " " + state.hoveredCell.y);
+			//System.out.println("hovered and selected" + state.hoveredCell.x + " " + state.hoveredCell.y);
 		}
 		else if (state.hoveredCell != null)
 		{
 			GL11.glColor3f(1, 0.5f, 0.5f);
 			drawCell(state.hoveredCell, state.hoveredCell.y, state.hoveredCell.x, false);
-			System.out.println("hovered " + state.hoveredCell.x + " " + state.hoveredCell.y);
+			//System.out.println("hovered " + state.hoveredCell.x + " " + state.hoveredCell.y);
 		}
 		else if (state.selectedCell != null)
 		{
 			GL11.glColor3f(0.5f, 0.5f, 1f);
 			drawCell(state.selectedCell, state.selectedCell.y, state.selectedCell.x, false);
-			System.out.println("selected " + state.selectedCell.x + " " + state.selectedCell.y);
+			//System.out.println("selected " + state.selectedCell.x + " " + state.selectedCell.y);
 		}
 		RenderUtil.unbindShader();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 	}
 	
+	private void bindModelTexture(Model m) {
+		for(Face f : m.getFaces()) {
+			Material mat = f.getMaterial();
+			if(mat != null && mat.texture != null) {
+				mat.texture.bind();
+				return;
+			}
+		}
+	}
+	
 	private void drawEntities(GameState state, int width, int height) {
+		this.shaderProg.bind();
+		
 		Cell[][] cells = state.getGrid().getCells();
+		
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
 				Cell c = cells[y][x];
@@ -266,17 +290,23 @@ public class Renderer {
 				if(e != null) {
 					GL11.glPushMatrix();
 					GL11.glTranslatef(x + 0.5F, y + 0.5F, c.height + 1);
+					GL11.glColor3f(1, 1, 1);
 					if(e instanceof EntityBuildingBase) {
-						GL11.glCallList(this.baseID);
+						bindModelTexture(baseModel);
+						GL11.glCallList(this.baseId);
 					} else if(e instanceof EntityWarrior) {
-						GL11.glCallList(this.warriorID);
+						bindModelTexture(warriorModel);
+						GL11.glCallList(this.warriorId);
 					} else if(e instanceof EntityWorker) {
-						GL11.glCallList(this.workerID);
+						bindModelTexture(minerModel);
+						GL11.glCallList(this.minerId);
 					}
 					GL11.glPopMatrix();
 				}
 			}
 		}
+		
+		RenderUtil.unbindShader();
 	}
 
 	private void drawGrid(GameState state, int width, int height) {

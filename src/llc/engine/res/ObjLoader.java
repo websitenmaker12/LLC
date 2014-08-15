@@ -34,9 +34,11 @@ import static org.lwjgl.opengl.GL11.GL_DIFFUSE;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_FRONT;
 import static org.lwjgl.opengl.GL11.GL_SHININESS;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glEndList;
 import static org.lwjgl.opengl.GL11.glGenLists;
@@ -75,7 +77,6 @@ public class ObjLoader {
 		glNewList(displayList, GL_COMPILE);
 		{
 			glMaterialf(GL_FRONT, GL_SHININESS, 120);
-			glColor3f(0.4f, 0.27f, 0.17f);
 			glBegin(GL_TRIANGLES);
 			for (Model.Face face : m.getFaces()) {
 				if (face.hasNormals()) {
@@ -209,6 +210,7 @@ public class ObjLoader {
 		int displayList = glGenLists(1);
 		glNewList(displayList, GL_COMPILE);
 		{
+			glEnable(GL_TEXTURE_2D);
 			glBegin(GL_TRIANGLES);
 			for (Model.Face face : m.getFaces()) {
 				if (face.hasTextureCoordinates()) {
@@ -266,6 +268,7 @@ public class ObjLoader {
 				glVertex3f(v3.x, v3.y, v3.z);
 			}
 			glEnd();
+			glDisable(GL_TEXTURE_2D);
 		}
 		glEndList();
 		return displayList;
