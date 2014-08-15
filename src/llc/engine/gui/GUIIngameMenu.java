@@ -4,6 +4,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 
+import llc.LLC;
 import llc.engine.GUIRenderer;
 import llc.loading.GameLoader;
 import llc.logic.Logic;
@@ -25,6 +26,7 @@ public class GUIIngameMenu extends GUI{
 		
 		this.elements.add(new GUIButton(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2 - 165, 300, 40, "Back to game") {
 			public void onClick(int x, int y) {
+				
 			}
 		});
 		
@@ -47,6 +49,7 @@ public class GUIIngameMenu extends GUI{
 		
 		this.elements.add(new GUIButton(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2, 300, 40, "Exit") {
 			public void onClick(int x, int y) {
+				LLC.getLLC().closeGame();
 			}
 		});
 		
