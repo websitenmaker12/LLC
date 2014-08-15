@@ -30,6 +30,8 @@ import org.lwjgl.util.vector.Vector3f;
 public class LLC implements IKeybindingListener {
 
 	public static final String VERSION = "0.1 INDEV";
+
+	private static LLC instance;
 	private boolean isRunning = false;
 	
 	private Profiler profiler = new Profiler();
@@ -56,10 +58,12 @@ public class LLC implements IKeybindingListener {
 	private boolean isGamePaused = false;
 	
 	public LLC() {
+		instance = this;
+		
 		this.camera = new Camera(new Vector3f(4, 4, 10), new Vector3f(0, 1.5f, -1), new Vector3f(0, 0, 1));
 		this.input = new Input(this, this.camera);
 		this.gameLoader = new GameLoader();
-		this.logic = new Logic(this.gameLoader.createNewGame("res/maps/areas/map-2_areas.png"), this.input);
+		this.logic = new Logic(this.gameLoader.createNewGame("res/maps/areas/map-2_areas.png", this.camera), this.input);
 		
 		this.input.addFireListener(new Input.LogicListener() {
 
@@ -146,14 +150,19 @@ public class LLC implements IKeybindingListener {
 			this.profiler.start("Mouse updates");
 			this.mouseX = Mouse.getX();
 			this.mouseY = this.height - Mouse.getY();
-			this.input.mousePos(this.mouseX, this.mouseY);
-			if(Mouse.isButtonDown(0) && !this.lastButtonState) this.input.mouseClick(this.mouseX, this.mouseY);
-			this.lastButtonState = Mouse.isButtonDown(0);
+			
+			if(!this.isGamePaused) {
+				this.input.mousePos(this.mouseX, this.mouseY);
+				if(Mouse.isButtonDown(0) && !this.lastButtonState) this.input.mouseClick(this.mouseX, this.mouseY);
+				this.lastButtonState = Mouse.isButtonDown(0);
+			}
 			
 			// Scrolling
-			int scroll = Mouse.getDWheel();
-			if(scroll > 0) this.camera.zoom(-1);
-			else if(scroll < 0) this.camera.zoom(1);
+			if(!this.isGamePaused) {
+				int scroll = Mouse.getDWheel();
+				if(scroll > 0) this.camera.zoom(-1);
+				else if(scroll < 0) this.camera.zoom(1);
+			}
 			
 			// Keyboard updates
 			this.profiler.endStart("Keyboard updates");
@@ -161,7 +170,7 @@ public class LLC implements IKeybindingListener {
 			
 			// Rendering
 			this.profiler.endStart("Render game");
-			this.renderer.render(this.camera, this.logic.getGameState());
+			this.renderer.render(this.camera, this.logic.getGameState(), delta);
 			this.profiler.endStart("Render GUI");
 			this.guiRenderer.render(this.width, this.height, this.mouseX, this.mouseY);
 			this.profiler.end();
@@ -224,6 +233,13 @@ public class LLC implements IKeybindingListener {
 	 */
 	public void closeGame() {
 		this.isRunning = false;
+	}
+	
+	/**
+	 * Returns the LLC instance
+	 */
+	public static LLC getLLC() {
+		return instance;
 	}
 	
 }

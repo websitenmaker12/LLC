@@ -13,6 +13,7 @@ import llc.loading.GameLoader;
  * handles changes to the gamestate
  * @author PetaByteBoy
  * @author erdlof
+ * @author websitenmaker12
  */
 public class Logic {
 

@@ -44,11 +44,4 @@ public class GUI {
 		return this.elements;
 	}
 	
-	/**
-	 * Returns whether the GUI pauses the game or not
-	 */
-	public boolean pauseGame() {
-		return false;
-	}
-	
 }

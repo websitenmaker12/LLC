@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 
 import javax.imageio.ImageIO;
 
+import llc.engine.Camera;
 import llc.entity.Entity;
 import llc.entity.EntityBuildingBase;
 import llc.logic.Cell;
@@ -120,11 +121,11 @@ public class GameLoader {
 		}
 		return null;
 	}
-	public GameState createNewGame(String map) {
-		return createNewGame(new File(map));
+	public GameState createNewGame(String map, Camera camera) {
+		return createNewGame(new File(map), camera);
 	}
 	
-	public GameState createNewGame(File map) {
+	public GameState createNewGame(File map, Camera camera) {
 		GameState state = null;
 		try {
 			BufferedImage img = ImageIO.read(map);
@@ -132,7 +133,7 @@ public class GameLoader {
 			height = img.getHeight();
 			width = img.getWidth();
 			Grid g = new Grid(height, width);
-			state = new GameState(g);
+			state = new GameState(g, camera);
 			Color c;
 			Cell cell;
 			
@@ -165,6 +166,8 @@ public class GameLoader {
 					g.setCellAt(cell, x, y);
 				}
 			}
+			
+			state.setActivePlayer(state.getPlayer1());
 		}
 		catch (Exception e) {
 			System.err.println("Konnte neues Spiel nicht laden ;(");
