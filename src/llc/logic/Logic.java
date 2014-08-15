@@ -182,7 +182,7 @@ public class Logic {
 		}
 		
 		if (spawnCell != null && !spawnCell.containsEntity() && entity.getCost() > 0 && gameState.getActivePlayer().getMinerals() >= entity.getCost()) {
-			//gameState.getActivePlayer().removeMinerals(entity.getCost());
+			gameState.getActivePlayer().removeMinerals(entity.getCost());
 			entity.setPlayer(gameState.activePlayer);
 			spawnCell.setEntity(entity);
 			entity.setX(spawnCell.x);
