@@ -105,7 +105,7 @@ public class GameLoader {
 				for (Cell[] cs : g.getCells()) {
 					for (Cell c : cs) {
 						if (c.containsEntity()) {
-							System.out.println("Found entity while loading: " + c.getEntity().toString() + " Json Representation:" + getEntityDebugInformation(c.getEntity()));
+							
 						}
 					}
 				}
@@ -192,7 +192,7 @@ public class GameLoader {
 			return 0;
 		}
 	}
-	public static String getEntityDebugInformation(Entity en) {
-		return en.getClass().getName() + gson.toJson(en);
-	}
+//	public static String getEntityDebugInformation(Entity en) {
+//		return en.getClass().getName() + gson.toJson(en);
+//	}
 }

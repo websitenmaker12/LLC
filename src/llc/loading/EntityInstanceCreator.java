@@ -52,7 +52,7 @@ public class EntityInstanceCreator implements JsonDeserializer<Entity>, JsonSeri
 		
 		JsonElement e = context.serialize(entity);
 		
-		//System.out.println(e);
+		System.out.println(e);
 		
 		if (entity instanceof EntityWarrior) {
 			e.getAsJsonObject().addProperty("type", "warrior");
