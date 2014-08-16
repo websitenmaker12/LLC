@@ -51,6 +51,7 @@ public class GUIIngameMenu extends GUI{
 		
 		this.elements.add(new GUIButton(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2, 300, 40, "Exit") {
 			public void onClick(int x, int y) {
+				gameLoader.saveToFile(logic.getGameState(), "save.llcsav");
 				LLC.getLLC().closeGame();
 			}
 		});
