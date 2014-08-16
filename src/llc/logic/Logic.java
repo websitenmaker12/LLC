@@ -17,7 +17,7 @@ import llc.util.PathFinder;
  * @author websitenmaker12
  */
 public class Logic {
-
+	
 	private GameState gameState;
 	private EntityMovable selectedEntity;
 	private Input input;
@@ -83,6 +83,7 @@ public class Logic {
 		if (0 <= clickY && clickY < gameState.getGrid().getHeigth() && 0 <= clickX && clickX < gameState.getGrid().getWidth()) {
 			Cell clickedCell = gameState.getGrid().getCellAt(clickX, clickY);
 			if (clickedCell.containsEntity()) {
+				//System.out.println(GameLoader.getEntityDebugInformation(clickedCell.getEntity()));
 				if (clickedCell.getEntity().getPlayer() == gameState.activePlayer) {
 					// select
 					selectEntity(clickedCell.getEntity());
@@ -116,11 +117,15 @@ public class Logic {
 	 */
 	private void attackCell(int destX, int destY) {
 		Entity destEntity = gameState.getGrid().getCellAt(destX, destY).getEntity();
+		//System.out.println("Entity attack!");
 		if (destEntity.health > 0) {
 			// do damage
 			destEntity.health -= ((IAttacking) selectedEntity).getAttackDamage();
 
 			if (destEntity.health <= 0) {
+				//System.out.println("Entity Death!");
+				Cell c = gameState.getGrid().getCellAt((int)destEntity.getX(), (int)destEntity.getY());
+				c.setEntity(null);
 				moveSelectedEntity(destX, destY, false);
 				gameState.getActivePlayer().addMinerals(25);
 				// if a base was destroyed, the game is over

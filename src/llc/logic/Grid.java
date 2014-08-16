@@ -1,11 +1,16 @@
 package llc.logic;
 
+import java.io.Serializable;
+
 
 /**
  * Represents a loaded Grid
  */
-public class Grid {
-
+public class Grid implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 10L;
 	private final int heigth;
 	private final int width;
 	

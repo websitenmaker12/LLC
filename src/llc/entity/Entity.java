@@ -1,5 +1,6 @@
 package llc.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 import llc.logic.Cell;
@@ -10,8 +11,12 @@ import llc.logic.Logic;
  * Contains player and health.
  * @author MaxiHoeve14
  */
-public abstract class Entity {
+public abstract class Entity implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public int health;
 	public int maxHealth;
 	

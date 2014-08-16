@@ -1,12 +1,17 @@
 package llc.engine;
 
+import java.io.Serializable;
+
 import llc.input.Input;
 import llc.logic.Cell;
 
 import org.lwjgl.util.vector.Vector3f;
 
-public class Camera {
-
+public class Camera implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 11L;
 	public final float pixelsPerCell = 100F;
 	private final float scrollSpeed = 0.6F;
 	
