@@ -33,7 +33,7 @@ public class PathFinder {
 			Cell lowestFValue = openCells.get(0);
 			if(openCells.size() > 1) for(Cell cell : openCells) if(cell.pathfFValue < lowestFValue.pathfFValue && !closedCells.contains(cell)) lowestFValue = cell;
 			
-			for (Cell cell : getNeighbours(lowestFValue, grid)) {
+			for (Cell cell : getNeighbours(lowestFValue, to, grid)) {
 				if (!openCells.contains(cell) && !closedCells.contains(cell)) {
 					cell.pathfOriginCell = lowestFValue;
 					cell.counter = lowestFValue.counter + 1;
@@ -70,14 +70,14 @@ public class PathFinder {
 	 * @param grid
 	 * @return finalCells as List<Cell>
 	 */
-	private static List<Cell> getNeighbours(Cell cell, Grid grid) {
+	private static List<Cell> getNeighbours(Cell cell, Cell destCell, Grid grid) {
 		List<Cell> finalCells = new ArrayList<Cell>();
 		
 		for(int x = -1; x <= 1; x++) {
 			for(int y = -1; y <= 1; y++) {
 				Cell iCell = grid.getCellAt(cell.x + x, cell.y + y);
 				if(iCell != cell && iCell != null && iCell.x >= 0 && iCell.y >= 0 && iCell.y < grid.getHeigth() && iCell.x < grid.getWidth()
-						&& iCell.getType() == CellType.WALKABLE && !iCell.containsEntity()) finalCells.add(iCell);
+						&& iCell.getType() == CellType.WALKABLE && (!iCell.containsEntity() || iCell == destCell)) finalCells.add(iCell);
 			}
 		}
 

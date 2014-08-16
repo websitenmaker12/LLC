@@ -72,21 +72,21 @@ public class GUIIngame extends GUI {
 	
 	@Override
 	public void render(GUIRenderer renderer, int x, int y) {
-		float scaleX = 1f - (640 / (float)Display.getWidth());
-		float scaleY = 1f - (480 / (float)Display.getHeight());
+		float scaleX = 640 / (float)Display.getWidth();
+		float scaleY = 480 / (float)Display.getHeight();
 		
 		GL11.glPushMatrix();
 		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		
 		middle.bind();
-		RenderUtil.drawTexturedQuad(368 * scaleX, Display.getHeight() - 252 * scaleY, Display.getWidth() - ((386 * scaleX) + (702 * scaleX)) + 15, 252 * scaleY);
+		//RenderUtil.drawTexturedQuad(368 * scaleX, Display.getHeight() - 252 * scaleY, Display.getWidth() - ((386 * scaleX) + (702 * scaleX)) + 15, 252 * scaleY);
 		
 		left.bind();
-		RenderUtil.drawTexturedQuad(0, Display.getHeight() - 348 * scaleY, 386 * scaleX, 348 * scaleY);
-		
+//		RenderUtil.drawTexturedQuad(0, Display.getHeight() - 348 * scaleY, 386 * scaleX, 348 * scaleY);
+//		
 		right.bind();
-		RenderUtil.drawTexturedQuad(Display.getWidth() - 702 * scaleX, Display.getHeight() - 348 * scaleY, 702 * scaleX, 348 * scaleY);
+		//RenderUtil.drawTexturedQuad(Display.getWidth() - 702 * scaleX, Display.getHeight() - 348 * scaleY, 702 * scaleX, 348 * scaleY);
 		
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glPopMatrix();
