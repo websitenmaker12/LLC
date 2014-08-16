@@ -7,6 +7,7 @@ import llc.entity.EntityMovable;
 import llc.entity.IAttacking;
 import llc.input.Input;
 import llc.input.Input.Direction;
+import llc.loading.GameLoader;
 import llc.util.PathFinder;
 
 /**

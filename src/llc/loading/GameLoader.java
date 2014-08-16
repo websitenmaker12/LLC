@@ -26,20 +26,14 @@ import com.google.gson.GsonBuilder;
  */
 public class GameLoader {
 	
-	private static Gson gson;
-	
-	static {
-		EntityInstanceCreator enCreator = new EntityInstanceCreator();
-
-		gson = new GsonBuilder().registerTypeAdapter(Entity.class, enCreator).create();
-	}
+	private Gson gson;
 	/**
 	 * Creates a new GameLoader, make sure to only do this once!(Performance...)
 	 */
 	public GameLoader() {
-//		EntityInstanceCreator enCreator = new EntityInstanceCreator();
-//
-//		gson = new GsonBuilder().registerTypeAdapter(Entity.class, enCreator).create();
+		EntityInstanceCreator enCreator = new EntityInstanceCreator();
+
+		gson = new GsonBuilder().registerTypeAdapter(Entity.class, enCreator).create();
 	}
 	
 	/**

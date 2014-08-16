@@ -39,6 +39,7 @@ public class EntityInstanceCreator implements JsonDeserializer<Entity>, JsonSeri
 		}
 		if (en instanceof EntityMovable) {
 			((EntityMovable) en).setMoveRange(object.get("moveRange").getAsInt());
+			((EntityMovable) en).setMoveSpeed(object.get("moveSpeed").getAsInt());
 		}
 		en.setX(object.get("x").getAsFloat());
 		en.setY(object.get("y").getAsFloat());
@@ -50,19 +51,28 @@ public class EntityInstanceCreator implements JsonDeserializer<Entity>, JsonSeri
 	@Override
 	public JsonElement serialize(Entity entity, Type type, JsonSerializationContext context) {
 		
-		JsonElement e = context.serialize(entity);
-		
-		System.out.println(e);
+		JsonObject e = new JsonObject();
 		
 		if (entity instanceof EntityWarrior) {
-			e.getAsJsonObject().addProperty("type", "warrior");
+			e.addProperty("type", "warrior");
 		}
 		else if (entity instanceof EntityWorker) {
-			e.getAsJsonObject().addProperty("type", "worker");
+			e.addProperty("type", "worker");
 		}
 		else if (entity instanceof EntityBuildingBase) {
-			e.getAsJsonObject().addProperty("type", "base");
+			e.addProperty("type", "base");
 		}
+		
+		if (entity instanceof EntityMovable) {
+			EntityMovable mover = (EntityMovable)entity;
+			e.addProperty("moveSpeed", mover.getMoveSpeed());
+			e.addProperty("moveRange", mover.getMoveRange());
+		}
+		e.addProperty("health", entity.health);
+		e.addProperty("maxHealth", entity.maxHealth);
+		e.addProperty("x", entity.getX());
+		e.addProperty("y", entity.getY());
+		e.addProperty("player", entity.getPlayer());
 		System.out.println("Serializer:" + e);
 		return e;
 	}
