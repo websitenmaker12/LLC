@@ -1,9 +1,15 @@
 package llc.logic;
 
+import java.io.Serializable;
+
 import llc.engine.Camera;
 
-public class GameState {
+public class GameState implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4L;
 	private Grid grid;
 	private Camera camera;
 	

@@ -2,12 +2,12 @@ package llc.loading;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
-
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import javax.imageio.ImageIO;
 
 import llc.engine.Camera;
@@ -17,23 +17,17 @@ import llc.logic.Cell;
 import llc.logic.GameState;
 import llc.logic.Grid;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 /**
  * A IO-Util to load and save Gamestates
  * @author simolus3
  */
 public class GameLoader {
-	
-	private Gson gson;
+
 	/**
 	 * Creates a new GameLoader, make sure to only do this once!(Performance...)
 	 */
 	public GameLoader() {
-		EntityInstanceCreator enCreator = new EntityInstanceCreator();
 
-		gson = new GsonBuilder().registerTypeAdapter(Entity.class, enCreator).create();
 	}
 	
 	/**
@@ -46,26 +40,19 @@ public class GameLoader {
 		if (f == null) {
 			throw new IllegalArgumentException("The GameState cannot be null!");
 		}
-		String stateString = gson.toJson(f);
-		
-		if (fileName == null) {
-			System.out.println(stateString);
-			return;
-		}
-		File saveTo = new File(fileName);
-		
+		 FileOutputStream fileOut;
 		try {
-			if (!saveTo.exists()) {
-				saveTo.createNewFile();
-			}
-			
-			PrintWriter writer = new PrintWriter(saveTo, "UTF-8");
-			writer.print(stateString);
-			writer.close();
-		}
-		catch (Exception e) {
-			System.err.println("Ein Fehler ist bem Speichern aufgetreten: Stacktrace:");
-			e.printStackTrace(System.err);
+			fileOut = new FileOutputStream(fileName);
+	        ObjectOutputStream out = new ObjectOutputStream(fileOut);
+	        out.writeObject(f);
+	        out.close();
+	        fileOut.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		};
+		if (fileName == null) {
+			System.out.println("File not set");
+			return;
 		}
 	}
 	
@@ -75,42 +62,14 @@ public class GameLoader {
 			throw new IllegalStateException("The save-file to load does not exist!");
 		}
 		try {
-			
-			BufferedReader in = new BufferedReader(new FileReader(f));
-			
-			String line = null;
-			String content = "";
-			
-			do {
-				line = in.readLine();
-				if (line == null) {
-					continue;
-				}
-				content += line;
-			} while (line != null);
-			
-			
+			GameState state = null;
+			FileInputStream fileIn = new FileInputStream(pathName);
+			ObjectInputStream in = new ObjectInputStream(fileIn);
+			state = (GameState) in.readObject();
 			in.close();
-			
-			//System.out.println(content);
-			try {
-				GameState loaded = gson.fromJson(content, GameState.class);
-				Grid g = loaded.getGrid();
-				for (Cell[] cs : g.getCells()) {
-					for (Cell c : cs) {
-						if (c.containsEntity()) {
-							
-						}
-					}
-				}
-				return loaded;
-			}
-			catch (Exception e) {
-				System.err.println("Unable to load savegame... Corrupted?");
-				e.printStackTrace(System.err);
-			}
+			return state;
 		} 
-		catch (IOException e) {
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;

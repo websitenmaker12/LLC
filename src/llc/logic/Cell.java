@@ -1,5 +1,7 @@
 package llc.logic;
 
+import java.io.Serializable;
+
 import org.lwjgl.util.vector.Vector3f;
 
 import llc.entity.Entity;
@@ -8,8 +10,11 @@ import llc.entity.Entity;
  * The cell class. Contains the entity and can be solid or walkable.
  * @author MaxiHoeve14
  */
-public class Cell {
-	
+public class Cell implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2L;
 	private Entity entity;
 	private CellType type;
 	

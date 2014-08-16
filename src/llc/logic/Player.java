@@ -1,11 +1,16 @@
 package llc.logic;
 
+import java.io.Serializable;
+
 /**
  * Player class.
  * @author MaxiHoeve14
  */
-public class Player {
-	
+public class Player implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3L;
 	private int minerals;
 	
 	public int playerID;
