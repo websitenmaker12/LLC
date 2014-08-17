@@ -35,7 +35,7 @@ public class Logic {
 			}
 
 			@Override
-			public void onScroll(Direction d) {}
+			public void onScroll(Direction d) {  }
 
 			@Override
 			public void onNewCellHovered(int cell_x, int cell_y) {
@@ -104,8 +104,9 @@ public class Logic {
 	 * @param toSelect The entity to be selected.
 	 */
 	private void selectEntity(Entity toSelect) {
-		if (toSelect instanceof EntityMovable) {
+		if(toSelect != null && toSelect instanceof EntityMovable) {
 			this.selectedEntity = (EntityMovable) toSelect;
+			LLC.getLLC().getCamera().focusCell(this.gameState.getGrid().getCellAt((int)toSelect.getX(), (int)toSelect.getY()), true);
 		}
 	}
 
@@ -129,7 +130,7 @@ public class Logic {
 				// if a base was destroyed, the game is over
 				if (destEntity instanceof EntityBuildingBase) {
 					gameOver(gameState.getActivePlayer());
-					LLC.getLLC().openGameOverGUI();
+					LLC.getLLC().openGameOverGUI(this.gameState.winner);
 				}
 			}
 		}

@@ -47,6 +47,8 @@ public class Camera implements Serializable {
 	}
 
 	public void focusCell(Cell cell, boolean animate) {
+		if(cell == null) return;
+		
 		Vector3f b = cell.getCenterPos();
 		float t = (this.pos.z - b.z) / this.viewDir.z;
 		Vector3f baseTrans = (Vector3f)new Vector3f(this.viewDir).scale(t);

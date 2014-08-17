@@ -19,6 +19,7 @@ import llc.input.KeyboardListener;
 import llc.loading.GameLoader;
 import llc.logic.Cell;
 import llc.logic.Logic;
+import llc.logic.Player;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
@@ -63,8 +64,7 @@ public class LLC implements IKeybindingListener {
 		
 		this.camera = new Camera(new Vector3f(4, 4, 10), new Vector3f(0, 1.5f, -1), new Vector3f(0, 0, 1));
 		this.input = new Input(this, this.camera);
-		this.gameLoader = new GameLoader();
-		this.logic = new Logic(this.gameLoader.createNewGame("res/maps/areas/miniMap_areas.png", this.camera), this.input);
+		this.startNewGame();
 		
 		this.input.addFireListener(new Input.LogicListener() {
 
@@ -96,6 +96,13 @@ public class LLC implements IKeybindingListener {
 		this.keyboardListener.registerEventHandler(this);
 		this.keyboardListener.registerKeyBinding(new KeyBinding("func.fullscreen", Keyboard.KEY_F11, false));
 		this.keyboardListener.registerKeyBinding(new KeyBinding("gui.pause", Keyboard.KEY_ESCAPE, false));
+	}
+	
+	/**
+	 * Returns the LLC instance
+	 */
+	public static LLC getLLC() {
+		return instance;
 	}
 	
 	/**
@@ -210,12 +217,18 @@ public class LLC implements IKeybindingListener {
 		}
 	}
 	
+	/**
+	 * Toggles the game into fullscreen mode
+	 */
 	private void toggleFullscreen() throws LWJGLException {
 		this.isFullscreen = !this.isFullscreen;
 	    Display.setDisplayMode(this.isFullscreen ? Display.getDesktopDisplayMode() : this.standartDisplayMode);
 	    Display.setFullscreen(this.isFullscreen);
 	}
 	
+	/**
+	 * Opens the pause menu or closes it
+	 */
 	public void togglePauseMenu() {
 		if (!logic.getGameState().isGameOver) {
 			this.isGamePaused = !this.isGamePaused;
@@ -237,15 +250,28 @@ public class LLC implements IKeybindingListener {
 	}
 	
 	/**
-	 * Returns the LLC instance
+	 * Opens the Game Over GUI
 	 */
-	public static LLC getLLC() {
-		return instance;
-	}
-	
-	public void openGameOverGUI() {
-		this.guiRenderer.openGUI(new GUIGameOver());
+	public void openGameOverGUI(Player winner) {
+		this.guiRenderer.openGUI(new GUIGameOver(winner));
 		this.isGamePaused = true;
+	}
+
+	/**
+	 * Returns an instance of the camera
+	 */
+	public Camera getCamera() {
+		return this.camera;
+	}
+
+	/**
+	 * Starts a new game
+	 */
+	public void startNewGame() {
+		this.gameLoader = new GameLoader();
+		this.logic = new Logic(this.gameLoader.createNewGame("res/maps/areas/miniMap_areas.png", this.camera), this.input);
+		if(this.width != 0) this.guiRenderer.openGUI(new GUIIngame(this.logic, gameLoader));
+		this.isGamePaused = false;
 	}
 	
 }

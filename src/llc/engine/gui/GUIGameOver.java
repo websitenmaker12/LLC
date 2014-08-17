@@ -2,31 +2,39 @@ package llc.engine.gui;
 
 import llc.LLC;
 import llc.engine.GUIRenderer;
+import llc.logic.Player;
 import llc.util.RenderUtil;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 
-public class GUIGameOver extends GUI{
+public class GUIGameOver extends GUI {
 	
-	GUIRenderer renderer;
+	private Player winner;
 	
-	public GUIGameOver() {
+	public GUIGameOver(Player winner) {
+		this.winner = winner;
 	}
 	
 	@Override
 	public void onOpen() {
 		super.onOpen();
 		
-		this.elements.add(new GUIButton(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2, 300, 40, "Close Game") {
+		this.elements.add(new GUIText(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2 - 140, 300, 0, "Game Over", Color.orange));
+		this.elements.add(new GUIText(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2 - 100, 300, 0, "Player " + String.valueOf(this.winner.playerID) + " wins!", Color.orange));
+	
+		this.elements.add(new GUIButton(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2, 300, 40, "New Game") {
+			public void onClick(int x, int y) {
+				LLC.getLLC().startNewGame();
+			}
+		});
+		
+		this.elements.add(new GUIButton(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2 + 60, 300, 40, "Close Game") {
 			public void onClick(int x, int y) {
 				LLC.getLLC().closeGame();
 			}
 		});
-		
-		this.elements.add(new GUIText(this, Display.getWidth() / 2 - 50, Display.getHeight() / 3, "Game Over", Color.orange) {});
-		
 	}
 	
 	@Override
