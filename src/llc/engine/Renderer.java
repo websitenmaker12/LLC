@@ -95,6 +95,7 @@ import llc.engine.res.Shader;
 import llc.engine.res.Texture;
 import llc.entity.Entity;
 import llc.entity.EntityBuildingBase;
+import llc.entity.EntityMovable;
 import llc.entity.EntityWarrior;
 import llc.entity.EntityWorker;
 import llc.logic.Cell;
@@ -148,7 +149,6 @@ public class Renderer {
 	private int viewportWidth;
 	private int viewportHeight;
 	
-	/// time in seconds since the game started
 	private float currentTime;
 	
 	private List<GradientPoint> colors = new ArrayList<GradientPoint>();
@@ -165,17 +165,17 @@ public class Renderer {
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 
-		// loading screen
+		// Loading screen
 		this.loadingScreen = new Texture("res/gui/logo.png");
 		this.drawLoadingScreen(Display.getWidth(), Display.getHeight());
 		
-		// textures
+		// Textures
 		grassTexture = new Texture("res/texture/grass.png");
 		sandTexture = new Texture("res/texture/sand.png");
 		waterTexture = new Texture("res/texture/water.png");
 		waterNormalsTexture = new Texture("res/texture/waternormals.jpg");
 
-		// meshes
+		// Meshes
 		try {
 			baseModel = ObjLoader.loadTexturedModel(new File("res/entity/base/Medieval_House.obj"));
 			baseId = ObjLoader.createTexturedDisplayList(baseModel);
@@ -195,14 +195,14 @@ public class Renderer {
 			e.printStackTrace();
 		}
 
-		// gradient
+		// Gradient
 		colors.add(new GradientPoint(-1f, new Vector3f(0.5f, 0.5f, 1f)));
 		colors.add(new GradientPoint(-0.25f,new Vector3f(1f, 1f, 1f)));
 		colors.add(new GradientPoint(0.15f,new Vector3f(1f, 1f, 1f)));
 		colors.add(new GradientPoint(0.25f,new Vector3f(0.5f, 1f, 1f)));
 		colors.add(new GradientPoint(0.5f,new Vector3f(1f, 1f, 1f)));
 
-		// shader
+		// Shader
 		this.shaderProg = new Program();
 		this.shaderProg.addShader(new Shader("res/shaders/test.vert", Shader.vertexShader));
 		this.shaderProg.addShader(new Shader("res/shaders/test.frag", Shader.fragmentShader));
@@ -409,7 +409,6 @@ public class Renderer {
 	}
 	
 	private void drawHoveredAndSelectedCells(GameState state) {
-		// highlight hovered cell
 		glEnable(GL_TEXTURE_2D);
 		this.shaderProg.bind();
 		
@@ -417,7 +416,7 @@ public class Renderer {
 			glColor3f(1, 0.5f, 0.5f);
 			drawCell(state.hoveredCell, state.hoveredCell.y, state.hoveredCell.x, false);
 
-			if(state.selectedCell != null) {
+			if(state.selectedCell != null && state.selectedCell.containsEntity() && state.selectedCell.getEntity() instanceof EntityMovable) {
 				List<Cell> cells = PathFinder.findPath(state.getGrid(), state.selectedCell, state.hoveredCell);
 				if(cells != null) for(Cell cell : cells) this.drawCell(cell, cell.y, cell.x, false);
 			}

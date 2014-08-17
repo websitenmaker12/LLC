@@ -11,12 +11,10 @@ import llc.logic.Logic;
  * Contains player and health.
  * @author MaxiHoeve14
  */
-public abstract class Entity implements Serializable{
+public abstract class Entity implements Serializable {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
 	public int health;
 	public int maxHealth;
 	
@@ -32,6 +30,7 @@ public abstract class Entity implements Serializable{
 	private long timeout;
 	private int origX, origY;
 	private boolean countLastMove;
+	
 	/**
 	 * @return cost to pay for an Entity of this type
 	 */

@@ -5,9 +5,6 @@ package llc.entity;
  */
 public class EntityBuildingBase extends EntityBuilding {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5L;
 
 	public EntityBuildingBase() {
