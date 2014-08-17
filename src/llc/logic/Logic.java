@@ -84,7 +84,6 @@ public class Logic {
 			EntityMovable selectedEntity = getSelectedEntity();
 			Cell clickedCell = gameState.getGrid().getCellAt(clickX, clickY);
 			if (clickedCell.containsEntity()) {
-				//System.out.println(GameLoader.getEntityDebugInformation(clickedCell.getEntity()));
 				if (clickedCell.getEntity().getPlayer() == gameState.activePlayer) {
 					// select
 					selectEntity(clickedCell.getEntity());
@@ -118,13 +117,11 @@ public class Logic {
 	 */
 	private void attackCell(int destX, int destY) {
 		Entity destEntity = gameState.getGrid().getCellAt(destX, destY).getEntity();
-		//System.out.println("Entity attack!");
 		if (destEntity.health > 0) {
 			// do damage
 			destEntity.health -= ((IAttacking) getSelectedEntity()).getAttackDamage();
 			
 			if (destEntity.health <= 0) {
-				//System.out.println("Entity Death!");
 				Cell c = gameState.getGrid().getCellAt((int)destEntity.getX(), (int)destEntity.getY());
 				c.setEntity(null);
 				moveSelectedEntity(destX, destY, false);

@@ -33,8 +33,6 @@ public class Input {
 	}
 
 	private Vector3f rayDirectionFromMousePos(int x, int y) {
-		// System.out.println("pos: " + x + " " + y);
-
 		float windowWidth = LLC_ref.width;
 		float windowHeight = LLC_ref.height;
 		y = LLC_ref.height - y;

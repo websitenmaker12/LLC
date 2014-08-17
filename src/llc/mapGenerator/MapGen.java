@@ -19,7 +19,7 @@ public class MapGen {
 			
 		BufferedImage buffy = new BufferedImage(30, 30, BufferedImage.TYPE_INT_RGB);
 		buffy.setRGB(0, 10, 0);
-		System.out.println(buffy.getRGB(0, 10));
+//		System.out.println(buffy.getRGB(0, 10));
 		ImageIO.write(buffy, "BMP", new File("map.bmp"));
 	}
 		

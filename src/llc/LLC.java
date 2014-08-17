@@ -184,7 +184,6 @@ public class LLC implements IKeybindingListener {
 		
 		if(Display.isCreated()) Display.destroy();
 		this.audioEngine.dispose();
-		System.out.println(0);
 	}
 	
 	/**

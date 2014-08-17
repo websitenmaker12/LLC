@@ -27,7 +27,6 @@ public class GameLoader {
 	 * Creates a new GameLoader, make sure to only do this once!(Performance...)
 	 */
 	public GameLoader() {
-
 	}
 	
 	/**
@@ -50,8 +49,8 @@ public class GameLoader {
 		} catch (IOException e) {
 			e.printStackTrace();
 		};
+		
 		if (fileName == null) {
-			System.out.println("File not set");
 			return;
 		}
 	}
