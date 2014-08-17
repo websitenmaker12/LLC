@@ -1,1 +1,2 @@
 - UI
+- Maybe wall entities that enemy entities cannot pass (they have to destroy/kill it first) to protect the base
