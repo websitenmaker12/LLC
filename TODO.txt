@@ -1,3 +1,1 @@
 - UI
-- Show which player has won the game in the GameOver-GUI
-- Add button to start a new game in GameOver-GUI

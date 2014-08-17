@@ -417,7 +417,8 @@ public class Renderer {
 			drawCell(state.hoveredCell, state.hoveredCell.y, state.hoveredCell.x, false);
 			
 			if(state.selectedCell != null && state.selectedCell.containsEntity() && state.selectedCell.getEntity() instanceof EntityMovable) {
-				if(((EntityMovable)state.selectedCell.getEntity()).isCellInRange(state.hoveredCell.x, state.hoveredCell.y)) {
+				if(((EntityMovable)state.selectedCell.getEntity()).isCellInRange(state.hoveredCell.x, state.hoveredCell.y)
+						&& (!state.hoveredCell.containsEntity() || state.hoveredCell.getEntity().getPlayer() != state.activePlayer)) {
 					List<Cell> cells = PathFinder.findPath(state.getGrid(), state.selectedCell, state.hoveredCell);
 					if(cells != null) for(Cell cell : cells) this.drawCell(cell, cell.y, cell.x, false);
 				}

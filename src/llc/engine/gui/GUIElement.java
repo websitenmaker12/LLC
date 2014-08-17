@@ -29,6 +29,7 @@ public abstract class GUIElement {
 	public abstract void render(GUIRenderer renderer, int x, int y);
 
 	/**
+	 * Returns whether this element is hovered by the given mouse coords or not
 	 */
 	public boolean isHovered(int x, int y) {
 		return x >= this.posX && x <= this.posX + this.width && y >= this.posY && y <= this.posY + this.height;
