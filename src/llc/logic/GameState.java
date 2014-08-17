@@ -46,7 +46,7 @@ public class GameState implements Serializable{
 			throw new IllegalArgumentException("Given Player argument does not exist");
 		}
 		
-		this.camera.focusCell(this.getActivePlayerTownHallLocation());
+		this.camera.focusCell(this.getActivePlayerTownHallLocation(), true);
 	}
 
 	public Player getPlayer1() {

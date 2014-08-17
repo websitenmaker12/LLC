@@ -168,6 +168,7 @@ public class LLC implements IKeybindingListener {
 			
 			// Rendering
 			this.profiler.endStart("Render game");
+			this.camera.update(delta);
 			this.renderer.render(this.camera, this.logic.getGameState(), delta);
 			this.profiler.endStart("Render GUI");
 			this.guiRenderer.render(this.width, this.height, this.mouseX, this.mouseY);
