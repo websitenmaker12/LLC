@@ -19,7 +19,7 @@ import llc.util.PathFinder;
 public class Logic {
 	
 	private GameState gameState;
-	private EntityMovable selectedEntityTest;
+	private EntityMovable selectedEntity;
 	private Input input;
 	
 	public int subTurns = 4;
@@ -106,7 +106,7 @@ public class Logic {
 	 */
 	private void selectEntity(Entity toSelect) {
 		if (toSelect instanceof EntityMovable) {
-			this.selectedEntityTest = (EntityMovable) toSelect;
+			this.selectedEntity = (EntityMovable) toSelect;
 		}
 	}
 
@@ -203,6 +203,6 @@ public class Logic {
 		}
 	}
 	private EntityMovable getSelectedEntity() {
-		return selectedEntityTest;
+		return selectedEntity;
 	}
 }
