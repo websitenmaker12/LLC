@@ -415,10 +415,12 @@ public class Renderer {
 		if(state.hoveredCell != null) {
 			glColor3f(1, 0.5f, 0.5f);
 			drawCell(state.hoveredCell, state.hoveredCell.y, state.hoveredCell.x, false);
-
+			
 			if(state.selectedCell != null && state.selectedCell.containsEntity() && state.selectedCell.getEntity() instanceof EntityMovable) {
-				List<Cell> cells = PathFinder.findPath(state.getGrid(), state.selectedCell, state.hoveredCell);
-				if(cells != null) for(Cell cell : cells) this.drawCell(cell, cell.y, cell.x, false);
+				if(((EntityMovable)state.selectedCell.getEntity()).isCellInRange(state.hoveredCell.x, state.hoveredCell.y)) {
+					List<Cell> cells = PathFinder.findPath(state.getGrid(), state.selectedCell, state.hoveredCell);
+					if(cells != null) for(Cell cell : cells) this.drawCell(cell, cell.y, cell.x, false);
+				}
 			}
 		}
 		if(state.selectedCell != null) {

@@ -18,10 +18,10 @@ public abstract class Entity implements Serializable {
 	public int health;
 	public int maxHealth;
 	
-	private float x;
-	private float y;
+	protected float x;
+	protected float y;
 	
-	private int player;
+	protected int player;
 	
 	// Vars for move animation
 	private Logic logic;

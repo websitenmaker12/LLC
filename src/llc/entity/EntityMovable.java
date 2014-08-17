@@ -9,7 +9,7 @@ public abstract class EntityMovable extends Entity {
 	private static final long serialVersionUID = 6L;
 	
 	private float moveSpeed = 1;
-	private int moveRange = 15;
+	private int moveRange = 8;
 
 	/**
 	 * Gets the {@link EntityMoveable} move speed.
@@ -50,6 +50,6 @@ public abstract class EntityMovable extends Entity {
 	 * @return If the entity is in range
 	 */
 	public boolean isCellInRange(int x, int y) {
-		return Math.abs((this.getX() - x) + (this.getY() - y)) <= this.moveRange;
+		return Math.abs(x - this.x) + Math.abs(y - this.y) <= this.getMoveRange();
 	}
 }

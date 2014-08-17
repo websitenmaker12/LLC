@@ -154,6 +154,7 @@ public class Logic {
 		EntityMovable selectedEntity = getSelectedEntity();
 		selectedEntity.initMoveRoutine(this, PathFinder.findPath(this.gameState.getGrid(),
 				this.gameState.getGrid().getCellAt((int)selectedEntity.getX(), (int)selectedEntity.getY()), this.gameState.getGrid().getCellAt(destX, destY)), countMove);
+		gameState.selectedCell = null;
 	}
 	
 	public void finishEntityMove(int origX, int origY, boolean countMove) {
@@ -162,7 +163,6 @@ public class Logic {
 		gameState.getGrid().getCellAt((int) selectedEntity.getX(), (int) selectedEntity.getY()).setEntity(selectedEntity);
 		if (countMove) countMove();
 		selectEntity(null);
-		gameState.selectedCell = null;
 	}
 	
 	/**

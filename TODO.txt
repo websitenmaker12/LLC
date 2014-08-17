@@ -1,6 +1,5 @@
 - UI
 - Remove System.out.println's
 - Can't move base entity
-- Range check by movement
 - Show which player has won the game in the GameOver-GUI
 - Add button to start a new game in GameOver-GUI
