@@ -119,7 +119,7 @@ public abstract class Entity implements Serializable{
 	public void update(int delta) {
 		if(this.logic == null || this.path == null) return;
 		
-		if((this.timeout += delta) % 4L == 0L) {
+		if((this.timeout += 1) % 6L == 0L) {
 			this.currentPos++;
 			if(this.currentPos >= this.path.size()) {
 				this.logic.finishEntityMove(this.origX, this.origY, countLastMove);
