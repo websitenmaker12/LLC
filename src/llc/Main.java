@@ -24,6 +24,7 @@ public class Main {
 		
 		if (SystemUtil.compareVersions(versionJRE, "1.7") == -1) {
 			JOptionPane.showMessageDialog(null, "Your java runtime environment is not up to date ): (You use " + versionJRE + ")", "Higher JRE version expected", JOptionPane.ERROR_MESSAGE);
+			return;
 		}
 
 		LLC game = new LLC();

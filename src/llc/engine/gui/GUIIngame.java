@@ -7,7 +7,6 @@ import llc.entity.EntityWarrior;
 import llc.entity.EntityWorker;
 import llc.loading.GameLoader;
 import llc.logic.Logic;
-import llc.util.RenderUtil;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -72,8 +71,8 @@ public class GUIIngame extends GUI {
 	
 	@Override
 	public void render(GUIRenderer renderer, int x, int y) {
-		float scaleX = 640 / (float)Display.getWidth();
-		float scaleY = 480 / (float)Display.getHeight();
+//		float scaleX = 640 / (float)Display.getWidth();
+//		float scaleY = 480 / (float)Display.getHeight();
 		
 		GL11.glPushMatrix();
 		
