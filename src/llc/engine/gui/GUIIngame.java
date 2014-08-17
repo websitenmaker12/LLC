@@ -51,6 +51,16 @@ public class GUIIngame extends GUI {
 			@Override
 			public void update(int x, int y) {
 				setText("Gold:" + logic.getGameState().getActivePlayer().getMinerals());
+				if (logic.markMinerals) {
+					this.mark();
+					logic.markMinerals = false;
+				}
+				if (this.isMarked()) {
+					this.setColor(Color.red);
+				}
+				else {
+					this.setColor(Color.orange);
+				}
 			}
 		});
 		
