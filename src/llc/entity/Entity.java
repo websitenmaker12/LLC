@@ -31,7 +31,7 @@ public abstract class Entity implements Serializable{
 	private int currentPos;
 	private long timeout;
 	private int origX, origY;
-
+	private boolean countLastMove;
 	/**
 	 * @return cost to pay for an Entity of this type
 	 */
@@ -103,13 +103,14 @@ public abstract class Entity implements Serializable{
 	/**
 	 * Starts the move animation
 	 */
-	public void initMoveRoutine(Logic logic, List<Cell> path) {
+	public void initMoveRoutine(Logic logic, List<Cell> path, boolean countMove) {
 		this.logic = logic;
 		this.path = path;
 		this.currentPos = -1;
 		this.timeout = 0L;
 		this.origX = (int)this.x;
 		this.origY = (int)this.y;
+		this.countLastMove = countMove;
 	}
 	
 	/**
@@ -121,7 +122,7 @@ public abstract class Entity implements Serializable{
 		if((this.timeout += delta) % 4L == 0L) {
 			this.currentPos++;
 			if(this.currentPos >= this.path.size()) {
-				this.logic.finishEntityMove(this.origX, this.origY, true);
+				this.logic.finishEntityMove(this.origX, this.origY, countLastMove);
 				this.logic = null;
 				return;
 			}

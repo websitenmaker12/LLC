@@ -19,7 +19,7 @@ import llc.util.PathFinder;
 public class Logic {
 	
 	private GameState gameState;
-	private EntityMovable selectedEntity;
+	private EntityMovable selectedEntityTest;
 	private Input input;
 	
 	public int subTurns = 4;
@@ -81,6 +81,7 @@ public class Logic {
 	 */
 	private void clickCell(int clickX, int clickY) {
 		if (0 <= clickY && clickY < gameState.getGrid().getHeigth() && 0 <= clickX && clickX < gameState.getGrid().getWidth()) {
+			EntityMovable selectedEntity = getSelectedEntity();
 			Cell clickedCell = gameState.getGrid().getCellAt(clickX, clickY);
 			if (clickedCell.containsEntity()) {
 				//System.out.println(GameLoader.getEntityDebugInformation(clickedCell.getEntity()));
@@ -105,7 +106,7 @@ public class Logic {
 	 */
 	private void selectEntity(Entity toSelect) {
 		if (toSelect instanceof EntityMovable) {
-			this.selectedEntity = (EntityMovable) toSelect;
+			this.selectedEntityTest = (EntityMovable) toSelect;
 		}
 	}
 
@@ -120,8 +121,8 @@ public class Logic {
 		//System.out.println("Entity attack!");
 		if (destEntity.health > 0) {
 			// do damage
-			destEntity.health -= ((IAttacking) selectedEntity).getAttackDamage();
-
+			destEntity.health -= ((IAttacking) getSelectedEntity()).getAttackDamage();
+			
 			if (destEntity.health <= 0) {
 				//System.out.println("Entity Death!");
 				Cell c = gameState.getGrid().getCellAt((int)destEntity.getX(), (int)destEntity.getY());
@@ -150,15 +151,17 @@ public class Logic {
 	 * @param countMove Does the move count as player action.
 	 */
 	private void moveSelectedEntity(int destX, int destY, boolean countMove) {
-		this.selectedEntity.initMoveRoutine(this, PathFinder.findPath(this.gameState.getGrid(),
-				this.gameState.getGrid().getCellAt((int)selectedEntity.getX(), (int)selectedEntity.getY()), this.gameState.getGrid().getCellAt(destX, destY)));
+		EntityMovable selectedEntity = getSelectedEntity();
+		selectedEntity.initMoveRoutine(this, PathFinder.findPath(this.gameState.getGrid(),
+				this.gameState.getGrid().getCellAt((int)selectedEntity.getX(), (int)selectedEntity.getY()), this.gameState.getGrid().getCellAt(destX, destY)), countMove);
 	}
 	
 	public void finishEntityMove(int origX, int origY, boolean countMove) {
+		EntityMovable selectedEntity = getSelectedEntity();
 		gameState.getGrid().getCellAt(origX, origY).setEntity(null);
 		gameState.getGrid().getCellAt((int) selectedEntity.getX(), (int) selectedEntity.getY()).setEntity(selectedEntity);
 		if (countMove) countMove();
-		selectedEntity = null;
+		selectEntity(null);
 		gameState.selectedCell = null;
 	}
 	
@@ -173,7 +176,7 @@ public class Logic {
 			gameState.setActivePlayer(gameState.getInActivePlayer());
 			gameState.moveCount = 0;
 			gameState.selectedCell = null;
-			selectedEntity = null;
+			selectEntity(null);
 		}
 	}
 
@@ -198,5 +201,8 @@ public class Logic {
 			entity.setY(spawnCell.y);
 			clickCell(spawnCell.x,spawnCell.y);
 		}
+	}
+	private EntityMovable getSelectedEntity() {
+		return selectedEntityTest;
 	}
 }
