@@ -90,11 +90,11 @@ public class Logic {
 					gameState.selectedCell = clickedCell;
 				} else if (selectedEntity instanceof IAttacking && selectedEntity.isCellInRange(clickX, clickY)) {
 					// attack
-					attackCell( clickX, clickY);
+					attackCell(clickX, clickY);
 				}
 			} else if (clickedCell.getType() == CellType.WALKABLE && selectedEntity != null && selectedEntity.isCellInRange(clickX, clickY)) {
 				//move
-				moveSelectedEntity(clickX, clickY, true);
+				moveSelectedEntity(clickX, clickY, true, false);
 			}
 		}
 	}
@@ -121,11 +121,11 @@ public class Logic {
 		if (destEntity.health > 0) {
 			// do damage
 			destEntity.health -= ((IAttacking) getSelectedEntity()).getAttackDamage();
+			moveSelectedEntity(destX, destY, false, true);
 			
 			if (destEntity.health <= 0) {
 				Cell c = gameState.getGrid().getCellAt((int)destEntity.getX(), (int)destEntity.getY());
 				c.setEntity(null);
-				moveSelectedEntity(destX, destY, false);
 				gameState.getActivePlayer().addMinerals(25);
 				// if a base was destroyed, the game is over
 				if (destEntity instanceof EntityBuildingBase) {
@@ -148,10 +148,10 @@ public class Logic {
 	 * @param destY The new y position
 	 * @param countMove Does the move count as player action.
 	 */
-	private void moveSelectedEntity(int destX, int destY, boolean countMove) {
+	private void moveSelectedEntity(int destX, int destY, boolean countMove, boolean shouldReturn) {
 		EntityMovable selectedEntity = getSelectedEntity();
 		selectedEntity.initMoveRoutine(this, PathFinder.findPath(this.gameState.getGrid(),
-				this.gameState.getGrid().getCellAt((int)selectedEntity.getX(), (int)selectedEntity.getY()), this.gameState.getGrid().getCellAt(destX, destY)), countMove);
+				this.gameState.getGrid().getCellAt((int)selectedEntity.getX(), (int)selectedEntity.getY()), this.gameState.getGrid().getCellAt(destX, destY)), countMove, shouldReturn);
 		gameState.selectedCell = null;
 	}
 	
@@ -159,7 +159,7 @@ public class Logic {
 		EntityMovable selectedEntity = getSelectedEntity();
 		gameState.getGrid().getCellAt(origX, origY).setEntity(null);
 		gameState.getGrid().getCellAt((int) selectedEntity.getX(), (int) selectedEntity.getY()).setEntity(selectedEntity);
-		if (countMove) countMove();
+		if(countMove) countMove();
 		selectEntity(null);
 	}
 	

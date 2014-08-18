@@ -1,6 +1,5 @@
 package llc.engine.gui;
 
-
 import llc.engine.GUIRenderer;
 import llc.engine.res.Texture;
 import llc.entity.EntityWarrior;
@@ -14,9 +13,7 @@ import org.newdawn.slick.Color;
 
 public class GUIIngame extends GUI {
 
-	@SuppressWarnings("unused")
-	private GameLoader gameLoader;
-	private Logic logic;
+	protected Logic logic;
 	
 	private Texture left;
 	private Texture middle;
@@ -24,7 +21,6 @@ public class GUIIngame extends GUI {
 	
 	public GUIIngame(Logic logic, GameLoader gameLoader) {
 		this.logic = logic;
-		this.gameLoader = gameLoader;
 		
 		left = new Texture("res/gui/ingame_left.png");
 		middle = new Texture("res/gui/ingame_middle.png");

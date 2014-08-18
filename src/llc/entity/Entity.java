@@ -1,10 +1,14 @@
 package llc.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import llc.logic.Cell;
 import llc.logic.Logic;
+
+import org.lwjgl.util.vector.Vector3f;
 
 /**
  * The entity base class.
@@ -23,13 +27,14 @@ public abstract class Entity implements Serializable {
 	
 	protected int player;
 	
-	// Vars for move animation
+	// Variables for move animation
 	private Logic logic;
-	private List<Cell> path;
+	private List<Vector3f> path = new ArrayList<Vector3f>();
 	private int currentPos;
 	private long timeout;
 	private int origX, origY;
 	private boolean countLastMove;
+	private boolean shouldReturn;
 	
 	/**
 	 * @return cost to pay for an Entity of this type
@@ -40,8 +45,7 @@ public abstract class Entity implements Serializable {
 	 * Creates a new entity with the amount of 100 health
 	 */
 	public Entity() {
-		this.maxHealth = 100;
-		this.health = maxHealth;
+		this.health = this.maxHealth = 100;
 	}
 
 	/**
@@ -49,7 +53,7 @@ public abstract class Entity implements Serializable {
 	 * @param maxHealth The amount of health
 	 */
 	public Entity(int health) {
-		this.health = maxHealth;
+		this.health = this.maxHealth = health;
 	}
 	
 	/**
@@ -102,14 +106,18 @@ public abstract class Entity implements Serializable {
 	/**
 	 * Starts the move animation
 	 */
-	public void initMoveRoutine(Logic logic, List<Cell> path, boolean countMove) {
+	public void initMoveRoutine(Logic logic, List<Cell> path, boolean countMove, boolean shouldReturn) {
 		this.logic = logic;
-		this.path = path;
+		
+		this.path.clear();
+		for(Cell cell : path) this.path.add(new Vector3f(cell.x, cell.y, cell.height));
+		
 		this.currentPos = -1;
 		this.timeout = 0L;
 		this.origX = (int)this.x;
 		this.origY = (int)this.y;
 		this.countLastMove = countMove;
+		this.shouldReturn = shouldReturn;
 	}
 	
 	/**
@@ -118,13 +126,22 @@ public abstract class Entity implements Serializable {
 	public void update(int delta) {
 		if(this.logic == null || this.path == null) return;
 		
-		if((this.timeout += 1) % 6L == 0L) {
+		if(++this.timeout % 6L == 0L) {
 			this.currentPos++;
 			if(this.currentPos >= this.path.size()) {
-				this.logic.finishEntityMove(this.origX, this.origY, countLastMove);
-				this.logic = null;
-				return;
+				if(this.shouldReturn) {
+					this.shouldReturn = false;
+					Collections.reverse(this.path);
+					this.path.add(new Vector3f(this.origX, this.origY, 0));
+					this.currentPos = 0;
+					this.timeout = 0L;
+				} else {
+					this.logic.finishEntityMove(this.origX, this.origY, countLastMove);
+					this.logic = null;
+					return;
+				}
 			}
+			
 			this.x = this.path.get(this.currentPos).x;
 			this.y = this.path.get(this.currentPos).y;
 		}
