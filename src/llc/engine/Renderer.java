@@ -468,7 +468,9 @@ public class Renderer {
 						}
 					}
 					
-					glTranslatef(e.getX() + 0.5F, e.getY() + 0.5F, f);
+					if(e.posVec == null) glTranslatef(e.getX() + 0.5F, e.getY() + 0.5F, f);
+					else glTranslatef(e.posVec.x, e.posVec.y, f);
+					
 					RenderUtil.clearColor();
 					if(e instanceof EntityBuildingBase) {
 						bindModelTexture(baseModel);
@@ -484,12 +486,18 @@ public class Renderer {
 					
 					// Health Bar
 					GL11.glPushMatrix();
-					GL11.glTranslatef(0, 0, f + 1.25F);
+					float barWidth = (float)e.maxHealth / 160F;
+					
+					if(e.posVec == null) GL11.glTranslatef(e.getX() - barWidth / 2 + 0.5F, e.getY() + 0.5F, f + 1.25F);
+					else GL11.glTranslatef(e.posVec.x - barWidth / 2, e.posVec.y, f + 1.25F);
+					
 					Color.black.bind();
-					RenderUtil.drawQuad(e.getX(), e.getY(), e.maxHealth / 160F, 0.1F);
+					RenderUtil.drawQuad(0, 0, barWidth, 0.1F);
+					
 					if(state.getActivePlayer().playerID == e.getPlayer()) Color.green.bind();
 					else Color.red.bind();
-					RenderUtil.drawQuad(e.getX(), e.getY(), e.health / 160F, 0.1F);
+					RenderUtil.drawQuad(0, 0, e.health / 160F, 0.1F);
+					
 					GL11.glPopMatrix();
 				}
 			}

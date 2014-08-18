@@ -1,3 +1,2 @@
 - UI
-- Create animation when entity moves, no teleporting
 - Maybe wall entities that enemy entities cannot pass (they have to destroy/kill it first) to protect the base

@@ -92,7 +92,7 @@ public class Logic {
 			
 			if (clickedCell.containsEntity()) {
 				if (clickedCell.getEntity().getPlayer() == gameState.activePlayer) {
-					//is the selected entity a worker and the entity of the clicked cell is a base, repair it
+					// Is the selected entity a worker and the entity of the clicked cell is a base, repair it
 					if (this.selectedEntity instanceof IRepairer && clickedCell.getEntity() instanceof EntityBuildingBase) {
 						int addHealth = ((IRepairer)this.selectedEntity).getRepairHealth();
 						int cost = ((IRepairer)this.selectedEntity).getRepairCost();
@@ -115,7 +115,7 @@ public class Logic {
 					attackCell(clickX, clickY);
 				}
 			} else if (clickedCell.getType() == CellType.WALKABLE && selectedEntity != null && selectedEntity.isCellInRange(clickX, clickY)) {
-				//move
+				// move
 				moveSelectedEntity(clickX, clickY, true, false);
 			}
 		}
@@ -197,10 +197,8 @@ public class Logic {
 			gameState.getActivePlayer().addMinerals(50);
 			gameState.setActivePlayer(gameState.getInActivePlayer());
 			gameState.moveCount = 0;
+			gameState.selectedCell = null;
 		}
-		
-		gameState.selectedCell = null;
-		selectEntity(null);
 	}
 
 	public void buyEntity(Entity entity) {
