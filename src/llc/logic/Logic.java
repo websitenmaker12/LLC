@@ -1,5 +1,7 @@
 package llc.logic;
 
+import java.util.Random;
+
 import llc.LLC;
 import llc.entity.Entity;
 import llc.entity.EntityBuildingBase;
@@ -22,8 +24,9 @@ public class Logic {
 	private GameState gameState;
 	private EntityMovable selectedEntity;
 	private Input input;
-	public boolean markMinerals;
+	private Random random;
 	
+	public boolean markMinerals;
 	public int subTurns = 4;
 
 	public Logic(GameState state, Input input) {
@@ -44,6 +47,8 @@ public class Logic {
 				hoverCell(cell_x, cell_y);
 			}
 		});
+		
+		this.random = new Random(System.currentTimeMillis());
 	}
 
 	/**
@@ -83,15 +88,15 @@ public class Logic {
 	 */
 	private void clickCell(int clickX, int clickY) {
 		if (0 <= clickY && clickY < gameState.getGrid().getHeigth() && 0 <= clickX && clickX < gameState.getGrid().getWidth()) {
-			EntityMovable selectedEntity = getSelectedEntity();
+			EntityMovable selectedEntity = this.selectedEntity;
 			Cell clickedCell = gameState.getGrid().getCellAt(clickX, clickY);
 			
 			if (clickedCell.containsEntity()) {
 				if (clickedCell.getEntity().getPlayer() == gameState.activePlayer) {
 					//is the selected entity a worker and the entity of the clicked cell is a base, repair it
-					if (getSelectedEntity() instanceof IRepairer && clickedCell.getEntity() instanceof EntityBuildingBase) {
-						int addHealth = ((IRepairer)getSelectedEntity()).getRepairHealth();
-						int cost = ((IRepairer)getSelectedEntity()).getRepairCost();
+					if (this.selectedEntity instanceof IRepairer && clickedCell.getEntity() instanceof EntityBuildingBase) {
+						int addHealth = ((IRepairer)this.selectedEntity).getRepairHealth();
+						int cost = ((IRepairer)this.selectedEntity).getRepairCost();
 						int minerals = gameState.getActivePlayer().getMinerals();
 						
 						if (minerals >= cost) {
@@ -138,7 +143,7 @@ public class Logic {
 		Entity destEntity = gameState.getGrid().getCellAt(destX, destY).getEntity();
 		if (destEntity.health > 0) {
 			// do damage
-			destEntity.health -= ((IAttacking) getSelectedEntity()).getAttackDamage();
+			destEntity.health -= ((IAttacking) this.selectedEntity).getAttackDamage();
 			moveSelectedEntity(destX, destY, false, true);
 			
 			if (destEntity.health <= 0) {
@@ -167,14 +172,14 @@ public class Logic {
 	 * @param countMove Does the move count as player action.
 	 */
 	private void moveSelectedEntity(int destX, int destY, boolean countMove, boolean shouldReturn) {
-		EntityMovable selectedEntity = getSelectedEntity();
+		EntityMovable selectedEntity = this.selectedEntity;
 		selectedEntity.initMoveRoutine(this, PathFinder.findPath(this.gameState.getGrid(),
 				this.gameState.getGrid().getCellAt((int)selectedEntity.getX(), (int)selectedEntity.getY()), this.gameState.getGrid().getCellAt(destX, destY)), countMove, shouldReturn);
 		gameState.selectedCell = null;
 	}
 	
 	public void finishEntityMove(int origX, int origY, boolean countMove) {
-		EntityMovable selectedEntity = getSelectedEntity();
+		EntityMovable selectedEntity = this.selectedEntity;
 		gameState.getGrid().getCellAt(origX, origY).setEntity(null);
 		gameState.getGrid().getCellAt((int) selectedEntity.getX(), (int) selectedEntity.getY()).setEntity(selectedEntity);
 		if(countMove) countMove();
@@ -199,15 +204,10 @@ public class Logic {
 	public void buyEntity(Entity entity) {
 		int cx = gameState.getActivePlayerTownHallLocation().x;
 		int cy = gameState.getActivePlayerTownHallLocation().y;
-		Cell spawnCell = null;
 		
-		for(int x = -2; x <= 2; x++) {
-			for(int y = -2; y <= 2; y++) {
-				spawnCell = gameState.getGrid().getCellAt(cx + x, cy + y);
-				if(spawnCell == null || spawnCell.containsEntity() || spawnCell.getType() == CellType.SOLID) continue;
-				else break;
-			}
-		}
+		Cell spawnCell = null;
+		while(spawnCell == null || spawnCell.containsEntity() || spawnCell.getType() == CellType.SOLID)
+			spawnCell = this.gameState.getGrid().getCellAt(cx + random.nextInt(4) - 2, cy + random.nextInt(4) - 2);
 		
 		if (spawnCell != null && !spawnCell.containsEntity() && entity.getCost() > 0 && gameState.getActivePlayer().getMinerals() >= entity.getCost()) {
 			gameState.getActivePlayer().removeMinerals(entity.getCost());
@@ -221,7 +221,5 @@ public class Logic {
 			markMinerals = true;
 		}
 	}
-	private EntityMovable getSelectedEntity() {
-		return selectedEntity;
-	}
+
 }

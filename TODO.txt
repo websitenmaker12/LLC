@@ -1,6 +1,4 @@
 - UI
-- When entity attacks it should move forward and back to its original position
 - Create animation when entity moves, no teleporting
 - Bug that after a round you can control the enemy's solider
-- Randomize where the bought entity spawns
 - Maybe wall entities that enemy entities cannot pass (they have to destroy/kill it first) to protect the base
