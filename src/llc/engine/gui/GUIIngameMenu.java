@@ -1,14 +1,14 @@
 package llc.engine.gui;
 
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.Color;
-
 import llc.LLC;
 import llc.engine.GUIRenderer;
 import llc.loading.GameLoader;
 import llc.logic.Logic;
 import llc.util.RenderUtil;
+
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.Color;
 
 public class GUIIngameMenu extends GUI{
 	
@@ -25,6 +25,8 @@ public class GUIIngameMenu extends GUI{
 	@Override
 	public void onOpen() {
 		super.onOpen();
+		
+		this.elements.add(new GUIText(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2 - 230, 300, 40, "LLC - " + LLC.VERSION, Color.orange));
 		
 		this.elements.add(new GUIButton(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2 - 165, 300, 40, "Back to game") {
 			public void onClick(int x, int y) {
@@ -44,7 +46,6 @@ public class GUIIngameMenu extends GUI{
 					logic.setGameState(gameLoader.loadFromFile("save.llcsav"));
 				}
 				catch (Exception e) {
-					//File does not exist
 				}
 			}
 		});
@@ -64,12 +65,9 @@ public class GUIIngameMenu extends GUI{
 	
 	@Override
 	public void render(GUIRenderer renderer, int x, int y) {
-		GL11.glPushMatrix();
 		GL11.glColor4f(0.0F, 0.0F, 0.0F, 0.5f);
 		RenderUtil.drawQuad(0, 0, Display.getWidth(), Display.getHeight());
-		GL11.glPopMatrix();
-		
-		renderer.font.drawString(Display.getWidth() / 2 - renderer.font.getWidth("LLC v. 0.1"), Display.getHeight() / 8, "LLC v. 0.1", Color.orange);
+		RenderUtil.clearColor();
 		
 		super.render(renderer, x, y);
 	}
