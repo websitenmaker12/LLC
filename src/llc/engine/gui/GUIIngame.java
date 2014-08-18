@@ -43,21 +43,31 @@ public class GUIIngame extends GUI {
 			}
 		});
 		
-		this.elements.add(new GUIText(this, 20, 20, 0, 0, "Gold: ", Color.orange) {
+		this.elements.add(new GUIText(this, 50, 20, 0, 0, "Gold: ", Color.orange) {
 			@Override
 			public void update(int x, int y) {
 				setText("Gold:" + logic.getGameState().getActivePlayer().getMinerals());
+				if (logic.markMinerals) {
+					this.mark();
+					logic.markMinerals = false;
+				}
+				if (this.isMarked()) {
+					this.setColor(Color.red);
+				}
+				else {
+					this.setColor(Color.orange);
+				}
 			}
 		});
 		
-		this.elements.add(new GUIText(this, Display.getWidth() - 110, 20, 0, 0, "Player: ", Color.orange) {
+		this.elements.add(new GUIText(this, Display.getWidth() - 60, 20, 0, 0, "Player: ", Color.orange) {
 			@Override
 			public void update(int x, int y) {
 				setText("Player " + logic.getGameState().getActivePlayer().playerID);
 			}
 		});
 		
-		this.elements.add(new GUIText(this, Display.getWidth() / 2 - 40, 20, 0, 0, "Turns left: ", Color.orange) {
+		this.elements.add(new GUIText(this, Display.getWidth() / 2 , 20, 0, 0, "Turns left: ", Color.orange) {
 			@Override
 			public void update(int x, int y) {
 				setText("Turns left: " + (logic.subTurns - logic.getGameState().moveCount) + "/" + logic.subTurns);
