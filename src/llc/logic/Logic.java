@@ -88,7 +88,6 @@ public class Logic {
 	 */
 	private void clickCell(int clickX, int clickY) {
 		if (0 <= clickY && clickY < gameState.getGrid().getHeigth() && 0 <= clickX && clickX < gameState.getGrid().getWidth()) {
-			EntityMovable selectedEntity = this.selectedEntity;
 			Cell clickedCell = gameState.getGrid().getCellAt(clickX, clickY);
 			
 			if (clickedCell.containsEntity()) {
@@ -130,6 +129,8 @@ public class Logic {
 		if(toSelect != null && toSelect instanceof EntityMovable) {
 			this.selectedEntity = (EntityMovable) toSelect;
 			LLC.getLLC().getCamera().focusCell(this.gameState.getGrid().getCellAt((int)toSelect.getX(), (int)toSelect.getY()), true);
+		} else {
+			this.selectedEntity = null;
 		}
 	}
 
@@ -196,9 +197,10 @@ public class Logic {
 			gameState.getActivePlayer().addMinerals(50);
 			gameState.setActivePlayer(gameState.getInActivePlayer());
 			gameState.moveCount = 0;
-			gameState.selectedCell = null;
-			selectEntity(null);
 		}
+		
+		gameState.selectedCell = null;
+		selectEntity(null);
 	}
 
 	public void buyEntity(Entity entity) {
