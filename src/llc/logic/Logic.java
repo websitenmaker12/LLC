@@ -5,7 +5,7 @@ import llc.entity.Entity;
 import llc.entity.EntityBuildingBase;
 import llc.entity.EntityMovable;
 import llc.entity.IAttacking;
-import llc.entity.Repairer;
+import llc.entity.IRepairer;
 import llc.input.Input;
 import llc.input.Input.Direction;
 import llc.util.PathFinder;
@@ -85,26 +85,19 @@ public class Logic {
 		if (0 <= clickY && clickY < gameState.getGrid().getHeigth() && 0 <= clickX && clickX < gameState.getGrid().getWidth()) {
 			EntityMovable selectedEntity = getSelectedEntity();
 			Cell clickedCell = gameState.getGrid().getCellAt(clickX, clickY);
+			
 			if (clickedCell.containsEntity()) {
 				if (clickedCell.getEntity().getPlayer() == gameState.activePlayer) {
 					//is the selected entity a worker and the entity of the clicked cell is a base, repair it
-					if (getSelectedEntity() instanceof Repairer && clickedCell.getEntity() instanceof EntityBuildingBase) {
-						int addHealth = ((Repairer)getSelectedEntity()).getRepairHealth();
-						int cost = ((Repairer)getSelectedEntity()).getRepairCost();
+					if (getSelectedEntity() instanceof IRepairer && clickedCell.getEntity() instanceof EntityBuildingBase) {
+						int addHealth = ((IRepairer)getSelectedEntity()).getRepairHealth();
+						int cost = ((IRepairer)getSelectedEntity()).getRepairCost();
 						int minerals = gameState.getActivePlayer().getMinerals();
-						int health = clickedCell.getEntity().health;
-						int maxHealth = clickedCell.getEntity().maxHealth;
+						
 						if (minerals >= cost) {
-							if (maxHealth-health > addHealth) {
-								clickedCell.getEntity().health += addHealth;
-								countMove();
-								gameState.getActivePlayer().setMinerals(minerals - cost);
-							}
-							else if (health != maxHealth){
-								clickedCell.getEntity().health = maxHealth;
-								gameState.getActivePlayer().setMinerals(minerals - cost);
-								countMove();
-							}
+							clickedCell.getEntity().health = Math.min(clickedCell.getEntity().health + addHealth, clickedCell.getEntity().maxHealth);
+							gameState.getActivePlayer().setMinerals(minerals - cost);
+							countMove();
 						} else {
 							markMinerals = true;
 						}
@@ -224,7 +217,7 @@ public class Logic {
 			entity.setY(spawnCell.y);
 			clickCell(spawnCell.x,spawnCell.y);
 		} else if (gameState.getActivePlayer().getMinerals() < entity.getCost()){
-			//The entity did not spawn because the player didn't have enough minerals
+			// The entity did not spawn because the player didn't have enough minerals
 			markMinerals = true;
 		}
 	}

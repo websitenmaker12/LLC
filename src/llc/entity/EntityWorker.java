@@ -1,6 +1,6 @@
 package llc.entity;
 
-public class EntityWorker extends EntityMovable implements Repairer{
+public class EntityWorker extends EntityMovable implements IRepairer {
 
 	private static final long serialVersionUID = 9L;
 	public static final int cost = 25;
@@ -11,7 +11,6 @@ public class EntityWorker extends EntityMovable implements Repairer{
 	}
 	
 	@Override
-	//It heals so much so that the enemy has to kill the workers first
 	public int getRepairHealth() {
 		return 60;
 	}

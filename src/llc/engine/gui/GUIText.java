@@ -8,7 +8,9 @@ public class GUIText extends GUIElement {
 	
 	private String text;
 	private Color color;
-	private Long stopMark;
+	
+	private long markerTime;
+	private Color markerColor;
 	
 	public GUIText(GUI gui, float posX, float posY, float width, float height, String text, Color color) {
 		super(gui, posX, posY, width, height);
@@ -18,7 +20,7 @@ public class GUIText extends GUIElement {
 	
 	@Override
 	public void render(GUIRenderer renderer, int x, int y) {
-		renderer.font.drawString(this.posX + this.width / 2 - renderer.font.getWidth(this.text) / 2, this.posY, this.text, this.color);
+		renderer.font.drawString(this.posX + this.width / 2 - renderer.font.getWidth(this.text) / 2, this.posY, this.text, this.isMarked() ? this.markerColor : this.color);
 	}
 	
 	@Override
@@ -40,19 +42,15 @@ public class GUIText extends GUIElement {
 	}
 	/**
 	 * Marks this element for 1.5 seconds. The element decides how to handle this
+	 * @param i 
+	 * @param red 
 	 */
-	public void mark() {
-		stopMark = System.currentTimeMillis() + 1500;
+	public void mark(Color color, long l) {
+		this.markerTime = System.currentTimeMillis() + l;
+		this.markerColor = color;
 	}
+	
 	public boolean isMarked() {
-		if (stopMark == null) {
-			return false;
-		}
-		if (stopMark >= System.currentTimeMillis()) {
-			return true;
-		} else {
-			stopMark = null;
-			return false;
-		}
+		return this.markerTime > System.currentTimeMillis();
 	}
 }
