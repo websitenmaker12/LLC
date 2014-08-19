@@ -17,6 +17,6 @@ public class EntityWorker extends EntityMovable implements IRepairer {
 
 	@Override
 	public int getRepairCost() {
-		return 20;
+		return 100;
 	}
 }
