@@ -19,4 +19,10 @@ public class EntityWorker extends EntityMovable implements IRepairer {
 	public int getRepairCost() {
 		return 100;
 	}
+	
+	@Override
+	public String getName() {
+		return "entity.worker.name";
+	}
+	
 }

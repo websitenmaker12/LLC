@@ -82,11 +82,12 @@ public class GameLoader {
 		GameState state = null;
 		try {
 			BufferedImage img = ImageIO.read(map);
+			
 			int height, width;
 			height = img.getHeight();
 			width = img.getWidth();
 			Grid g = new Grid(height, width);
-			state = new GameState(g, camera);
+			state = new GameState(g, camera, map);
 			Color c;
 			Cell cell;
 			

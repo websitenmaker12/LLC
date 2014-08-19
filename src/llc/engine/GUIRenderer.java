@@ -5,8 +5,9 @@ import java.awt.Font;
 import llc.engine.audio.AudioEngine;
 import llc.engine.gui.GUI;
 import llc.input.Input;
-
 import static org.lwjgl.opengl.GL11.*;
+
+import org.lwjgl.opengl.Display;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.util.ResourceLoader;
 
@@ -21,12 +22,6 @@ public class GUIRenderer {
 	public GUIRenderer(Input input, AudioEngine audioEngine) {
 		this.input = input;
 		this.audioEngine = audioEngine;
-		
-		try {
-			this.font = new TrueTypeFont(Font.createFont(Font.TRUETYPE_FONT, ResourceLoader.getResourceAsStream("res/font/PTM55FT.ttf")).deriveFont(20F), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 	/**
@@ -82,6 +77,13 @@ public class GUIRenderer {
 	 */
 	public void handleDisplayResize(int width, int height) {
 		if(this.currentGUI != null) this.currentGUI.onOpen();
+		
+		float scale = (float)Display.getWidth() / 680F;
+		try {
+			this.font = new TrueTypeFont(Font.createFont(Font.TRUETYPE_FONT, ResourceLoader.getResourceAsStream("res/font/PTM55FT.ttf")).deriveFont(Math.min(14F * scale, 25)), true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

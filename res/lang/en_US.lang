@@ -1,0 +1,5 @@
+entity.base.name=Base
+entity.warrior.name=Warrior
+entity.worker.name=Worker
+
+gui.health=Health

@@ -13,4 +13,10 @@ public class EntityWarrior extends EntityMovable implements IAttacking {
 	public int getCost() {
 		return 50;
 	}
+	
+	@Override
+	public String getName() {
+		return "entity.warrior.name";
+	}
+	
 }

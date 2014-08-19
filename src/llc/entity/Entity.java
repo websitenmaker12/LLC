@@ -147,4 +147,10 @@ public abstract class Entity implements Serializable {
 		this.x = (int)this.posVec.x;
 		this.y = (int)this.posVec.y;
 	}
+
+	/**
+	 * Returns the unlocalized name for this entity
+	 */
+	public abstract String getName();
+
 }

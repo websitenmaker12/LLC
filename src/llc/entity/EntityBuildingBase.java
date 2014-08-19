@@ -16,4 +16,9 @@ public class EntityBuildingBase extends EntityBuilding {
 	public int getCost() {
 		return 0;
 	}
+
+	@Override
+	public String getName() {
+		return "entity.base.name";
+	}
 }

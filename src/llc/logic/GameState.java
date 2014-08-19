@@ -1,36 +1,39 @@
 package llc.logic;
 
+import java.io.File;
 import java.io.Serializable;
 
 import llc.engine.Camera;
 
-public class GameState implements Serializable{
+public class GameState implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4L;
+	
 	private Grid grid;
 	private Camera camera;
 	
 	private Player player1, player2;
 	private Cell townHall1, townHall2;
-	
 	public Cell hoveredCell, selectedCell;
 	
 	public int activePlayer;
 	public int moveCount = 0;
 	
+	public final String levelName;
+	public final String levelPath;
+	
 	public boolean isGameOver = false;
-
 	public Player winner;
 	
-	public GameState(Grid grid, Camera camera) {
+	public GameState(Grid grid, Camera camera, File level) {
 		this.grid = grid;
 		this.camera = camera;
 		
 		player1 = new Player(1, 100);
 		player2 = new Player(2, 100);
+		
+		this.levelName = level.getName();
+		this.levelPath = level.getPath();
 	}
 	
 	public Grid getGrid() {
