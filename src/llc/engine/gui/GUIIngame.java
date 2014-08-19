@@ -1,11 +1,13 @@
 package llc.engine.gui;
 
+import llc.LLC;
 import llc.engine.GUIRenderer;
 import llc.engine.res.Texture;
 import llc.entity.EntityWarrior;
 import llc.entity.EntityWorker;
 import llc.loading.GameLoader;
 import llc.logic.Logic;
+import llc.util.RenderUtil;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -71,21 +73,19 @@ public class GUIIngame extends GUI {
 	
 	@Override
 	public void render(GUIRenderer renderer, int x, int y) {
-//		float scaleX = 640 / (float)Display.getWidth();
-//		float scaleY = 480 / (float)Display.getHeight();
+		float scale = (float)Display.getWidth() / (float)LLC.standartDisplayMode.getWidth();
 		
 		GL11.glPushMatrix();
-		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		
-		middle.bind();
-		//RenderUtil.drawTexturedQuad(368 * scaleX, Display.getHeight() - 252 * scaleY, Display.getWidth() - ((386 * scaleX) + (702 * scaleX)) + 15, 252 * scaleY);
-		
 		left.bind();
-//		RenderUtil.drawTexturedQuad(0, Display.getHeight() - 348 * scaleY, 386 * scaleX, 348 * scaleY);
-//		
+		RenderUtil.drawTexturedQuad(0, Display.getHeight() - 130F * scale, 130F * scale, 130F * scale);
+		
 		right.bind();
-		//RenderUtil.drawTexturedQuad(Display.getWidth() - 702 * scaleX, Display.getHeight() - 348 * scaleY, 702 * scaleX, 348 * scaleY);
+		RenderUtil.drawTexturedQuad(Display.getWidth() - 200F * scale, Display.getHeight() - 130F * scale, 200F * scale, 130F * scale);
+		
+		middle.bind();
+		RenderUtil.drawTexturedQuad(130F * scale, Display.getHeight() - 94F * scale, 310F * scale, 94F * scale);
 		
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glPopMatrix();

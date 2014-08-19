@@ -54,7 +54,7 @@ public class LLC implements IKeybindingListener {
 	private boolean lastButtonState = false;
 	
 	private boolean isFullscreen = false;
-	private final DisplayMode standartDisplayMode = new DisplayMode(640, 480);
+	public static final DisplayMode standartDisplayMode = new DisplayMode(640, 480);
 	
 	private GUI prevGui = null;
 	private boolean isGamePaused = false;
@@ -128,7 +128,7 @@ public class LLC implements IKeybindingListener {
 	 * Setups the Display
 	 */
 	private void initDisplay() throws LWJGLException {
-		Display.setDisplayMode(this.standartDisplayMode);
+		Display.setDisplayMode(standartDisplayMode);
 		Display.setResizable(true);
 		Display.setVSyncEnabled(true);
 		Display.setTitle("LLC - " + VERSION);
@@ -222,7 +222,7 @@ public class LLC implements IKeybindingListener {
 	 */
 	private void toggleFullscreen() throws LWJGLException {
 		this.isFullscreen = !this.isFullscreen;
-	    Display.setDisplayMode(this.isFullscreen ? Display.getDesktopDisplayMode() : this.standartDisplayMode);
+	    Display.setDisplayMode(this.isFullscreen ? Display.getDesktopDisplayMode() : standartDisplayMode);
 	    Display.setFullscreen(this.isFullscreen);
 	}
 	
