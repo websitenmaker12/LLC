@@ -179,12 +179,11 @@ public class Logic {
 		gameState.selectedCell = null;
 	}
 	
-	public void finishEntityMove(int origX, int origY, boolean countMove) {
-		EntityMovable selectedEntity = this.selectedEntity;
+	public void finishEntityMove(int origX, int origY, boolean countMove, Entity entity) {
 		gameState.getGrid().getCellAt(origX, origY).setEntity(null);
-		gameState.getGrid().getCellAt((int) selectedEntity.getX(), (int) selectedEntity.getY()).setEntity(selectedEntity);
+		gameState.getGrid().getCellAt((int)entity.getX(), (int)entity.getY()).setEntity(entity);
 		if(countMove) countMove();
-		selectEntity(null);
+		if(this.selectedEntity == entity) selectEntity(null);
 	}
 	
 	/**
@@ -216,7 +215,7 @@ public class Logic {
 			entity.setX(spawnCell.x);
 			entity.setY(spawnCell.y);
 			clickCell(spawnCell.x,spawnCell.y);
-		} else if (gameState.getActivePlayer().getMinerals() < entity.getCost()){
+		} else if (gameState.getActivePlayer().getMinerals() < entity.getCost()) {
 			// The entity did not spawn because the player didn't have enough minerals
 			markMinerals = true;
 		}
