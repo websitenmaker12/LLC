@@ -18,38 +18,33 @@ import org.newdawn.slick.Color;
 
 public class GUIIngame extends GUI {
 
+	protected static final String strGold = Translator.translate("gui.gold") + ": ";
+	protected static final String strPlayer = Translator.translate("gui.player") + ": ";
+	protected static final String strTurns = Translator.translate("gui.turnsLeft") + ": ";
+	
 	protected Logic logic;
 	
 	private Texture ui;
-	private Texture map;
+	
+	private GUIGroup baseGroup;
+	private GUIGroup workerGroup;
 	
 	public GUIIngame(Logic logic, GameLoader gameLoader) {
 		this.logic = logic;
 		
 		this.ui = new Texture("res/gui/ui.png");
-		this.map = new Texture(this.logic.getGameState().levelPath);
 	}
 	
 	@Override
 	public void onOpen() {
 		super.onOpen();
-		String name = Translator.translate("gui.buy") + " " + Translator.translate("entity.warrior.name");
-		this.elements.add(new GUIButton(this, Display.getWidth() - 212, Display.getHeight() - 55, 200, 35, name) {
-			public void onClick(int x, int y) {
-				logic.buyEntity(new EntityWarrior());
-			}
-		});
-		name = Translator.translate("gui.buy") + " " + Translator.translate("entity.worker.name");
-		this.elements.add(new GUIButton(this, Display.getWidth() - 212, Display.getHeight() - 110, 200, 35, "Buy Worker") {
-			public void onClick(int x, int y) {
-				logic.buyEntity(new EntityWorker());
-			}
-		});
-		this.elements.add(new GUIText(this, 50, 20, 0, 0, "Gold: ", Color.orange) {
-			private String name = Translator.translate("gui.gold") + " ";
-			@Override
+		
+		float scaleX = (float)Display.getWidth() / 1024F;
+		float scaleY = (float)Display.getHeight() / 768F;
+		
+		this.elements.add(new GUIText(this, 10 * scaleX, 614 * scaleY, 0, 0, "", Color.white) {
 			public void update(int x, int y) {
-				setText(name + logic.getGameState().getActivePlayer().getMinerals());
+				this.setText(strGold + logic.getGameState().getActivePlayer().getMinerals());
 				if (logic.markMinerals) {
 					this.mark(Color.red, 1500);
 					logic.markMinerals = false;
@@ -57,19 +52,33 @@ public class GUIIngame extends GUI {
 			}
 		});
 		
-		this.elements.add(new GUIText(this, Display.getWidth() - 60, 20, 0, 0, "Player: ", Color.orange) {
-			private String name = Translator.translate("gui.activePlayer") + " ";
-			@Override
+		this.elements.add(new GUIText(this, 10 * scaleX, 640 * scaleY, 0, 0, "", Color.white) {
 			public void update(int x, int y) {
-				setText(name + logic.getGameState().getActivePlayer().playerID);
+				this.setText(strPlayer + logic.getGameState().getActivePlayer().playerID);
 			}
 		});
 		
-		this.elements.add(new GUIText(this, Display.getWidth() / 2 , 20, 0, 0, "Turns left: ", Color.orange) {
-			private String name = Translator.translate("gui.turnsLeft") + " ";
-			@Override
+		this.elements.add(new GUIText(this, 10 * scaleX, 666 * scaleY, 0, 0, "", Color.white) {
 			public void update(int x, int y) {
-				setText(name + (logic.subTurns - logic.getGameState().moveCount) + "/" + logic.subTurns);
+				this.setText(strTurns + (logic.subTurns - logic.getGameState().moveCount));
+			}
+		});
+		
+		// Groups
+		this.baseGroup = new GUIGroup(this, false);
+		this.workerGroup = new GUIGroup(this, false);
+		this.elements.add(this.baseGroup);
+		this.elements.add(this.workerGroup);
+		
+		this.baseGroup.add(new GUIHotkeyButton(this, (811 + 50 * 0) * scaleX, 611 * scaleY, 46 * scaleX, 46 * scaleY) {
+			public void onClick(int x, int y) {
+				logic.buyEntity(new EntityWarrior());
+			}
+		});
+		
+		this.baseGroup.add(new GUIHotkeyButton(this, (811 + 50 * 1) * scaleX, 611 * scaleY, 46 * scaleX, 46 * scaleY) {
+			public void onClick(int x, int y) {
+				logic.buyEntity(new EntityWorker());
 			}
 		});
 	}
@@ -85,13 +94,6 @@ public class GUIIngame extends GUI {
 		// UI Texture
 		this.ui.bind();
 		RenderUtil.drawTexturedQuad(0, 0, Display.getWidth(), Display.getHeight());
-		
-		// Mini-Map
-		this.map.bind();
-		
-		GL11.glPushMatrix();
-		RenderUtil.drawTexturedQuad(10 * scaleX, 614 * scaleY, 167 * scaleX, 144 * scaleY);
-		GL11.glPopMatrix();
 		
 		// Entity data
 		if(this.logic.getGameState().selectedCell != null) {
@@ -109,9 +111,8 @@ public class GUIIngame extends GUI {
 				renderer.font.drawString(237 * scaleX, 660F * scaleY, s, Color.white);
 				
 				// Functions
-				if(entity instanceof EntityBuildingBase) {
-				} else if(entity instanceof EntityWorker) {
-				}
+				this.baseGroup.setVisible(entity instanceof EntityBuildingBase);
+				this.workerGroup.setVisible(entity instanceof EntityWorker);
 			}
 		}
 		

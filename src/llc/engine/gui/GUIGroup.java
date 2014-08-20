@@ -8,20 +8,25 @@ import llc.engine.GUIRenderer;
 public class GUIGroup extends GUIElement {
 
 	private List<GUIElement> elements = new ArrayList<GUIElement>();
-	private boolean isVisible = true;
+	private boolean isVisible;
 	
 	public GUIGroup(GUI gui) {
+		this(gui, true);
+	}
+	
+	public GUIGroup(GUI gui, boolean isVisible) {
 		super(gui, 0, 0, 0, 0);
+		this.isVisible = isVisible;
 	}
 	
 	@Override
 	public void update(int x, int y) {
-		for(GUIElement element : this.elements) element.update(x, y);
+		if(this.isVisible) for(GUIElement element : this.elements) element.update(x, y);
 	}
 
 	@Override
 	public void render(GUIRenderer renderer, int x, int y) {
-		for(GUIElement element : this.elements) element.render(renderer, x, y);
+		if(this.isVisible) for(GUIElement element : this.elements) element.render(renderer, x, y);
 	}
 
 	/**
@@ -52,6 +57,12 @@ public class GUIGroup extends GUIElement {
 	 */
 	public void setVisible(boolean isVisible) {
 		this.isVisible = isVisible;
+	}
+	
+	@Override
+	public boolean isHovered(int x, int y) {
+		if(this.isVisible) for(GUIElement element : this.elements) if(element.isHovered(x, y)) return true;
+		return false;
 	}
 
 }

@@ -3,24 +3,42 @@ package llc.engine.gui;
 import llc.engine.GUIRenderer;
 
 import org.newdawn.slick.Color;
+import org.newdawn.slick.opengl.TextureImpl;
 
 public class GUIText extends GUIElement {
 	
 	private String text;
 	private Color color;
+	private EnumAnchor anchor;
 	
 	private long markerTime;
 	private Color markerColor;
 	
 	public GUIText(GUI gui, float posX, float posY, float width, float height, String text, Color color) {
+		this(gui, posX, posY, width, height, text, color, EnumAnchor.LEFT);
+	}
+	
+	public GUIText(GUI gui, float posX, float posY, float width, float height, String text, Color color, EnumAnchor anchor) {
 		super(gui, posX, posY, width, height);
 		this.setText(text);
 		this.color = color;
+		this.anchor = anchor;
 	}
 	
 	@Override
 	public void render(GUIRenderer renderer, int x, int y) {
-		renderer.font.drawString(this.posX + this.width / 2 - renderer.font.getWidth(this.text) / 2, this.posY, this.text, this.isMarked() ? this.markerColor : this.color);
+		TextureImpl.bindNone();
+		switch(this.anchor) {
+			case LEFT:
+				renderer.font.drawString(this.posX, this.posY, this.text, this.isMarked() ? this.markerColor : this.color);
+				break;
+			case MIDDLE:
+				renderer.font.drawString(this.posX + this.width / 2 - renderer.font.getWidth(this.text) / 2, this.posY, this.text, this.isMarked() ? this.markerColor : this.color);
+				break;
+			case RIGHT:
+				renderer.font.drawString(this.posX + this.width - renderer.font.getWidth(this.text), this.posY, this.text, this.isMarked() ? this.markerColor : this.color);
+				break;
+		}
 	}
 	
 	@Override

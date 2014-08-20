@@ -4,6 +4,6 @@ entity.worker.name=Arbeiter
 
 gui.health=Gesundheit
 gui.buy=Kaufe
-gui.gold=Gold:
-gui.activePlayer=Spieler:
-gui.turnsLeft=Züge übrig:
+gui.gold=Gold
+gui.player=Spieler
+gui.turnsLeft=Züge übrig
