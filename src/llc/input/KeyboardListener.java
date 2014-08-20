@@ -11,7 +11,9 @@ public class KeyboardListener {
 
 	private Map<Integer, KeyBinding> keyBindings = new HashMap<Integer, KeyBinding>();
 	private List<KeyBinding> updateKeys = new ArrayList<KeyBinding>();
-	private List<IKeybindingListener> listeners = new ArrayList<IKeybindingListener>();
+	
+	private List<IKeybindingListener> keyBindingListeners = new ArrayList<IKeybindingListener>();
+	private List<IKeyListener> keyListeners = new ArrayList<IKeyListener>();
 	
 	/**
 	 * Registers a new {@link KeyBinding}
@@ -26,8 +28,14 @@ public class KeyboardListener {
 	 */
 	public void update() {
 		while(Keyboard.next()) {
-			KeyBinding binding = this.keyBindings.get(Keyboard.getEventKey());
+			int key = Keyboard.getEventKey();
 			boolean state = Keyboard.getEventKeyState();
+			
+			// Key
+			for(IKeyListener listener : this.keyListeners) listener.onKeyUpdate(key, state);
+			
+			// KeyBinding
+			KeyBinding binding = this.keyBindings.get(key);
 			if(binding != null) {
 				this.fireKeyEvent(binding, state);
 				if(binding.canRepeat && !this.updateKeys.contains(binding)) {
@@ -44,11 +52,18 @@ public class KeyboardListener {
 	 * Registers a new EventHandler
 	 */
 	public void registerEventHandler(IKeybindingListener listener) {
-		this.listeners.add(listener);
+		this.keyBindingListeners.add(listener);
+	}
+	
+	/**
+	 * Registers a new EventHandler
+	 */
+	public void registerEventHandler(IKeyListener listener) {
+		this.keyListeners.add(listener);
 	}
 	
 	private void fireKeyEvent(KeyBinding keyBinding, boolean isPressed) {
-		for(IKeybindingListener listener : this.listeners) listener.onKeyBindingUpdate(keyBinding, isPressed);
+		for(IKeybindingListener listener : this.keyBindingListeners) listener.onKeyBindingUpdate(keyBinding, isPressed);
 	}
 	
 }

@@ -23,7 +23,6 @@ public class GUIIngame extends GUI {
 	protected static final String strTurns = Translator.translate("gui.turnsLeft") + ": ";
 	
 	protected Logic logic;
-	
 	private Texture ui;
 	
 	private GUIGroup baseGroup;
