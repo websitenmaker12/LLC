@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import llc.LLC;
 import llc.engine.GUIRenderer;
+import llc.engine.gui.screens.GUI;
 import llc.engine.res.Texture;
 import llc.input.IKeyListener;
 import llc.util.RenderUtil;

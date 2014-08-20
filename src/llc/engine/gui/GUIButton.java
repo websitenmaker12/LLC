@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import llc.engine.GUIRenderer;
+import llc.engine.gui.screens.GUI;
 import llc.engine.res.Texture;
 import llc.util.RenderUtil;
 

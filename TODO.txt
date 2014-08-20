@@ -4,7 +4,6 @@
 - Get Audio engine to work
 - Add button to worker to repair base
 - Add posibility to create hotkeys on 1-9 for selecting cells
-- Add hotkeys on F1 and F2 to select a random worker (F1) and all warriors (F2)
 
 LATER:
 - Add option that a bought entity doesn't get selected automaticly

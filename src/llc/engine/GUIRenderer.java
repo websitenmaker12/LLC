@@ -3,7 +3,7 @@ package llc.engine;
 import java.awt.Font;
 
 import llc.engine.audio.AudioEngine;
-import llc.engine.gui.GUI;
+import llc.engine.gui.screens.GUI;
 import llc.input.Input;
 import static org.lwjgl.opengl.GL11.*;
 

@@ -1,10 +1,11 @@
-package llc.engine.gui;
+package llc.engine.gui.screens;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import llc.engine.GUIRenderer;
 import llc.engine.audio.AudioEngine;
+import llc.engine.gui.GUIElement;
 
 public class GUI {
 	

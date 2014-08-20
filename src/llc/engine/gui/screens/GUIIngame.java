@@ -1,7 +1,10 @@
-package llc.engine.gui;
+package llc.engine.gui.screens;
 
 import llc.engine.GUIRenderer;
 import llc.engine.Translator;
+import llc.engine.gui.GUIGroup;
+import llc.engine.gui.GUIHotkeyButton;
+import llc.engine.gui.GUIText;
 import llc.engine.res.Texture;
 import llc.entity.Entity;
 import llc.entity.EntityBuildingBase;

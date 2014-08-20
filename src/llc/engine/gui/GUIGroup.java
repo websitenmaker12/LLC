@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import llc.engine.GUIRenderer;
+import llc.engine.gui.screens.GUI;
 
 public class GUIGroup extends GUIElement {
 

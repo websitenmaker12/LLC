@@ -1,6 +1,7 @@
 package llc.engine.gui;
 
 import llc.engine.GUIRenderer;
+import llc.engine.gui.screens.GUI;
 
 public abstract class GUIElement {
 	

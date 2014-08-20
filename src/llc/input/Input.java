@@ -6,8 +6,8 @@ import java.util.List;
 import llc.LLC;
 import llc.engine.Camera;
 import llc.engine.Triangle;
-import llc.engine.gui.GUI;
 import llc.engine.gui.GUIElement;
+import llc.engine.gui.screens.GUI;
 
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;

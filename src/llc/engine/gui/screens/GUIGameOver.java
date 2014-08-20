@@ -1,7 +1,9 @@
-package llc.engine.gui;
+package llc.engine.gui.screens;
 
 import llc.LLC;
 import llc.engine.GUIRenderer;
+import llc.engine.gui.GUIButton;
+import llc.engine.gui.GUIText;
 import llc.logic.Player;
 import llc.util.RenderUtil;
 

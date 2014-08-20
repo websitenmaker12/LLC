@@ -1,6 +1,7 @@
 package llc.engine.gui;
 
 import llc.engine.GUIRenderer;
+import llc.engine.gui.screens.GUI;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.TextureImpl;
