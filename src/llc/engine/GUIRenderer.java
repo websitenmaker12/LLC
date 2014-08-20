@@ -1,11 +1,18 @@
 package llc.engine;
 
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glOrtho;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+
 import java.awt.Font;
 
-import llc.engine.audio.AudioEngine;
+import llc.engine.audio.SoundEngine;
 import llc.engine.gui.screens.GUI;
 import llc.input.Input;
-import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.opengl.Display;
 import org.newdawn.slick.TrueTypeFont;
@@ -17,11 +24,11 @@ public class GUIRenderer {
 	
 	private GUI currentGUI;
 	private Input input;
-	private AudioEngine audioEngine;
+	private SoundEngine soundEngine;
 	
-	public GUIRenderer(Input input, AudioEngine audioEngine) {
+	public GUIRenderer(Input input, SoundEngine audioEngine) {
 		this.input = input;
-		this.audioEngine = audioEngine;
+		this.soundEngine = audioEngine;
 	}
 	
 	/**
@@ -56,7 +63,7 @@ public class GUIRenderer {
 		if(gui != null) {
 			this.currentGUI.onOpen();
 			this.input.guiChange(this.currentGUI);
-			this.currentGUI.audioEngine = this.audioEngine;
+			this.currentGUI.soundEngine = this.soundEngine;
 		} else {
 			this.input.guiChange(null);
 		}

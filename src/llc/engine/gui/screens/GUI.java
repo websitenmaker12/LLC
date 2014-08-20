@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import llc.engine.GUIRenderer;
-import llc.engine.audio.AudioEngine;
+import llc.engine.audio.SoundEngine;
 import llc.engine.gui.GUIElement;
 
 public class GUI {
 	
 	protected List<GUIElement> elements = new ArrayList<GUIElement>();
-	public AudioEngine audioEngine;
+	public SoundEngine soundEngine;
 	
 	/**
 	 * Is called to update the GUI. Use this for inputs!

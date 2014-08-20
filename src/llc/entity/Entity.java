@@ -136,7 +136,7 @@ public abstract class Entity implements Serializable {
 					this.path.add(new Vector3f(this.origX + 0.5F, this.origY + 0.5F, 0));
 					this.currentPos = 0;
 				} else {
-					this.logic.finishEntityMove(this.origX, this.origY, this.countLastMove);
+					this.logic.finishEntityMove(this.origX, this.origY, this.countLastMove, this);
 					this.logic = null;
 					return;
 				}

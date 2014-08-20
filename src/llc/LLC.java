@@ -7,7 +7,7 @@ import llc.engine.GUIRenderer;
 import llc.engine.Profiler;
 import llc.engine.Renderer;
 import llc.engine.Timing;
-import llc.engine.audio.AudioEngine;
+import llc.engine.audio.SoundEngine;
 import llc.engine.gui.screens.GUI;
 import llc.engine.gui.screens.GUIGameOver;
 import llc.engine.gui.screens.GUIIngame;
@@ -43,7 +43,7 @@ public class LLC implements IKeybindingListener {
 	private GameLoader gameLoader;
 	private Logic logic;
 	private GUIRenderer guiRenderer;
-	private AudioEngine audioEngine;
+	public SoundEngine soundEngine;
 	private Timing timing;
 	public KeyboardListener keyboardListener;
 	
@@ -89,7 +89,7 @@ public class LLC implements IKeybindingListener {
 			}
 		});
 		
-		this.audioEngine = new AudioEngine();
+		this.soundEngine = new SoundEngine();
 		this.timing = new Timing();
 
 		this.keyboardListener = new KeyboardListener();
@@ -116,10 +116,10 @@ public class LLC implements IKeybindingListener {
 		this.renderer.generateGridGeometry(this.logic.getGameState());
 		this.input.setGridGeometry(this.renderer.getGridGeometry());
 		this.profiler.endStart("Setup GUI Renderer");
-		this.guiRenderer = new GUIRenderer(this.input, this.audioEngine);
+		this.guiRenderer = new GUIRenderer(this.input, this.soundEngine);
 		this.guiRenderer.openGUI(new GUIIngame(this.logic, gameLoader));
 		this.profiler.endStart("Setup Audio Engine");
-		this.audioEngine.initAudioEngine();
+		this.soundEngine.init();
 		this.profiler.end();
 		this.beginLoop();
 	}
@@ -191,7 +191,7 @@ public class LLC implements IKeybindingListener {
 		}
 		
 		if(Display.isCreated()) Display.destroy();
-		this.audioEngine.dispose();
+		this.soundEngine.dispose();
 	}
 	
 	/**
