@@ -93,7 +93,7 @@ public class GameLoader {
 			
 			for (int y = 0; y < height; y++) {
 				for (int x = 0; x < width; x++) {
-					c = new Color(img.getRGB(x, y));
+					c = new Color(img.getRGB(x, height-y-1));
 					//Check for base-cells
 					if (c.getBlue() == 0 && c.getRed() == 0 && c.getGreen() > 0) {
 						cell = new Cell(x, y, getHeight(c));
