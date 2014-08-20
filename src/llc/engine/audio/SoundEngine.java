@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import llc.entity.Entity;
-
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
 
@@ -15,8 +13,6 @@ public class SoundEngine {
 
 	public static Map<String, Sound> sounds = new HashMap<String, Sound>();
 	public Map<Integer, List<SoundSource>> sources = new HashMap<Integer, List<SoundSource>>();
-	
-	private Entity target;
 	
 	/**
 	 * Plays a sound without transformation
@@ -37,9 +33,9 @@ public class SoundEngine {
 			e.printStackTrace();
 		}
 		
-		this.setPosition(0, 0);
-		this.setVelocity(1, 1);
-		this.setOrientation(0, 0);
+		this.setPosition(0, 0, 0);
+		this.setVelocity(1, 1, 1);
+		this.setOrientation(0, 0, 0);
 	}
 	
 	/**
@@ -68,22 +64,22 @@ public class SoundEngine {
 	/**
 	 * Sets the position of the listener
 	 */
-	public void setPosition(float x, float y) {
-		AL10.alListener3f(AL10.AL_POSITION, x, y, 0);
+	public void setPosition(float x, float y, float z) {
+		AL10.alListener3f(AL10.AL_POSITION, x, y, z);
 	}
 
 	/**
 	 * Sets the velocity of the listener
 	 */
-	public void setVelocity(float x, float y) {
-		AL10.alListener3f(AL10.AL_VELOCITY, x, y, 0);
+	public void setVelocity(float x, float y, float z) {
+		AL10.alListener3f(AL10.AL_VELOCITY, x, y, z);
 	}
 
 	/**
 	 * Sets the orientation of the listener
 	 */
-	public void setOrientation(float x, float y) {
-		AL10.alListener3f(AL10.AL_ORIENTATION, x, y, 0);
+	public void setOrientation(float x, float y, float z) {
+		AL10.alListener3f(AL10.AL_ORIENTATION, x, y, z);
 	}
 
 	/**
@@ -128,20 +124,6 @@ public class SoundEngine {
 	 */
 	public void stopChannel(int channel) {
 		for(SoundSource source : this.sources.get(channel)) source.stop();
-	}
-	
-	/**
-	 * Binds a entity to the engine and replaces the listener with it
-	 */
-	public void bindToEntity(Entity entity) {
-		this.target = entity;
-	}
-	
-	/**
-	 * Updates the engine
-	 */
-	public void update() {
-		if(this.target != null) this.setPosition(this.target.getX(), this.target.getY());
 	}
 	
 }

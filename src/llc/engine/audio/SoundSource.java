@@ -8,6 +8,7 @@ public class SoundSource {
 
 	private float x;
 	private float y;
+	private float z;
 	public String name;
 	public Sound sound;
 	public int channel;
@@ -15,7 +16,7 @@ public class SoundSource {
 	private final int source;
 	public boolean isPlaying = false;
 	
-	public SoundSource(float x, float y, String name, int channel) {
+	public SoundSource(float x, float y, float z, String name, int channel) {
 		this.name = name;
 		this.channel = channel;
 		
@@ -25,7 +26,7 @@ public class SoundSource {
 		} catch (Exception e) {
 		}
 		this.source = this.sound.getSourceID();
-		this.translate(x, y);
+		this.translate(x, y, z);
 	}
 	
 	/**
@@ -45,24 +46,25 @@ public class SoundSource {
 	/**
 	 * Sets the velocity
 	 */
-	public void setVelocity(float x, float y) {
-		AL10.alSource3f(this.source, AL10.AL_VELOCITY, x, y, 0);
+	public void setVelocity(float x, float y, float z) {
+		AL10.alSource3f(this.source, AL10.AL_VELOCITY, x, y, z);
 	}
 	
 	/**
 	 * Translates the source
 	 */
-	public void translate(float x, float y) {
+	public void translate(float x, float y, float z) {
 		this.x = x;
 		this.y = y;
-		AL10.alSource3f(this.source, AL10.AL_POSITION, this.x, this.y, 0);
+		this.z = z;
+		AL10.alSource3f(this.source, AL10.AL_POSITION, this.x, this.y, this.z);
 	}
 
 	/**
 	 * Moves the source
 	 */
-	public void move(float dx, float dy) {
-		this.translate(this.x + dx, this.y + dy);
+	public void move(float dx, float dy, float dz) {
+		this.translate(this.x + dx, this.y + dy, this.z + dy);
 	}
 	
 	/**
@@ -105,6 +107,13 @@ public class SoundSource {
 	 */
 	public float getY() {
 		return this.y;
+	}
+	
+	/**
+	 * Returns the z-coordinate for the source
+	 */
+	public float getZ() {
+		return this.z;
 	}
 	
 }
