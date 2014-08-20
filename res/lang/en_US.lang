@@ -3,3 +3,7 @@ entity.warrior.name=Warrior
 entity.worker.name=Worker
 
 gui.health=Health
+gui.buy=Buy
+gui.gold=Gold:
+gui.activePlayer=Player:
+gui.turnsLeft=Turns left:

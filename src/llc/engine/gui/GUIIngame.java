@@ -33,23 +33,23 @@ public class GUIIngame extends GUI {
 	@Override
 	public void onOpen() {
 		super.onOpen();
-		
-		this.elements.add(new GUIButton(this, Display.getWidth() - 212, Display.getHeight() - 55, 200, 35, "Buy Warrior") {
+		String name = Translator.translate("gui.buy") + " " + Translator.translate("entity.warrior.name");
+		this.elements.add(new GUIButton(this, Display.getWidth() - 212, Display.getHeight() - 55, 200, 35, name) {
 			public void onClick(int x, int y) {
 				logic.buyEntity(new EntityWarrior());
 			}
 		});
-		
+		name = Translator.translate("gui.buy") + " " + Translator.translate("entity.worker.name");
 		this.elements.add(new GUIButton(this, Display.getWidth() - 212, Display.getHeight() - 110, 200, 35, "Buy Worker") {
 			public void onClick(int x, int y) {
 				logic.buyEntity(new EntityWorker());
 			}
 		});
-		
 		this.elements.add(new GUIText(this, 50, 20, 0, 0, "Gold: ", Color.orange) {
+			private String name = Translator.translate("gui.gold") + " ";
 			@Override
 			public void update(int x, int y) {
-				setText("Gold:" + logic.getGameState().getActivePlayer().getMinerals());
+				setText(name + logic.getGameState().getActivePlayer().getMinerals());
 				if (logic.markMinerals) {
 					this.mark(Color.red, 1500);
 					logic.markMinerals = false;
@@ -58,16 +58,18 @@ public class GUIIngame extends GUI {
 		});
 		
 		this.elements.add(new GUIText(this, Display.getWidth() - 60, 20, 0, 0, "Player: ", Color.orange) {
+			private String name = Translator.translate("gui.activePlayer") + " ";
 			@Override
 			public void update(int x, int y) {
-				setText("Player " + logic.getGameState().getActivePlayer().playerID);
+				setText(name + logic.getGameState().getActivePlayer().playerID);
 			}
 		});
 		
 		this.elements.add(new GUIText(this, Display.getWidth() / 2 , 20, 0, 0, "Turns left: ", Color.orange) {
+			private String name = Translator.translate("gui.turnsLeft") + " ";
 			@Override
 			public void update(int x, int y) {
-				setText("Turns left: " + (logic.subTurns - logic.getGameState().moveCount) + "/" + logic.subTurns);
+				setText(name + (logic.subTurns - logic.getGameState().moveCount) + "/" + logic.subTurns);
 			}
 		});
 	}
@@ -76,7 +78,7 @@ public class GUIIngame extends GUI {
 	public void render(GUIRenderer renderer, int x, int y) {
 		float scaleX = (float)Display.getWidth() / 1024F;
 		float scaleY = (float)Display.getHeight() / 768F;
-		
+
 		GL11.glPushMatrix();
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		
