@@ -12,6 +12,7 @@ import llc.logic.Cell;
 import llc.logic.Logic;
 import llc.util.RenderUtil;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
@@ -69,13 +70,13 @@ public class GUIIngame extends GUI {
 		this.elements.add(this.baseGroup);
 		this.elements.add(this.workerGroup);
 		
-		this.baseGroup.add(new GUIHotkeyButton(this, (811 + 50 * 0) * scaleX, 611 * scaleY, 46 * scaleX, 46 * scaleY) {
+		this.baseGroup.add(new GUIHotkeyButton(this, (811 + 50 * 0) * scaleX, 611 * scaleY, 46 * scaleX, 46 * scaleY, Translator.translate("gui.desc.buyWarrior"), Keyboard.KEY_A) {
 			public void onClick(int x, int y) {
 				logic.buyEntity(new EntityWarrior());
 			}
 		});
 		
-		this.baseGroup.add(new GUIHotkeyButton(this, (811 + 50 * 1) * scaleX, 611 * scaleY, 46 * scaleX, 46 * scaleY) {
+		this.baseGroup.add(new GUIHotkeyButton(this, (811 + 50 * 1) * scaleX, 611 * scaleY, 46 * scaleX, 46 * scaleY, Translator.translate("gui.desc.buyWorker"), Keyboard.KEY_W) {
 			public void onClick(int x, int y) {
 				logic.buyEntity(new EntityWorker());
 			}

@@ -1,4 +1,10 @@
 - UI
-- Maybe wall entities that enemy entities cannot pass (they have to destroy/kill it first) to protect the base
+- Maybe wall entities that enemy entities cannot pass (they have to destroy / kill it first) to protect the base
 - When a warrior attacks another entity that entity should get damage after the warrior is on it's cell and when that entity dies the warrior shouldn't move back
 - Get Audio engine to work
+- Add button to worker to repair base
+- Add posibility to create hotkeys on 1-9 for selecting cells
+- Add hotkeys on F1 and F2 to select a random worker (F1) and all warriors (F2)
+
+LATER:
+- Add option that a bought entity doesn't get selected automaticly

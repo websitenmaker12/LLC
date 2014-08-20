@@ -7,3 +7,5 @@ gui.buy=Buy
 gui.gold=Gold
 gui.player=Player
 gui.turnsLeft=Turns left
+gui.desc.buyWarrior=Buy Warrior
+gui.desc.buyWorker=Buy Worker

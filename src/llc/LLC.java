@@ -45,7 +45,7 @@ public class LLC implements IKeybindingListener {
 	private GUIRenderer guiRenderer;
 	private AudioEngine audioEngine;
 	private Timing timing;
-	private KeyboardListener keyboardListener;
+	public KeyboardListener keyboardListener;
 	
 	public int width = 0;
 	public int height = 0;
