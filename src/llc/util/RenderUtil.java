@@ -10,6 +10,7 @@ import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glVertex2d;
 
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.newdawn.slick.Color;
@@ -78,11 +79,14 @@ public class RenderUtil {
 		float height = lines.length * (font.getHeight() + 1);
 		for(String line : lines) if(font.getWidth(line) > width) width = font.getWidth(line);
 		
+		float offX = 0;
+		if(x + 4 + width > Display.getWidth() && !ignoreWindowBorder) offX = 8 + width;
+		
 		Color.darkGray.bind();
-		drawQuad(x, y, width + 8, height + 4);
+		drawQuad(x - offX, y, width + 8, height + 4);
 		
 		TextureImpl.bindNone();
-		for(int i = 0; i < lines.length; i++) font.drawString(x + 4, y + 2 + (font.getHeight() + 1) * i, lines[i]);
+		for(int i = 0; i < lines.length; i++) font.drawString(x - offX + 4, y + 2 + (font.getHeight() + 1) * i, lines[i]);
 		
 		GL11.glPopMatrix();
 	}

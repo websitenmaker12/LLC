@@ -67,7 +67,7 @@ public abstract class GUIHotkeyButton extends GUIElement implements IKeyListener
 		renderer.font.drawString(this.posX + this.width / 2 - renderer.font.getWidth(s) / 2, this.posY + this.height / 2 - renderer.font.getHeight() / 2, s);
 		
 		glDisable(GL_TEXTURE_2D);
-		if(this.isHover) RenderUtil.drawHoverBox(x, y, false, renderer.font, this.desc);
+		if(this.isHover) RenderUtil.drawHoverBox(x + 12, y + 12, false, renderer.font, this.desc);
 	}
 
 	/**

@@ -1,9 +1,9 @@
 - Maybe wall entities that enemy entities cannot pass (they have to destroy / kill it first) to protect the base
 - When a warrior attacks another entity that entity should get damage after the warrior is on it's cell and when that entity dies the warrior shouldn't move back
-- Get Audio engine to work
 - Add button to worker to repair base
 - Add posibility to create hotkeys on 1-9 for selecting cells
 - Add option menu especially for sound volume
 
 LATER:
 - Add option that a bought entity doesn't get selected automaticly
+- Add REAL multiplayer
