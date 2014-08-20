@@ -7,6 +7,7 @@ import llc.engine.GUIRenderer;
 import llc.engine.Profiler;
 import llc.engine.Renderer;
 import llc.engine.Timing;
+import llc.engine.audio.Sound;
 import llc.engine.audio.SoundEngine;
 import llc.engine.gui.screens.GUI;
 import llc.engine.gui.screens.GUIGameOver;
@@ -74,10 +75,10 @@ public class LLC implements IKeybindingListener {
 				float yOffset = camera.pos.z * (camera.viewDir.y / camera.viewDir.z);
 				float xOffset = camera.pos.z * (camera.viewDir.x / camera.viewDir.z);
 				Cell[][] cells = logic.getGameState().getGrid().getCells();
-				if (camera.pos.x < 0 + xOffset)	camera.pos.x = 0;
-				if (camera.pos.y < 0 + yOffset)	camera.pos.y = 0 + yOffset;
-				if (camera.pos.y > cells.length + yOffset)	camera.pos.y = cells.length + yOffset;
-				if (camera.pos.x > cells[0].length + xOffset) camera.pos.x = cells[0].length + xOffset;
+				if(camera.pos.x < 0 + xOffset)	camera.pos.x = 0;
+				if(camera.pos.y < 0 + yOffset)	camera.pos.y = 0 + yOffset;
+				if(camera.pos.y > cells.length + yOffset)	camera.pos.y = cells.length + yOffset;
+				if(camera.pos.x > cells[0].length + xOffset) camera.pos.x = cells[0].length + xOffset;
 			}
 
 			@Override
@@ -119,7 +120,14 @@ public class LLC implements IKeybindingListener {
 		this.guiRenderer = new GUIRenderer(this.input, this.soundEngine);
 		this.guiRenderer.openGUI(new GUIIngame(this.logic, gameLoader));
 		this.profiler.endStart("Setup Audio Engine");
+		
+		this.soundEngine.addSound("button_click", new Sound("res/sound/gui_click.wav", false));
+		this.soundEngine.addSound("music_1", new Sound("res/sound/music_1.wav", true));
+		
 		this.soundEngine.init();
+		this.soundEngine.playSound("music_1");
+		
+		this.soundEngine.bindCamera(this.camera);
 		this.profiler.end();
 		this.beginLoop();
 	}
@@ -173,6 +181,10 @@ public class LLC implements IKeybindingListener {
 			this.profiler.endStart("Keyboard updates");
 			this.keyboardListener.update();
 			
+			// Audio
+			this.profiler.endStart("Audio updates");
+			this.soundEngine.update(delta);
+			
 			// Rendering
 			this.profiler.endStart("Render game");
 			this.camera.update(delta);
@@ -189,9 +201,9 @@ public class LLC implements IKeybindingListener {
 		
 			this.timing.updateFPS();
 		}
-		
-		if(Display.isCreated()) Display.destroy();
+
 		this.soundEngine.dispose();
+		if(Display.isCreated()) Display.destroy();
 	}
 	
 	/**

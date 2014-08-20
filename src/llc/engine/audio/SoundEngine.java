@@ -6,13 +6,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import llc.engine.Camera;
+
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
 
 public class SoundEngine {
 
-	public static Map<String, Sound> sounds = new HashMap<String, Sound>();
+	public Map<String, Sound> sounds = new HashMap<String, Sound>();
 	public Map<Integer, List<SoundSource>> sources = new HashMap<Integer, List<SoundSource>>();
+	
+	private Camera camera;
 	
 	/**
 	 * Plays a sound without transformation
@@ -28,7 +32,7 @@ public class SoundEngine {
 	public void init() {
 		try {
 			AL.create();
-			for(Sound sound : sounds.values()) sound.load();
+			for(Sound sound : this.sounds.values()) sound.load();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -42,23 +46,23 @@ public class SoundEngine {
 	 * Deletes all sound and disposes the SoundEngine
 	 */
 	public void dispose() {
-		for(Sound sound : sounds.values()) sound.dispose();
-		sounds.clear();
+		for(Sound sound : this.sounds.values()) sound.dispose();
+		this.sounds.clear();
 		if(AL.isCreated()) AL.destroy();
 	}
 	
 	/**
 	 * Adds a sound for loading to the engine
 	 */
-	public static void addSound(String name, Sound sound) {
-		if(!sounds.containsKey(name)) sounds.put(name, sound);
+	public void addSound(String name, Sound sound) {
+		if(!this.sounds.containsKey(name)) this.sounds.put(name, sound);
 	}
 	
 	/**
 	 * Returns the sound for the given name
 	 */
 	public Sound getSound(String name) {
-		return sounds.get(name);
+		return this.sounds.get(name);
 	}
 	
 	/**
@@ -124,6 +128,23 @@ public class SoundEngine {
 	 */
 	public void stopChannel(int channel) {
 		for(SoundSource source : this.sources.get(channel)) source.stop();
+	}
+
+	/**
+	 * Binds the given camera to the engine
+	 */
+	public void bindCamera(Camera camera) {
+		this.camera = camera;
+	}
+	
+	/**
+	 * Updates the engine
+	 */
+	public void update(int delta) {
+		if(this.camera != null) {
+			this.setPosition(this.camera.pos.x, this.camera.pos.y, this.camera.pos.z);
+			this.setOrientation(this.camera.viewDir.x, this.camera.viewDir.y, this.camera.viewDir.z);
+		}
 	}
 	
 }

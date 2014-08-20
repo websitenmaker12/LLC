@@ -39,7 +39,7 @@ public abstract class GUIButton extends GUIElement {
 	public void update(int x, int y) {
 		if(this.isClicked && !this.wasClicked) {
 			this.onClick(x, y);
-			//this.gui.audioEngine.playSound(EnumSounds.BUTTONCLICK);
+			this.gui.soundEngine.playSound("button_click");
 		}
 		this.wasClicked = this.isClicked;
 		
