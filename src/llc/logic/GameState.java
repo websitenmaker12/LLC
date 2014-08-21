@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.Serializable;
 
 import llc.engine.Camera;
+import llc.entity.EntityBuildingBase;
 
 public class GameState implements Serializable {
 
@@ -96,6 +97,13 @@ public class GameState implements Serializable {
 		}
 		else {
 			return townHall2;
+		}
+	}
+	public EntityBuildingBase getActivePlayerTownHall() {
+		if (activePlayer == 1) {
+			return (EntityBuildingBase) townHall1.getEntity();
+		} else {
+			return (EntityBuildingBase) townHall2.getEntity();
 		}
 	}
 }

@@ -8,11 +8,16 @@ import llc.engine.gui.GUIText;
 import llc.engine.res.Texture;
 import llc.entity.Entity;
 import llc.entity.EntityBuildingBase;
+import llc.entity.EntityMovable;
 import llc.entity.EntityWarrior;
 import llc.entity.EntityWorker;
+import llc.entity.IRepairer;
 import llc.loading.GameLoader;
 import llc.logic.Cell;
+import llc.logic.GameState;
+import llc.logic.Grid;
 import llc.logic.Logic;
+import llc.util.PathFinder;
 import llc.util.RenderUtil;
 
 import org.lwjgl.input.Keyboard;
@@ -83,6 +88,30 @@ public class GUIIngame extends GUI {
 			public void onClick(int x, int y) {
 				logic.buyEntity(new EntityWorker());
 			}
+		});
+		this.workerGroup.add(new GUIHotkeyButton(this, (811 + 50 * 0) * scaleX, 611 * scaleY, 46 * scaleX, 46 * scaleY, Translator.translate("gui.desc.healBase"), Keyboard.KEY_H) {
+			public void onClick(int x, int y) {
+				Grid g = logic.getGameState().getGrid();
+				GameState gs = logic.getGameState();
+				Entity townhall = gs.getActivePlayerTownHall();
+				EntityMovable selected = (EntityMovable) logic.getSelectedEntity();
+				//Near enough to repair townhall?
+				if (PathFinder.findPath(g, g.getCellAt((int)selected.getX(), (int)selected.getY()), logic.getGameState().getActivePlayerTownHallLocation()).size() <= selected.getMoveRange()) {
+					if (selected instanceof IRepairer) {
+						int addHealth = ((IRepairer)selected).getRepairHealth();
+						int cost = ((IRepairer)selected).getRepairCost();
+						int minerals = gs.getActivePlayer().getMinerals();
+						
+						if (minerals >= cost) {
+							townhall.health = Math.min(townhall.health + addHealth, townhall.maxHealth);
+							gs.getActivePlayer().setMinerals(minerals - cost);
+							logic.countMove();
+						} else {
+							logic.markMinerals = true;
+						}
+					}
+				}
+ 			}
 		});
 	}
 	

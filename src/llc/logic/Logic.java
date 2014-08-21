@@ -190,7 +190,7 @@ public class Logic {
 	 * This method counts a player move and sets the other player active if the action counter of the current player is
 	 * equal the max action number per round.
 	 */
-	private void countMove() {
+	public void countMove() {
 		gameState.moveCount++;
 		if (gameState.moveCount >= subTurns) {
 			gameState.getActivePlayer().addMinerals(50);
@@ -220,5 +220,7 @@ public class Logic {
 			markMinerals = true;
 		}
 	}
-
+	public Entity getSelectedEntity() {
+		return selectedEntity;
+	}
 }
