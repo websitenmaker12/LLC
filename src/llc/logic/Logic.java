@@ -86,7 +86,7 @@ public class Logic {
 	 * @param clickX The x coord of the clicked cell.
 	 * @param clickY The y coord of the clicked cell.
 	 */
-	private void clickCell(int clickX, int clickY) {
+	public void clickCell(int clickX, int clickY) {
 		if (0 <= clickY && clickY < gameState.getGrid().getHeigth() && 0 <= clickX && clickX < gameState.getGrid().getWidth()) {
 			Cell clickedCell = gameState.getGrid().getCellAt(clickX, clickY);
 			
