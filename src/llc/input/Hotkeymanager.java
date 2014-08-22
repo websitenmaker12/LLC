@@ -9,14 +9,14 @@ import llc.logic.Logic;
 /**
  * @author simolus3
  */
-public class Hotkeymanager implements IKeybindingListener{
+public class HotkeyManager implements IKeybindingListener{
 	
 	private Cell[] bindingsPlayer1 = new Cell[9];
 	private Cell[] bindingsPlayer2 = new Cell[9];
 	
 	public Logic l;
 	
-	public Hotkeymanager(Logic l) {
+	public HotkeyManager(Logic l) {
 		LLC llc = LLC.getLLC();
 		KeyboardListener listener = llc.keyboardListener;
 		//Set up keys
@@ -62,15 +62,14 @@ public class Hotkeymanager implements IKeybindingListener{
 			if (shift) {
 				//Set
 				if (l.getGameState().hoveredCell != null) {
-				
 					set(i, l.getGameState().hoveredCell, l.getGameState().activePlayer);
 				}
-				//debug();
 			} else {
 				//Get
-				//debug();
 				Cell c = get(i, l.getGameState().activePlayer);
-				l.getGameState().hoveredCell = c;
+				if (c != null) {
+					l.getGameState().focusCell(c, true);
+				}
 			}
 		}
 	}

@@ -52,7 +52,9 @@ public class GameState implements Serializable {
 		
 		this.camera.focusCell(this.getActivePlayerTownHallLocation(), true);
 	}
-
+	public void focusCell(Cell c, boolean animate) {
+		this.camera.focusCell(c, animate);
+	}
 	public Player getPlayer1() {
 		return player1;
 	}

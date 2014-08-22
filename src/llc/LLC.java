@@ -13,7 +13,7 @@ import llc.engine.gui.screens.GUI;
 import llc.engine.gui.screens.GUIGameOver;
 import llc.engine.gui.screens.GUIIngame;
 import llc.engine.gui.screens.GUIIngameMenu;
-import llc.input.Hotkeymanager;
+import llc.input.HotkeyManager;
 import llc.input.IKeybindingListener;
 import llc.input.Input;
 import llc.input.KeyBinding;
@@ -48,7 +48,7 @@ public class LLC implements IKeybindingListener {
 	public SoundEngine soundEngine;
 	private Timing timing;
 	public KeyboardListener keyboardListener;
-	public Hotkeymanager hotkeymanager;
+	public HotkeyManager hotkeyManager;
 	
 	public int width = 0;
 	public int height = 0;
@@ -98,7 +98,7 @@ public class LLC implements IKeybindingListener {
 		this.keyboardListener.registerKeyBinding(new KeyBinding("func.fullscreen", Keyboard.KEY_F11, false));
 		this.keyboardListener.registerKeyBinding(new KeyBinding("gui.pause", Keyboard.KEY_ESCAPE, false));
 		
-		this.hotkeymanager = new Hotkeymanager(null);
+		this.hotkeyManager = new HotkeyManager(null);
 		this.startNewGame();
 	}
 	
@@ -285,7 +285,7 @@ public class LLC implements IKeybindingListener {
 	public void startNewGame() {
 		this.gameLoader = new GameLoader();
 		this.logic = new Logic(this.gameLoader.createNewGame("res/maps/areas/map-2_areas.png", this.camera), this.input);
-		this.hotkeymanager.l = this.logic;
+		this.hotkeyManager.l = this.logic;
 		if(this.width != 0) this.guiRenderer.openGUI(new GUIIngame(this.logic, gameLoader));
 		this.isGamePaused = false;
 	}
