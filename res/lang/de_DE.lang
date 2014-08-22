@@ -7,3 +7,6 @@ gui.buy=Kaufe
 gui.gold=Gold
 gui.player=Spieler
 gui.turnsLeft=Züge übrig
+gui.desc.buyWarrior=Krieger kaufen
+gui.desc.buyWorker=Arbeiter kaufen
+gui.desc.healBase=Basis heilen
