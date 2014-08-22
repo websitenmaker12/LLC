@@ -129,15 +129,12 @@ public class LLC implements IKeybindingListener {
 		this.profiler.endStart("Setup Audio Engine");
 		
 		this.soundEngine.addSound("button_click", new Sound("res/sound/gui_click.wav", false));
-		if (this.settings.getPlayBgSound()) {
-			this.soundEngine.addSound("music_1", new Sound("res/sound/music_1.wav", true));
-		}
-		
+		this.soundEngine.addSound("music_1", new Sound("res/sound/music_1.wav", true));
 		this.soundEngine.init();
-		this.soundEngine.playSound("music_1");
+		if(this.settings.getPlayBgSound()) this.soundEngine.playSound("music_1");
 		
+		this.profiler.end();
 		this.soundEngine.bindCamera(this.camera);
-
 		this.beginLoop();
 	}
 	
@@ -296,7 +293,9 @@ public class LLC implements IKeybindingListener {
 		if(this.width != 0) this.guiRenderer.openGUI(new GUIIngame(this.logic, gameLoader));
 		this.isGamePaused = false;
 	}
+
 	public Settings getSettings() {
-		return settings;
+		return this.settings;
 	}
+	
 }
