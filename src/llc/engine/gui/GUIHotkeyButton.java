@@ -17,7 +17,7 @@ import org.newdawn.slick.opengl.TextureImpl;
 public abstract class GUIHotkeyButton extends GUIElement implements IKeyListener {
 
 	private int key;
-	private String desc;
+	protected String desc;
 	
 	private boolean isHover = false;
 	private boolean isClicked = false;

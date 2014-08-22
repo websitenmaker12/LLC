@@ -1,5 +1,7 @@
 package llc.engine.gui.screens;
 
+import java.util.List;
+
 import llc.engine.GUIRenderer;
 import llc.engine.Translator;
 import llc.engine.gui.GUIGroup;
@@ -96,7 +98,14 @@ public class GUIIngame extends GUI {
 				Entity townhall = gs.getActivePlayerTownHall();
 				EntityMovable selected = (EntityMovable) logic.getSelectedEntity();
 				//Near enough to repair townhall?
-				if (PathFinder.findPath(g, g.getCellAt((int)selected.getX(), (int)selected.getY()), logic.getGameState().getActivePlayerTownHallLocation()).size() <= selected.getMoveRange()) {
+				if (selected == null) {
+					return;
+				}
+				List<Cell> c = PathFinder.findPath(g, g.getCellAt((int)selected.getX(), (int)selected.getY()), logic.getGameState().getActivePlayerTownHallLocation());
+				if (c == null) {
+					return;
+				}
+				if (c.size() <= selected.getMoveRange()) {
 					if (selected instanceof IRepairer) {
 						int addHealth = ((IRepairer)selected).getRepairHealth();
 						int cost = ((IRepairer)selected).getRepairCost();
