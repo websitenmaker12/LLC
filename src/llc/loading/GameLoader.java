@@ -3,20 +3,18 @@ package llc.loading;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
 import llc.engine.Camera;
-import llc.entity.Entity;
 import llc.entity.EntityBuildingBase;
 import llc.logic.Cell;
 import llc.logic.GameState;
 import llc.logic.Grid;
+import de.teamdna.databundle.DataBundle;
 
 /**
  * A IO-Util to load and save Gamestates
@@ -37,42 +35,22 @@ public class GameLoader {
 	 * @throws IllegalArgumentException if gamestate is null!
 	 */
 	public void saveToFile(GameState f, String fileName) {
-		if (f == null) {
-			throw new IllegalArgumentException("The GameState cannot be null!");
-		}
-		 FileOutputStream fileOut;
 		try {
-			fileOut = new FileOutputStream(fileName);
-	        ObjectOutputStream out = new ObjectOutputStream(fileOut);
-	        out.writeObject(f);
-	        out.close();
-	        fileOut.close();
+			f.writeToDataBundle().writeToFile(fileName);
 		} catch (IOException e) {
 			e.printStackTrace();
-		};
-		
-		if (fileName == null) {
-			return;
 		}
 	}
 	
 	public GameState loadFromFile(String pathName) {
-		File f = new File(pathName);
-		if (!f.exists()) {
-			throw new IllegalStateException("The save-file to load does not exist!");
-		}
+		DataBundle data = new DataBundle();
 		try {
-			GameState state = null;
-			FileInputStream fileIn = new FileInputStream(pathName);
-			ObjectInputStream in = new ObjectInputStream(fileIn);
-			state = (GameState) in.readObject();
-			in.close();
-			return state;
-		} 
-		catch (Exception e) {
+			data.readFromFile(pathName);
+		} catch (IOException e) {
+			System.err.println("Error: Could not load save file!");
 			e.printStackTrace();
 		}
-		return null;
+		return new GameState(data);
 	}
 	public GameState createNewGame(String map, Camera camera) {
 		return createNewGame(new File(map), camera);
@@ -87,31 +65,18 @@ public class GameLoader {
 			height = img.getHeight();
 			width = img.getWidth();
 			Grid g = new Grid(height, width);
-			state = new GameState(g, camera, map);
 			Color c;
 			Cell cell;
+			List<Cell> bases = new ArrayList<Cell>();
 			
 			for (int y = 0; y < height; y++) {
 				for (int x = 0; x < width; x++) {
 					c = new Color(img.getRGB(x, height-y-1));
 					//Check for base-cells
-					if (c.getBlue() == 0 && c.getRed() == 0 && c.getGreen() > 0) {
+					if (c.getBlue() == 0 && c.getGreen() == 0 && c.getRed() > 0) {
 						cell = new Cell(x, y, getHeight(c));
-						Entity townHall1 = new EntityBuildingBase();
-						townHall1.setPlayer(1);
-						townHall1.setX(x);
-						townHall1.setY(y);
-						cell.setEntity(townHall1);
-						state.setTownHall1Cell(cell);
-					}
-					else if (c.getBlue() == 0 && c.getGreen() == 0 && c.getRed() > 0) {
-						cell = new Cell(x, y, getHeight(c));
-						Entity townHall2 = new EntityBuildingBase();
-						townHall2.setPlayer(2);
-						townHall2.setX(x);
-						townHall2.setY(y);
-						cell.setEntity(townHall2);
-						state.setTownHall2Cell(cell);
+						cell.setEntity(new EntityBuildingBase(x, y));
+						bases.add(cell);
 					}
 					else {
 						//Normal cell
@@ -120,8 +85,8 @@ public class GameLoader {
 					g.setCellAt(cell, x, y);
 				}
 			}
-			
-			state.setActivePlayer(state.getPlayer1());
+
+			state = new GameState(g, camera, map, bases);
 		}
 		catch (Exception e) {
 			System.err.println("Konnte neues Spiel nicht laden ;(");

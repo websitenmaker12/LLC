@@ -1,18 +1,20 @@
 package llc.logic;
 
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import llc.entity.Entity;
+import de.teamdna.databundle.DataBundle;
 
 /**
  * Represents a loaded Grid
  */
-public class Grid implements Serializable{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 10L;
+public class Grid {
+	
 	private final int heigth;
 	private final int width;
+	
+	private List<Entity> entities = new ArrayList<Entity>();
 	
 	/**
 	 * Two dimensional array of cells. The first index represents the y-axis, the second one the x-axis
@@ -54,5 +56,19 @@ public class Grid implements Serializable{
 
 	public int getWidth() {
 		return width;
+	}
+
+	public void addEntity(Entity entity) {
+		entities.add(entity);
+	}
+	
+	public void removeEntity(Entity entity) {
+		entities.remove(entity);
+	}
+
+	public DataBundle writeToDataBundle() {
+		DataBundle data = new DataBundle();
+		
+		return data;
 	}
 }

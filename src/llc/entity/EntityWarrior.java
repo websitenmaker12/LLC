@@ -2,7 +2,13 @@ package llc.entity;
 
 public class EntityWarrior extends EntityMovable implements IAttacking {
 
-	private static final long serialVersionUID = 8L;
+	public EntityWarrior(float x, float y, int health) {
+		super(x, y, health);
+	}
+
+	public EntityWarrior(float x, float y) {
+		super(x, y);
+	}
 	
 	@Override
 	public int getAttackDamage() {

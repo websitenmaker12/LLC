@@ -5,12 +5,14 @@ import org.lwjgl.input.Keyboard;
 import llc.LLC;
 import llc.logic.Cell;
 import llc.logic.Logic;
+import llc.logic.Player;
 
 /**
  * @author simolus3
  */
 public class HotkeyManager implements IKeybindingListener{
 	
+	private Cell[] bindingsPlayer0 = new Cell[9];
 	private Cell[] bindingsPlayer1 = new Cell[9];
 	private Cell[] bindingsPlayer2 = new Cell[9];
 	
@@ -37,16 +39,20 @@ public class HotkeyManager implements IKeybindingListener{
 	 * @param index
 	 * @param c
 	 */
-	public void set(int index, Cell c, int playerID) {
-		if (playerID == 1) {
+	public void set(int index, Cell c, Player player) {
+		if (player == l.getGameState().getPlayer(0)) {
+			bindingsPlayer0[index] = c;
+		} else if (player == l.getGameState().getPlayer(1)) {
 			bindingsPlayer1[index] = c;
 		} else {
 			bindingsPlayer2[index] = c;
 		}
 	}
 	
-	public Cell get(int index, int playerID) {
-		if (playerID == 1) {
+	public Cell get(int index, Player player) {
+		if (player == l.getGameState().getPlayer(0)) {
+			return bindingsPlayer0[index];
+		} else if (player == l.getGameState().getPlayer(1)) {
 			return bindingsPlayer1[index];
 		} else {
 			return bindingsPlayer2[index];

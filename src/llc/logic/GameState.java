@@ -1,115 +1,95 @@
 package llc.logic;
 
 import java.io.File;
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-import llc.LLC;
 import llc.engine.Camera;
-import llc.entity.EntityBuildingBase;
+import llc.loading.ISavable;
+import de.teamdna.databundle.DataBundle;
 
-public class GameState implements Serializable {
+public class GameState implements ISavable{
 
-	private static final long serialVersionUID = 4L;
-	
 	private Grid grid;
 	private Camera camera;
-	
-	private Player player1, player2;
-	private Cell townHall1, townHall2;
+
+	private List<Player> players = new ArrayList<Player>();
 	public Cell hoveredCell, selectedCell;
-	
-	public int activePlayer;
+
+	public Player activePlayer;
 	public int moveCount = 0;
-	
+
 	public final String levelName;
 	public final String levelPath;
-	
+
 	public boolean isGameOver = false;
 	public Player winner;
-	
-	public GameState(Grid grid, Camera camera, File level) {
+
+	public GameState(Grid grid, Camera camera, File level, List<Cell> bases) {
 		this.grid = grid;
 		this.camera = camera;
 		
-		player1 = new Player(1, 100);
-		player2 = new Player(2, 100);
-		
+		for (int i = 0; i < bases.size(); i++) players.add(new Player("Player" + i, bases.get(i), i));
+		setActivePlayer(getPlayer(0));
+
 		this.levelName = level.getName();
 		this.levelPath = level.getPath();
 	}
-	
+
+	public GameState(DataBundle data) {
+		this.levelName = data.getString("levelName");
+		this.levelPath = data.getString("levelPath");
+		readFromDataBundle(data);
+	}
+
 	public Grid getGrid() {
 		return grid;
 	}
-
-	public void setActivePlayer(Player active) {
-		if (player1.equals(active)) {
-			activePlayer = 1;
-		} else if (player2.equals(active)) {
-			activePlayer = 2;
-		} else {
-			throw new IllegalArgumentException("Given Player argument does not exist");
-		}
-		
-		//If the settings are loaded and deny townhall focus switching, don't do it...
-		if (LLC.getLLC().getSettings() == null || LLC.getLLC().getSettings().getFocusBaseOnPlayerToggle()) {
-			this.camera.focusCell(this.getActivePlayerTownHallLocation(), true);
-		}
-	}
+	
 	public void focusCell(Cell c, boolean animate) {
 		this.camera.focusCell(c, animate);
 	}
-	public Player getPlayer1() {
-		return player1;
+
+	public void setActivePlayer(Player active) {
+		this.activePlayer = active;
+		this.camera.focusCell(this.getActivePlayerTownHall(), true);
 	}
 
-	public Player getPlayer2() {
-		return player2;
-	}
 	public Player getActivePlayer() {
-		if (activePlayer == 1) {
-			return player1;
+		return activePlayer;
+	}
+
+	public Player getNextPlayer() {
+		if (players.size() -1 > activePlayer.getPlayerID()) {
+			return players.get(activePlayer.getPlayerID() + 1);
 		} else {
-			return player2;
-		}
-	}
-	public Player getInActivePlayer() {
-		if (activePlayer == 1) {
-			return player2;
-		} else {
-			return player1;
+			return players.get(0);
 		}
 	}
 
-	public Cell getTownHall1Cell() {
-		return townHall1;
+	public Cell getActivePlayerTownHall() {
+		return activePlayer.getTownHall();
 	}
 
-	public void setTownHall1Cell(Cell townHall1) {
-		this.townHall1 = townHall1;
+	@Override
+	public DataBundle writeToDataBundle() {
+		DataBundle data = new DataBundle();
+
+		data.setInt("moveCount", moveCount);
+		data.setInt("activePlayerID", activePlayer.getPlayerID());
+//		data.setList("players", players);
+		data.setString("levelName", levelName);
+		data.setString("levelPath", levelPath);
+
+		return data;
 	}
 
-	public Cell getTownHall2Cell() {
-		return townHall2;
+	@Override
+	public void readFromDataBundle(DataBundle data) {
+
 	}
 
-	public void setTownHall2Cell(Cell townHall2) {
-		this.townHall2 = townHall2;
-	}
-	
-	public Cell getActivePlayerTownHallLocation() {
-		if (activePlayer == 1) {
-			return townHall1;
-		}
-		else {
-			return townHall2;
-		}
-	}
-	public EntityBuildingBase getActivePlayerTownHall() {
-		if (activePlayer == 1) {
-			return (EntityBuildingBase) townHall1.getEntity();
-		} else {
-			return (EntityBuildingBase) townHall2.getEntity();
-		}
+	public Player getPlayer(int i) {
+		return players.get(i);
 	}
 }

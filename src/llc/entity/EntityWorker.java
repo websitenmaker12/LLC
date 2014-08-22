@@ -2,7 +2,14 @@ package llc.entity;
 
 public class EntityWorker extends EntityMovable implements IRepairer {
 
-	private static final long serialVersionUID = 9L;
+	public EntityWorker(float x, float y, int health) {
+		super(x, y, health);
+	}
+
+	public EntityWorker(float x, float y) {
+		super(x, y);
+	}
+
 	public static final int cost = 25;
 
 	@Override

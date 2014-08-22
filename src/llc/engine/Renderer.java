@@ -490,7 +490,7 @@ public class Renderer {
 					Color.black.bind();
 					RenderUtil.drawQuad(0, 0, barWidth, 0.1F);
 					
-					if(state.getActivePlayer().playerID == e.getPlayer()) Color.green.bind();
+					if(state.getActivePlayer() == e.getPlayer()) Color.green.bind();
 					else Color.red.bind();
 					RenderUtil.drawQuad(0, 0, e.health / 160F, 0.1F);
 					

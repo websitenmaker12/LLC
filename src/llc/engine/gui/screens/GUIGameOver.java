@@ -24,7 +24,7 @@ public class GUIGameOver extends GUI {
 		super.onOpen();
 		
 		this.elements.add(new GUIText(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2 - 140, 300, 0, "Game Over", Color.orange));
-		this.elements.add(new GUIText(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2 - 100, 300, 0, "Player " + String.valueOf(this.winner.playerID) + " wins!", Color.orange));
+		this.elements.add(new GUIText(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2 - 100, 300, 0, String.valueOf(this.winner.getName()) + " wins!", Color.orange));
 	
 		this.elements.add(new GUIButton(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2, 300, 40, "New Game") {
 			public void onClick(int x, int y) {

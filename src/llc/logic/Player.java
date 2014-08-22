@@ -1,35 +1,40 @@
 package llc.logic;
 
-import java.io.Serializable;
+import de.teamdna.databundle.DataBundle;
+import llc.loading.ISavable;
 
 /**
  * Player class.
  * @author MaxiHoeve14
  */
-public class Player implements Serializable{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3L;
+public class Player implements ISavable{
+
+	private Cell townHall;
 	private int minerals;
-	
-	public int playerID;
+	private final String name;
+	private final int playerID;
 	
 	/**
-	 * Initializes the player with 0 minerals.
+	 * Initializes the player with 100 minerals.
 	 */
-	public Player(int playerID) {
-		this.minerals = 0;
+	public Player(String name, Cell townHall, int playerID) {
 		this.playerID = playerID;
+		this.townHall = townHall;
+		this.name = name;
+		this.minerals = 100;
+		townHall.getEntity().setPlayer(this);
 	}
 	
 	/**
 	 * Initializes the player with given minerals.
 	 * @param startMinerals The amount of minerals that is given to the player at the beginning of a game.
 	 */
-	public Player(int playerID, int startMinerals) {
+	public Player(String name, int startMinerals, Cell townHall, int playerID) {
 		this.playerID = playerID;
+		this.townHall = townHall;
+		this.name = name;
 		this.minerals = startMinerals;
+		townHall.getEntity().setPlayer(this);
 	}
 	
 	/**
@@ -62,5 +67,29 @@ public class Player implements Serializable{
 	 */
 	public void removeMinerals(int minerals) {
 		this.minerals -= minerals;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public DataBundle writeToDataBundle() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void readFromDataBundle(DataBundle data) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Cell getTownHall() {
+		return townHall;
+	}
+
+	public int getPlayerID() {
+		return playerID;
 	}
 }

@@ -1,7 +1,5 @@
 package llc.engine.gui.screens;
 
-import java.util.List;
-
 import llc.engine.GUIRenderer;
 import llc.engine.Translator;
 import llc.engine.gui.GUIGroup;
@@ -10,16 +8,11 @@ import llc.engine.gui.GUIText;
 import llc.engine.res.Texture;
 import llc.entity.Entity;
 import llc.entity.EntityBuildingBase;
-import llc.entity.EntityMovable;
 import llc.entity.EntityWarrior;
 import llc.entity.EntityWorker;
-import llc.entity.IRepairer;
 import llc.loading.GameLoader;
 import llc.logic.Cell;
-import llc.logic.GameState;
-import llc.logic.Grid;
 import llc.logic.Logic;
-import llc.util.PathFinder;
 import llc.util.RenderUtil;
 
 import org.lwjgl.input.Keyboard;
@@ -64,7 +57,7 @@ public class GUIIngame extends GUI {
 		
 		this.elements.add(new GUIText(this, 10 * scaleX, 640 * scaleY, 0, 0, "", Color.white) {
 			public void update(int x, int y) {
-				this.setText(strPlayer + logic.getGameState().getActivePlayer().playerID);
+				this.setText(logic.getGameState().getActivePlayer().getName());
 			}
 		});
 		
@@ -82,44 +75,18 @@ public class GUIIngame extends GUI {
 		
 		this.baseGroup.add(new GUIHotkeyButton(this, (811 + 50 * 0) * scaleX, 611 * scaleY, 46 * scaleX, 46 * scaleY, Translator.translate("gui.desc.buyWarrior"), Keyboard.KEY_A) {
 			public void onClick(int x, int y) {
-				logic.buyEntity(new EntityWarrior());
+				logic.buyEntity(new EntityWarrior(0, 0));
 			}
 		});
 		
 		this.baseGroup.add(new GUIHotkeyButton(this, (811 + 50 * 1) * scaleX, 611 * scaleY, 46 * scaleX, 46 * scaleY, Translator.translate("gui.desc.buyWorker"), Keyboard.KEY_W) {
 			public void onClick(int x, int y) {
-				logic.buyEntity(new EntityWorker());
+				logic.buyEntity(new EntityWorker(0, 0));
 			}
 		});
 		this.workerGroup.add(new GUIHotkeyButton(this, (811 + 50 * 0) * scaleX, 611 * scaleY, 46 * scaleX, 46 * scaleY, Translator.translate("gui.desc.healBase"), Keyboard.KEY_H) {
 			public void onClick(int x, int y) {
-				Grid g = logic.getGameState().getGrid();
-				GameState gs = logic.getGameState();
-				Entity townhall = gs.getActivePlayerTownHall();
-				EntityMovable selected = (EntityMovable) logic.getSelectedEntity();
-				//Near enough to repair townhall?
-				if (selected == null) {
-					return;
-				}
-				List<Cell> c = PathFinder.findPath(g, g.getCellAt((int)selected.getX(), (int)selected.getY()), logic.getGameState().getActivePlayerTownHallLocation());
-				if (c == null) {
-					return;
-				}
-				if (c.size() <= selected.getMoveRange()) {
-					if (selected instanceof IRepairer) {
-						int addHealth = ((IRepairer)selected).getRepairHealth();
-						int cost = ((IRepairer)selected).getRepairCost();
-						int minerals = gs.getActivePlayer().getMinerals();
-						
-						if (minerals >= cost) {
-							townhall.health = Math.min(townhall.health + addHealth, townhall.maxHealth);
-							gs.getActivePlayer().setMinerals(minerals - cost);
-							logic.countMove();
-						} else {
-							logic.markMinerals = true;
-						}
-					}
-				}
+				logic.healBase(x, y);
  			}
 		});
 	}

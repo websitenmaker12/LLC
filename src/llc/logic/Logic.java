@@ -87,12 +87,12 @@ public class Logic {
 	 * @param clickX The x coord of the clicked cell.
 	 * @param clickY The y coord of the clicked cell.
 	 */
-	public void clickCell(int clickX, int clickY) {
+	private void clickCell(int clickX, int clickY) {
 		if (0 <= clickY && clickY < gameState.getGrid().getHeigth() && 0 <= clickX && clickX < gameState.getGrid().getWidth()) {
 			Cell clickedCell = gameState.getGrid().getCellAt(clickX, clickY);
 			
 			if (clickedCell.containsEntity()) {
-				if (clickedCell.getEntity().getPlayer() == gameState.activePlayer) {
+				if (clickedCell.getEntity().getPlayer() == gameState.getActivePlayer()) {
 					// Is the selected entity a worker and the entity of the clicked cell is a base, repair it
 					if (this.selectedEntity instanceof IRepairer && clickedCell.getEntity() instanceof EntityBuildingBase) {
 						int addHealth = ((IRepairer)this.selectedEntity).getRepairHealth();
@@ -151,6 +151,7 @@ public class Logic {
 			if (destEntity.health <= 0) {
 				Cell c = gameState.getGrid().getCellAt((int)destEntity.getX(), (int)destEntity.getY());
 				c.setEntity(null);
+				gameState.getGrid().removeEntity(destEntity);
 				gameState.getActivePlayer().addMinerals(25);
 				// if a base was destroyed, the game is over
 				if (destEntity instanceof EntityBuildingBase) {
@@ -174,13 +175,16 @@ public class Logic {
 	 * @param countMove Does the move count as player action.
 	 */
 	private void moveSelectedEntity(int destX, int destY, boolean countMove, boolean shouldReturn) {
-		EntityMovable selectedEntity = this.selectedEntity;
-		
 		List<Cell> path = PathFinder.findPath(this.gameState.getGrid(), this.gameState.getGrid().getCellAt((int)selectedEntity.getX(), (int)selectedEntity.getY()), this.gameState.getGrid().getCellAt(destX, destY));
 		if(path != null) {
 			selectedEntity.initMoveRoutine(this, path, countMove, shouldReturn);
 			gameState.selectedCell = null;
 		}
+		
+		EntityMovable selectedEntity = this.selectedEntity;
+		selectedEntity.initMoveRoutine(this, PathFinder.findPath(this.gameState.getGrid(),
+				this.gameState.getGrid().getCellAt((int)selectedEntity.getX(), (int)selectedEntity.getY()), this.gameState.getGrid().getCellAt(destX, destY)), countMove, shouldReturn);
+		gameState.selectedCell = null;
 	}
 	
 	public void finishEntityMove(int origX, int origY, boolean countMove, Entity entity) {
@@ -194,19 +198,19 @@ public class Logic {
 	 * This method counts a player move and sets the other player active if the action counter of the current player is
 	 * equal the max action number per round.
 	 */
-	public void countMove() {
+	private void countMove() {
 		gameState.moveCount++;
 		if (gameState.moveCount >= subTurns) {
 			gameState.getActivePlayer().addMinerals(50);
-			gameState.setActivePlayer(gameState.getInActivePlayer());
+			gameState.setActivePlayer(gameState.getNextPlayer());
 			gameState.moveCount = 0;
-			gameState.selectedCell = null;
+			selectEntity(gameState.getActivePlayerTownHall().getEntity());
 		}
 	}
 
 	public void buyEntity(Entity entity) {
-		int cx = gameState.getActivePlayerTownHallLocation().x;
-		int cy = gameState.getActivePlayerTownHallLocation().y;
+		int cx = gameState.getActivePlayerTownHall().x;
+		int cy = gameState.getActivePlayerTownHall().y;
 		
 		Cell spawnCell = null;
 		while(spawnCell == null || spawnCell.containsEntity() || spawnCell.getType() == CellType.SOLID)
@@ -214,19 +218,47 @@ public class Logic {
 		
 		if (spawnCell != null && !spawnCell.containsEntity() && entity.getCost() > 0 && gameState.getActivePlayer().getMinerals() >= entity.getCost()) {
 			gameState.getActivePlayer().removeMinerals(entity.getCost());
-			entity.setPlayer(gameState.activePlayer);
+			entity.setPlayer(gameState.getActivePlayer());
 			spawnCell.setEntity(entity);
 			entity.setX(spawnCell.x);
 			entity.setY(spawnCell.y);
-			if (LLC.getLLC().getSettings().getSelectEntityOnBuy()) {
-				clickCell(spawnCell.x,spawnCell.y);
-			}
+			gameState.getGrid().addEntity(entity);
+			clickCell(spawnCell.x,spawnCell.y);
 		} else if (gameState.getActivePlayer().getMinerals() < entity.getCost()) {
 			// The entity did not spawn because the player didn't have enough minerals
 			markMinerals = true;
 		}
 	}
-	public Entity getSelectedEntity() {
+
+	public EntityMovable getSelectedEntity() {
 		return selectedEntity;
 	}
+
+	public void healBase(int x, int y) {
+		Entity townhall = gameState.getActivePlayer().getTownHall().getEntity();
+		//Near enough to repair townhall?
+		if (selectedEntity == null) {
+			return;
+		}
+		List<Cell> c = PathFinder.findPath(gameState.getGrid(), gameState.getGrid().getCellAt((int)selectedEntity.getX(), (int)selectedEntity.getY()), gameState.getActivePlayer().getTownHall());
+		if (c == null) {
+			return;
+		}
+		if (c.size() <= selectedEntity.getMoveRange()) {
+			if (selectedEntity instanceof IRepairer) {
+				int addHealth = ((IRepairer)selectedEntity).getRepairHealth();
+				int cost = ((IRepairer)selectedEntity).getRepairCost();
+				int minerals = gameState.getActivePlayer().getMinerals();
+				
+				if (minerals >= cost) {
+					townhall.health = Math.min(townhall.health + addHealth, townhall.maxHealth);
+					gameState.getActivePlayer().setMinerals(minerals - cost);
+					countMove();
+				} else {
+					markMinerals = true;
+				}
+			}
+		}
+	}
+
 }

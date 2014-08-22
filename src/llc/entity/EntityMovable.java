@@ -6,7 +6,13 @@ package llc.entity;
  */
 public abstract class EntityMovable extends Entity {
 
-	private static final long serialVersionUID = 6L;
+	public EntityMovable(float x, float y, int health) {
+		super(x, y, health);
+	}
+
+	public EntityMovable(float x, float y) {
+		super(x, y);
+	}
 	
 	private float moveSpeed = 1;
 	private int moveRange = 8;

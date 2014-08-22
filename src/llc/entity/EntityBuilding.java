@@ -5,5 +5,11 @@ package llc.entity;
  */
 public abstract class EntityBuilding extends Entity {
 
-	private static final long serialVersionUID = 7L;
+	public EntityBuilding(float x, float y, int health) {
+		super(x, y, health);
+	}
+
+	public EntityBuilding(float x, float y) {
+		super(x, y);
+	}
 }
