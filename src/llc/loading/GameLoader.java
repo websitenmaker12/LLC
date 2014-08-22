@@ -9,7 +9,6 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import llc.engine.Camera;
 import llc.entity.EntityBuildingBase;
 import llc.logic.Cell;
 import llc.logic.GameState;
@@ -52,11 +51,11 @@ public class GameLoader {
 		}
 		return new GameState(data);
 	}
-	public GameState createNewGame(String map, Camera camera) {
-		return createNewGame(new File(map), camera);
+	public GameState createNewGame(String map) {
+		return createNewGame(new File(map));
 	}
 	
-	public GameState createNewGame(File map, Camera camera) {
+	public GameState createNewGame(File map) {
 		GameState state = null;
 		try {
 			BufferedImage img = ImageIO.read(map);
@@ -86,7 +85,7 @@ public class GameLoader {
 				}
 			}
 
-			state = new GameState(g, camera, map, bases);
+			state = new GameState(g, map, bases);
 		}
 		catch (Exception e) {
 			System.err.println("Konnte neues Spiel nicht laden ;(");

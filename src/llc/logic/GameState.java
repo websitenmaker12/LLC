@@ -4,14 +4,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import llc.engine.Camera;
+import llc.LLC;
 import llc.loading.ISavable;
 import de.teamdna.databundle.DataBundle;
 
 public class GameState implements ISavable{
 
 	private Grid grid;
-	private Camera camera;
 
 	private List<Player> players = new ArrayList<Player>();
 	public Cell hoveredCell, selectedCell;
@@ -25,9 +24,8 @@ public class GameState implements ISavable{
 	public boolean isGameOver = false;
 	public Player winner;
 
-	public GameState(Grid grid, Camera camera, File level, List<Cell> bases) {
+	public GameState(Grid grid, File level, List<Cell> bases) {
 		this.grid = grid;
-		this.camera = camera;
 		
 		for (int i = 0; i < bases.size(); i++) players.add(new Player("Player" + i, bases.get(i), i));
 		setActivePlayer(getPlayer(0));
@@ -45,14 +43,11 @@ public class GameState implements ISavable{
 	public Grid getGrid() {
 		return grid;
 	}
-	
-	public void focusCell(Cell c, boolean animate) {
-		this.camera.focusCell(c, animate);
-	}
 
 	public void setActivePlayer(Player active) {
 		this.activePlayer = active;
-		this.camera.focusCell(this.getActivePlayerTownHall(), true);
+		LLC.getLLC().getCamera().focusCell(active.getTownHall(), true);
+		selectedCell = active.getTownHall();
 	}
 
 	public Player getActivePlayer() {
@@ -65,10 +60,6 @@ public class GameState implements ISavable{
 		} else {
 			return players.get(0);
 		}
-	}
-
-	public Cell getActivePlayerTownHall() {
-		return activePlayer.getTownHall();
 	}
 
 	@Override
