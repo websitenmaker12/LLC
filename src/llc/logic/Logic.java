@@ -95,17 +95,7 @@ public class Logic {
 				if (clickedCell.getEntity().getPlayer() == gameState.getActivePlayer()) {
 					// Is the selected entity a worker and the entity of the clicked cell is a base, repair it
 					if (this.selectedEntity instanceof IRepairer && clickedCell.getEntity() instanceof EntityBuildingBase) {
-						int addHealth = ((IRepairer)this.selectedEntity).getRepairHealth();
-						int cost = ((IRepairer)this.selectedEntity).getRepairCost();
-						int minerals = gameState.getActivePlayer().getMinerals();
-						
-						if (minerals >= cost) {
-							clickedCell.getEntity().health = Math.min(clickedCell.getEntity().health + addHealth, clickedCell.getEntity().maxHealth);
-							gameState.getActivePlayer().setMinerals(minerals - cost);
-							countMove();
-						} else {
-							markMinerals = true;
-						}
+						healBase(clickY, clickY);
 					} else {
 						// select
 						selectEntity(clickedCell.getEntity());
@@ -249,13 +239,29 @@ public class Logic {
 				int addHealth = ((IRepairer)selectedEntity).getRepairHealth();
 				int cost = ((IRepairer)selectedEntity).getRepairCost();
 				int minerals = gameState.getActivePlayer().getMinerals();
-				
-				if (minerals >= cost) {
-					townhall.health = Math.min(townhall.health + addHealth, townhall.maxHealth);
-					gameState.getActivePlayer().setMinerals(minerals - cost);
-					countMove();
-				} else {
-					markMinerals = true;
+				int baseHealth = townhall.health;
+				int maxBaseHealth = townhall.maxHealth;
+				if(baseHealth < maxBaseHealth){
+					if(addHealth <= (maxBaseHealth-baseHealth)){
+						if (minerals >= cost) {
+							townhall.health = Math.min(townhall.health + addHealth, townhall.maxHealth);
+							gameState.getActivePlayer().setMinerals(minerals - cost);
+							countMove();
+						} else {
+							markMinerals = true;
+						}
+					} else {
+						//calculate new cost
+						float percentOfRepair = ((float)maxBaseHealth-(float)baseHealth)/(float)addHealth;
+						cost = Math.round(percentOfRepair*cost);
+						if (minerals >= cost) {
+							townhall.health = Math.min(townhall.health + addHealth, townhall.maxHealth);
+							gameState.getActivePlayer().setMinerals(minerals - cost);
+							countMove();
+						} else {
+							markMinerals = true;
+						}
+					}
 				}
 			}
 		}
