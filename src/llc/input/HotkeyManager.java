@@ -75,7 +75,7 @@ public class HotkeyManager implements IKeybindingListener{
 				//Get
 				Cell c = get(i, l.getGameState().activePlayer);
 				if (c != null) {
-					l.getGameState().focusCell(c, true);
+					l.focusCell(c, true);
 				}
 			}
 		}

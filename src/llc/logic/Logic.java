@@ -17,8 +17,10 @@ import llc.util.PathFinder;
  * Logic class
  * handles changes to the gamestate
  * @author PetaByteBoy
+ * 
  * @author erdlof
  * @author websitenmaker12
+ * @author simolus3
  */
 public class Logic {
 	
@@ -90,27 +92,11 @@ public class Logic {
 	private void clickCell(int clickX, int clickY) {
 		if (0 <= clickY && clickY < gameState.getGrid().getHeigth() && 0 <= clickX && clickX < gameState.getGrid().getWidth()) {
 			Cell clickedCell = gameState.getGrid().getCellAt(clickX, clickY);
-			
 			if (clickedCell.containsEntity()) {
 				if (clickedCell.getEntity().getPlayer() == gameState.getActivePlayer()) {
-					// Is the selected entity a worker and the entity of the clicked cell is a base, repair it
-					if (this.selectedEntity instanceof IRepairer && clickedCell.getEntity() instanceof EntityBuildingBase) {
-						int addHealth = ((IRepairer)this.selectedEntity).getRepairHealth();
-						int cost = ((IRepairer)this.selectedEntity).getRepairCost();
-						int minerals = gameState.getActivePlayer().getMinerals();
-						
-						if (minerals >= cost) {
-							clickedCell.getEntity().health = Math.min(clickedCell.getEntity().health + addHealth, clickedCell.getEntity().maxHealth);
-							gameState.getActivePlayer().setMinerals(minerals - cost);
-							countMove();
-						} else {
-							markMinerals = true;
-						}
-					} else {
-						// select
-						selectEntity(clickedCell.getEntity());
-						gameState.selectedCell = clickedCell;
-					}
+					// select
+					selectEntity(clickedCell.getEntity());
+					gameState.selectedCell = clickedCell;
 				} else if (selectedEntity instanceof IAttacking && selectedEntity.isCellInRange(clickX, clickY)) {
 					// attack
 					attackCell(clickX, clickY);
@@ -119,20 +105,26 @@ public class Logic {
 				// move
 				moveSelectedEntity(clickX, clickY, true, false);
 			}
-		}
+		} 
 	}
 
 	/**
 	 * This method selects a given entity for later work.
 	 * @param toSelect The entity to be selected.
 	 */
-	private void selectEntity(Entity toSelect) {
-		if(toSelect != null && toSelect instanceof EntityMovable) {
-			this.selectedEntity = (EntityMovable) toSelect;
-			LLC.getLLC().getCamera().focusCell(this.gameState.getGrid().getCellAt((int)toSelect.getX(), (int)toSelect.getY()), true);
+	public void selectEntity(Entity toSelect) {
+		if (toSelect != null) {
+			if(toSelect instanceof EntityMovable) {
+				this.selectedEntity = (EntityMovable) toSelect;
+			}
+			focusCell(this.gameState.getGrid().getCellAt((int)toSelect.getX(), (int)toSelect.getY()), true);
 		} else {
 			this.selectedEntity = null;
 		}
+	}
+	
+	public void focusCell(Cell c, boolean animate) {
+		LLC.getLLC().getCamera().focusCell(c, animate);
 	}
 
 	/**
@@ -204,13 +196,12 @@ public class Logic {
 			gameState.getActivePlayer().addMinerals(50);
 			gameState.setActivePlayer(gameState.getNextPlayer());
 			gameState.moveCount = 0;
-			selectEntity(gameState.getActivePlayerTownHall().getEntity());
 		}
 	}
 
 	public void buyEntity(Entity entity) {
-		int cx = gameState.getActivePlayerTownHall().x;
-		int cy = gameState.getActivePlayerTownHall().y;
+		int cx = gameState.getActivePlayer().getTownHall().x;
+		int cy = gameState.getActivePlayer().getTownHall().y;
 		
 		Cell spawnCell = null;
 		while(spawnCell == null || spawnCell.containsEntity() || spawnCell.getType() == CellType.SOLID)
