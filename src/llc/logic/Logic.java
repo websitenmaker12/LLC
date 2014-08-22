@@ -1,5 +1,6 @@
 package llc.logic;
 
+import java.util.List;
 import java.util.Random;
 
 import llc.LLC;
@@ -174,9 +175,12 @@ public class Logic {
 	 */
 	private void moveSelectedEntity(int destX, int destY, boolean countMove, boolean shouldReturn) {
 		EntityMovable selectedEntity = this.selectedEntity;
-		selectedEntity.initMoveRoutine(this, PathFinder.findPath(this.gameState.getGrid(),
-				this.gameState.getGrid().getCellAt((int)selectedEntity.getX(), (int)selectedEntity.getY()), this.gameState.getGrid().getCellAt(destX, destY)), countMove, shouldReturn);
-		gameState.selectedCell = null;
+		
+		List<Cell> path = PathFinder.findPath(this.gameState.getGrid(), this.gameState.getGrid().getCellAt((int)selectedEntity.getX(), (int)selectedEntity.getY()), this.gameState.getGrid().getCellAt(destX, destY));
+		if(path != null) {
+			selectedEntity.initMoveRoutine(this, path, countMove, shouldReturn);
+			gameState.selectedCell = null;
+		}
 	}
 	
 	public void finishEntityMove(int origX, int origY, boolean countMove, Entity entity) {

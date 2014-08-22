@@ -337,27 +337,16 @@ public class Renderer {
 		glColor3f(1, 1, 1);
 		
 		glBegin(GL_TRIANGLES);
-		glTexCoord2f(0, 1);
-		glVertex3f(0, 0, 0);
-		
-		glTexCoord2f(1, 1);
-		glVertex3f(width, 0, 0);
-		
-		glTexCoord2f(0, 0);
-		glVertex3f(0, height, 0);
+		glTexCoord2f(0, 1); glVertex3f(0, 0, 0);
+		glTexCoord2f(1, 1); glVertex3f(width, 0, 0);
+		glTexCoord2f(0, 0); glVertex3f(0, height, 0);
 
-		glTexCoord2f(1, 1);
-		glVertex3f(width, 0, 0);
-		
-		glTexCoord2f(1, 0);
-		glVertex3f(width, height, 0);
-
-		glTexCoord2f(0, 0);
-		glVertex3f(0, height, 0);
+		glTexCoord2f(1, 1); glVertex3f(width, 0, 0);
+		glTexCoord2f(1, 0); glVertex3f(width, height, 0);
+		glTexCoord2f(0, 0); glVertex3f(0, height, 0);
 		glEnd();
 		
 		RenderUtil.unbindShader();
-
 		glActiveTexture(GL_TEXTURE0);
 	}
 	
