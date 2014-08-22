@@ -44,6 +44,7 @@ public class HotkeyManager implements IKeybindingListener{
 			bindingsPlayer2[index] = c;
 		}
 	}
+	
 	public Cell get(int index, int playerID) {
 		if (playerID == 1) {
 			return bindingsPlayer1[index];
