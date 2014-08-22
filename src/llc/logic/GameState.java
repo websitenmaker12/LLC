@@ -46,7 +46,8 @@ public class GameState implements ISavable{
 
 	public void setActivePlayer(Player active) {
 		this.activePlayer = active;
-		LLC.getLLC().getLogic().selectEntity(active.getTownHall().getEntity());
+		LLC.getLLC().getCamera().focusCell(active.getTownHall(), true);
+		selectedCell = active.getTownHall();
 	}
 
 	public Player getActivePlayer() {
