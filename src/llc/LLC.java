@@ -19,6 +19,7 @@ import llc.input.Input;
 import llc.input.KeyBinding;
 import llc.input.KeyboardListener;
 import llc.loading.GameLoader;
+import llc.loading.Settings;
 import llc.logic.Cell;
 import llc.logic.Logic;
 import llc.logic.Player;
@@ -39,6 +40,7 @@ public class LLC implements IKeybindingListener {
 	private boolean isRunning = false;
 	
 	private Profiler profiler = new Profiler();
+	private Settings settings;
 	private Camera camera;
 	private Input input;
 	private Renderer renderer;
@@ -122,16 +124,20 @@ public class LLC implements IKeybindingListener {
 		this.profiler.endStart("Setup GUI Renderer");
 		this.guiRenderer = new GUIRenderer(this.input, this.soundEngine);
 		this.guiRenderer.openGUI(new GUIIngame(this.logic, gameLoader));
+		this.profiler.endStart("Loading Settings");
+		this.settings = Settings.loadSettings();
 		this.profiler.endStart("Setup Audio Engine");
 		
 		this.soundEngine.addSound("button_click", new Sound("res/sound/gui_click.wav", false));
-		this.soundEngine.addSound("music_1", new Sound("res/sound/music_1.wav", true));
+		if (this.settings.getPlayBgSound()) {
+			this.soundEngine.addSound("music_1", new Sound("res/sound/music_1.wav", true));
+		}
 		
 		this.soundEngine.init();
 		this.soundEngine.playSound("music_1");
 		
 		this.soundEngine.bindCamera(this.camera);
-		this.profiler.end();
+
 		this.beginLoop();
 	}
 	
@@ -206,6 +212,7 @@ public class LLC implements IKeybindingListener {
 		}
 
 		this.soundEngine.dispose();
+		Settings.saveSettings(this.settings);
 		if(Display.isCreated()) Display.destroy();
 	}
 	
@@ -289,5 +296,7 @@ public class LLC implements IKeybindingListener {
 		if(this.width != 0) this.guiRenderer.openGUI(new GUIIngame(this.logic, gameLoader));
 		this.isGamePaused = false;
 	}
-	
+	public Settings getSettings() {
+		return settings;
+	}
 }

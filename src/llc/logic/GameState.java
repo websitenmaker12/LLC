@@ -3,6 +3,7 @@ package llc.logic;
 import java.io.File;
 import java.io.Serializable;
 
+import llc.LLC;
 import llc.engine.Camera;
 import llc.entity.EntityBuildingBase;
 
@@ -50,7 +51,10 @@ public class GameState implements Serializable {
 			throw new IllegalArgumentException("Given Player argument does not exist");
 		}
 		
-		this.camera.focusCell(this.getActivePlayerTownHallLocation(), true);
+		//If the settings are loaded and deny townhall focus switching, don't do it...
+		if (LLC.getLLC().getSettings() == null || LLC.getLLC().getSettings().getFocusBaseOnPlayerToggle()) {
+			this.camera.focusCell(this.getActivePlayerTownHallLocation(), true);
+		}
 	}
 	public void focusCell(Cell c, boolean animate) {
 		this.camera.focusCell(c, animate);
