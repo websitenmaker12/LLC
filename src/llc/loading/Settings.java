@@ -15,25 +15,39 @@ import java.util.Map.Entry;
  */
 public class Settings {
 	public static final String settingsPath = ".llcsettings";
-	private HashMap<String, String> settings;
+	public static final String version = "0.0.2";
+	public static final Settings defaultSettings = new Settings();
 	
+	static {
+		defaultSettings.setPlayBgSound(true);
+		defaultSettings.setFocusBaseOnPlayerToggle(true);
+		defaultSettings.setSelectEntityOnBuy(true);
+	}
+	
+	private HashMap<String, String> settings;
 	public Settings() {
 		settings = new HashMap<String, String>();
+		settings.put("version", version);
 	}
 	
 	public void setPlayBgSound(boolean playSound) {
 		settings.put("playBgSound", Boolean.toString(playSound));
 	}
 	public boolean getPlayBgSound() {
-		return Boolean.parseBoolean(settings.get("playerBgSound"));
+		return Boolean.parseBoolean(settings.get("playBgSound"));
 	}
 
 	public boolean getFocusBaseOnPlayerToggle() {
 		return Boolean.parseBoolean(settings.get("focusBaseOnPlayerToggle"));
 	}
-
 	public void setFocusBaseOnPlayerToggle(boolean focusBaseOnPlayerToggle) {
 		settings.put("focusBaseOnPlayerToggle", Boolean.toString(focusBaseOnPlayerToggle));
+	}
+	public void setSelectEntityOnBuy(boolean select) {
+		settings.put("selectEntityOnBuy", Boolean.toString(select));
+	}
+	public boolean getSelectEntityOnBuy() {
+		return Boolean.parseBoolean(settings.get("selectEntityOnBuy"));
 	}
 	public void set(String key, String value) {
 		settings.put(key, value);
@@ -68,9 +82,7 @@ public class Settings {
 		try {
 			if (!f.exists()) {
 				//Return default settings
-				s.setFocusBaseOnPlayerToggle(true);
-				s.setPlayBgSound(true);
-				return s;
+				return defaultSettings;
 			}
 			Reader r = new FileReader(f);
 			
@@ -84,10 +96,7 @@ public class Settings {
 				entry = line.split("=", 2);
 				s.set(entry[0], entry[1]);
 			}
-			
-			r.close();
 			br.close();
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

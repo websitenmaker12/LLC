@@ -214,7 +214,9 @@ public class Logic {
 			spawnCell.setEntity(entity);
 			entity.setX(spawnCell.x);
 			entity.setY(spawnCell.y);
-			clickCell(spawnCell.x,spawnCell.y);
+			if (LLC.getLLC().getSettings().getSelectEntityOnBuy()) {
+				clickCell(spawnCell.x,spawnCell.y);
+			}
 		} else if (gameState.getActivePlayer().getMinerals() < entity.getCost()) {
 			// The entity did not spawn because the player didn't have enough minerals
 			markMinerals = true;
