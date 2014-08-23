@@ -11,6 +11,8 @@ import llc.util.MathUtil;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import de.teamdna.databundle.DataBundle;
+
 /**
  * The entity base class.
  * Contains player and health.
@@ -39,6 +41,14 @@ public abstract class Entity {
 	 * @return cost to pay for an Entity of this type
 	 */
 	public abstract int getCost();
+
+	public Entity(DataBundle data, List<Player> players) {
+		this.x = data.getFloat("x");
+		this.y = data.getFloat("y");
+		this.player = players.get(data.getInt("playerID"));
+		this.health = data.getInt("health");
+		this.maxHealth = data.getInt("maxHealth");
+	}
 	
 	/**
 	 * Creates a new entity with the amount of 100 health
@@ -157,4 +167,17 @@ public abstract class Entity {
 	 */
 	public abstract String getName();
 
+	public DataBundle writeToDataBundle() {
+		DataBundle data = new DataBundle();
+		
+		data.setFloat("x", x);
+		data.setFloat("y", y);
+		data.setInt("playerID", player.getPlayerID());
+		data.setInt("health", health);
+		data.setInt("maxHealth", maxHealth);
+		data.setString("type", this.getClass().toString());
+		
+		return data;
+	}
+	
 }

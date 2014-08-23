@@ -1,5 +1,10 @@
 package llc.entity;
 
+import java.util.List;
+
+import llc.logic.Player;
+import de.teamdna.databundle.DataBundle;
+
 /**
  * Base class for movable entities.
  * @author MaxiHoeve14
@@ -8,6 +13,10 @@ public abstract class EntityMovable extends Entity {
 
 	public EntityMovable(float x, float y, int health) {
 		super(x, y, health);
+	}
+
+	public EntityMovable(DataBundle data, List<Player> players) {
+		super(data, players);
 	}
 
 	public EntityMovable(float x, float y) {

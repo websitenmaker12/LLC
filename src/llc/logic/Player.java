@@ -26,6 +26,17 @@ public class Player implements ISavable{
 	}
 	
 	/**
+	 * Initializes the player with 100 minerals.
+	 * @param townHall 
+	 */
+	public Player(DataBundle data, Cell townHall) {
+		this.playerID = data.getInt("playerID");
+		this.minerals = data.getInt("minerals");
+		this.name = data.getString("name");
+		this.townHall = townHall;
+	}
+	
+	/**
 	 * Initializes the player with given minerals.
 	 * @param startMinerals The amount of minerals that is given to the player at the beginning of a game.
 	 */
@@ -75,18 +86,19 @@ public class Player implements ISavable{
 
 	@Override
 	public DataBundle writeToDataBundle() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void readFromDataBundle(DataBundle data) {
-		// TODO Auto-generated method stub
-		
+		DataBundle data = new DataBundle();
+		data.setInt("minerals", minerals);
+		data.setInt("playerID", playerID);
+		data.setString("name", name);
+		return data;
 	}
 
 	public Cell getTownHall() {
 		return townHall;
+	}
+
+	public void setTownHall(Cell townHall) {
+		this.townHall = townHall;
 	}
 
 	public int getPlayerID() {

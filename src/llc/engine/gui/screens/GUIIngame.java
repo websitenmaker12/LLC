@@ -47,6 +47,9 @@ public class GUIIngame extends GUI {
 		
 		this.elements.add(new GUIText(this, 10 * scaleX, 614 * scaleY, 0, 0, "", Color.white) {
 			public void update(int x, int y) {
+				System.out.println(logic.getGameState());
+				System.out.println(logic.getGameState().getActivePlayer());
+				System.out.println(logic.getGameState().getActivePlayer().getMinerals());
 				this.setText(strGold + logic.getGameState().getActivePlayer().getMinerals());
 				if (logic.markMinerals) {
 					this.mark(Color.red, 1500);

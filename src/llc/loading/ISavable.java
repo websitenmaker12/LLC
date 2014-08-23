@@ -6,6 +6,4 @@ public interface ISavable {
 
 	DataBundle writeToDataBundle();
 
-	void readFromDataBundle(DataBundle data);
-
 }

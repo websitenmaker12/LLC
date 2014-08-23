@@ -1,5 +1,7 @@
 package llc.logic;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,6 +71,21 @@ public class Grid {
 	public DataBundle writeToDataBundle() {
 		DataBundle data = new DataBundle();
 		
+		data.setInt("entitiesSize", entities.size());
+		for (int i = 0; i < entities.size(); i++){
+			data.setBundle("entity" + i, entities.get(i).writeToDataBundle());
+		}
+		
 		return data;
+	}
+
+	public void readFromDataBundle(DataBundle data, List<Player> players) throws ClassNotFoundException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		for (int i = 0; i < data.getInt("entitiesSize"); i++) {
+			String className = data.getBundle("entity" + i).getString("type").substring(6);
+			Class<?> clazz = Class.forName(className);
+			Constructor<?> ctor = clazz.asSubclass(Entity.class).getConstructor( DataBundle.class, List.class );
+			Entity e = (Entity) ctor.newInstance(new Object[] { data.getBundle("entity" + i), players });
+			getCellAt((int) e.getX(), (int) e.getY()).setEntity(e);
+		}
 	}
 }

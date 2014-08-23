@@ -49,9 +49,10 @@ public class GameLoader {
 			System.err.println("Error: Could not load save file!");
 			e.printStackTrace();
 		}
-		return new GameState(data);
+		return new GameState(data, this);
 	}
 	public GameState createNewGame(String map) {
+		System.out.println(map);
 		return createNewGame(new File(map));
 	}
 	
@@ -112,5 +113,27 @@ public class GameLoader {
 	}
 //	public static String getEntityDebugInformation(Entity en) {
 //		return en.getClass().getName() + gson.toJson(en);
+//	}
+	
+	public DataBundle saveList(List<ISavable> l) {
+		DataBundle d = new DataBundle();
+		
+		d.setInt("size", l.size());
+		
+		for (int i = 0; i < l.size(); i++) {
+			d.setBundle(String.valueOf(i), l.get(i).writeToDataBundle());
+		}
+		
+		return d;
+	}
+//	
+//	public List<T> readList(DataBundle d, Class<T>) {
+//		List<T> l = new ArrayList<T>();
+//		
+//		for (int i = 0; i < d.getInt("size"); i++) {
+//			l.set(i,<T>.readFromDataBundle(d.getBundle(String.valueOf(i)));
+//		}
+//		
+//		return l;
 //	}
 }

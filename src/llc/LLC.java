@@ -288,7 +288,7 @@ public class LLC implements IKeybindingListener {
 	 */
 	public void startNewGame() {
 		this.gameLoader = new GameLoader();
-		this.logic = new Logic(this.gameLoader.createNewGame("res/maps/areas/map-2_areas.png"), this.input);
+		this.logic = new Logic(gameLoader.createNewGame("res/maps/areas/map-2_areas.png"), this.input);
 		this.hotkeyManager.l = this.logic;
 		if(this.width != 0) this.guiRenderer.openGUI(new GUIIngame(this.logic, gameLoader));
 		this.isGamePaused = false;

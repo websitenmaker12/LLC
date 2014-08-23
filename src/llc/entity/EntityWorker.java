@@ -1,5 +1,10 @@
 package llc.entity;
 
+import java.util.List;
+
+import llc.logic.Player;
+import de.teamdna.databundle.DataBundle;
+
 public class EntityWorker extends EntityMovable implements IRepairer {
 
 	public EntityWorker(float x, float y, int health) {
@@ -8,6 +13,10 @@ public class EntityWorker extends EntityMovable implements IRepairer {
 
 	public EntityWorker(float x, float y) {
 		super(x, y);
+	}
+
+	public EntityWorker(DataBundle data, List<Player> players) {
+		super(data, players);
 	}
 
 	public static final int cost = 25;
