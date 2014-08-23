@@ -1,7 +1,7 @@
 package llc.logic;
 
 import de.teamdna.databundle.DataBundle;
-import llc.loading.ISavable;
+import de.teamdna.databundle.ISavable;
 
 /**
  * Player class.
@@ -85,12 +85,10 @@ public class Player implements ISavable{
 	}
 
 	@Override
-	public DataBundle writeToDataBundle() {
-		DataBundle data = new DataBundle();
+	public void save(DataBundle data) {
 		data.setInt("minerals", minerals);
 		data.setInt("playerID", playerID);
 		data.setString("name", name);
-		return data;
 	}
 
 	public Cell getTownHall() {
@@ -104,4 +102,7 @@ public class Player implements ISavable{
 	public int getPlayerID() {
 		return playerID;
 	}
+
+	@Override
+	public void read(DataBundle arg0) {}
 }

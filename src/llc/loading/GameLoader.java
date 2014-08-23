@@ -14,6 +14,7 @@ import llc.logic.Cell;
 import llc.logic.GameState;
 import llc.logic.Grid;
 import de.teamdna.databundle.DataBundle;
+import de.teamdna.databundle.ISavable;
 
 /**
  * A IO-Util to load and save Gamestates
@@ -35,7 +36,9 @@ public class GameLoader {
 	 */
 	public void saveToFile(GameState f, String fileName) {
 		try {
-			f.writeToDataBundle().writeToFile(fileName);
+			DataBundle d = new DataBundle();
+			f.save(d);
+			d.writeToFile(fileName);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -108,29 +111,17 @@ public class GameLoader {
 			return 0;
 		}
 	}
-//	public static String getEntityDebugInformation(Entity en) {
-//		return en.getClass().getName() + gson.toJson(en);
-//	}
 	
-	public DataBundle saveList(List<ISavable> l) {
-		DataBundle d = new DataBundle();
+	public DataBundle writeListToDataBundle(List<ISavable> list) {
+		DataBundle data = new DataBundle();
 		
-		d.setInt("size", l.size());
-		
-		for (int i = 0; i < l.size(); i++) {
-			d.setBundle(String.valueOf(i), l.get(i).writeToDataBundle());
+		data.setInt("size", list.size());
+		for (int i = 0; i < list.size(); i++){
+			DataBundle d = new DataBundle();
+			list.get(i).save(d);
+			data.setBundle("entry" + i, d);
 		}
 		
-		return d;
+		return data;
 	}
-//	
-//	public List<T> readList(DataBundle d, Class<T>) {
-//		List<T> l = new ArrayList<T>();
-//		
-//		for (int i = 0; i < d.getInt("size"); i++) {
-//			l.set(i,<T>.readFromDataBundle(d.getBundle(String.valueOf(i)));
-//		}
-//		
-//		return l;
-//	}
 }

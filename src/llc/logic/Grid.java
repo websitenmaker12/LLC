@@ -6,6 +6,7 @@ import java.util.List;
 
 import llc.entity.Entity;
 import de.teamdna.databundle.DataBundle;
+import de.teamdna.databundle.ISavable;
 
 /**
  * Represents a loaded Grid
@@ -66,19 +67,15 @@ public class Grid {
 	public void removeEntity(Entity entity) {
 		entities.remove(entity);
 	}
-
-	public DataBundle writeToDataBundle() {
-		DataBundle data = new DataBundle();
-		
+	
+	public void save(DataBundle data) {
 		data.setInt("entitiesSize", entities.size());
 		for (int i = 0; i < entities.size(); i++){
 			data.setBundle("entity" + i, entities.get(i).writeToDataBundle());
 		}
-		
-		return data;
 	}
 
-	public void readFromDataBundle(DataBundle data, List<Player> players) throws ClassNotFoundException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public void read(DataBundle data, List<Player> players) throws ClassNotFoundException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		for (int i = 0; i < data.getInt("entitiesSize"); i++) {
 			Entity e = (Entity) Class.forName(data.getBundle("entity" + i).getString("type").substring(6)).asSubclass(Entity.class).getConstructor( DataBundle.class, List.class ).newInstance(new Object[] { data.getBundle("entity" + i), players });
 			getCellAt((int) e.getX(), (int) e.getY()).setEntity(e);

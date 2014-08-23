@@ -7,8 +7,8 @@ import java.util.List;
 
 import llc.LLC;
 import llc.loading.GameLoader;
-import llc.loading.ISavable;
 import de.teamdna.databundle.DataBundle;
+import de.teamdna.databundle.ISavable;
 
 public class GameState implements ISavable{
 
@@ -50,7 +50,7 @@ public class GameState implements ISavable{
 		}
 		setActivePlayer(getPlayer(data.getInt("activePlayerID")));
 		try {
-			this.grid.readFromDataBundle(data.getBundle("grid"), players);
+			this.grid.read(data.getBundle("grid"), players);
 		} catch (ClassNotFoundException | NoSuchMethodException
 				| SecurityException | InstantiationException
 				| IllegalAccessException | IllegalArgumentException
@@ -90,26 +90,29 @@ public class GameState implements ISavable{
 	}
 
 	@Override
-	public DataBundle writeToDataBundle() {
-		DataBundle data = new DataBundle();
-
+	public void save(DataBundle data) {
 		data.setInt("moveCount", moveCount);
 		data.setInt("activePlayerID", activePlayer.getPlayerID());
 
 		data.setInt("playersSize", players.size());
 		for (int i = 0; i < players.size(); i++){
-			data.setBundle("player" + i, players.get(i).writeToDataBundle());
+			DataBundle d = new DataBundle();
+			players.get(i).save(d);
+			data.setBundle("player" + i, d);
 		}
 		
 		data.setString("levelName", levelName);
 		data.setString("levelPath", levelPath);
-		
-		data.setBundle("grid", grid.writeToDataBundle());
 
-		return data;
+		DataBundle d = new DataBundle();
+		grid.save(d);
+		data.setBundle("grid", d);
 	}
 
 	public Player getPlayer(int i) {
 		return players.get(i);
 	}
+
+	@Override
+	public void read(DataBundle arg0) {}
 }
