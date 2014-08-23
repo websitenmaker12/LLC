@@ -47,7 +47,7 @@ public class GameState implements ISavable{
 		for (int i = 0; i < data.getInt("playersSize"); i++) {
 			this.players.add(new Player(data.getBundle("player" + i), newgs.getPlayer(i).getTownHall()));
 		}
-		setActivePlayer(getPlayer(0));
+		setActivePlayer(getPlayer(data.getInt("activePlayerID")));
 		try {
 			this.grid.readFromDataBundle(data.getBundle("grid"), players);
 		} catch (ClassNotFoundException | NoSuchMethodException
