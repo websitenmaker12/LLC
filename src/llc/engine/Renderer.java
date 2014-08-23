@@ -357,7 +357,6 @@ public class Renderer {
 		triangles = new Triangle[height][width][2];
 		for(int y = 0; y < height; y++) {
 			for(int x = 0; x < width; x++) {
-				//Generating heigth coordinates
 				float currentHeight = cells[y][x].height;
 				float[][] heights = new float [3][3];
 				heights[0][0] = y > 0 && x > 0 ? cells[y - 1][x - 1].height : currentHeight;
@@ -423,10 +422,6 @@ public class Renderer {
 		if(state.selectedCell != null) {
 			glColor3f(0.3f, 1f, 0.3f);
 			drawCell(state.selectedCell, state.selectedCell.y, state.selectedCell.x, false);
-		}
-		if(state.hoveredCell != null && state.selectedCell == state.hoveredCell) {
-			glColor3f(1, 0.5f, 1);
-			drawCell(state.hoveredCell, state.hoveredCell.y, state.hoveredCell.x, false);
 		}
 		
 		RenderUtil.unbindShader();
@@ -609,7 +604,6 @@ public class Renderer {
 	}
 	
 	private Vector3f getTerrainColorFromHeight(float height) {
-		
 		// find gradient colors around height
 		int upper;
 		for(upper = 0; upper < colors.size(); upper++) {
