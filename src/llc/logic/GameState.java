@@ -42,6 +42,7 @@ public class GameState implements ISavable{
 	public GameState(DataBundle data, GameLoader gameLoader) {
 		this.levelName = data.getString("levelName");
 		this.levelPath = data.getString("levelPath");
+		this.moveCount = data.getInt("moveCount");
 		GameState newgs = gameLoader.createNewGame(levelPath + "/maps/areas/" + levelName);
 		this.grid = newgs.grid;
 		for (int i = 0; i < data.getInt("playersSize"); i++) {
@@ -72,6 +73,12 @@ public class GameState implements ISavable{
 
 	public Player getActivePlayer() {
 		return activePlayer;
+	}
+	
+	public List<Player> getInActivePlayers() {
+		List<Player> l = new ArrayList<Player>(players);
+		l.remove(activePlayer.getPlayerID());
+		return l;
 	}
 
 	public Player getNextPlayer() {

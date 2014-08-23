@@ -96,13 +96,13 @@ public class Logic {
 				if (clickedCell.getEntity().getPlayer() == gameState.getActivePlayer()) {
 
 					// Is the selected entity a worker and the entity of the clicked cell is a base, repair it
-					if (this.selectedEntity instanceof IRepairer && clickedCell.getEntity() instanceof EntityBuildingBase) {
-						healBase(clickY, clickY);
-					} else {
+//					if (this.selectedEntity instanceof IRepairer && clickedCell.getEntity() instanceof EntityBuildingBase) {
+//						healBase(clickY, clickY);
+//					} else {
 						// select
 						selectEntity(clickedCell.getEntity());
 						gameState.selectedCell = clickedCell;
-					}
+//					}
 
 				} else if (selectedEntity instanceof IAttacking && selectedEntity.isCellInRange(clickX, clickY)) {
 					// attack
@@ -112,7 +112,7 @@ public class Logic {
 				// move
 				moveSelectedEntity(clickX, clickY, true, false);
 			}
-		} 
+		}
 	}
 
 	/**
@@ -153,13 +153,18 @@ public class Logic {
 				gameState.getGrid().removeEntity(destEntity);
 				gameState.getActivePlayer().addMinerals(25);
 				// if a base was destroyed, the game is over
-				if (destEntity instanceof EntityBuildingBase) {
+				if (destEntity instanceof EntityBuildingBase && hasPlayerWon()) {
 					gameOver(gameState.getActivePlayer());
 					LLC.getLLC().openGameOverGUI(this.gameState.winner);
 				}
 			}
 		}
 		countMove();
+	}
+	
+	private boolean hasPlayerWon() {
+		for (Player p:gameState.getInActivePlayers()) if (p.getTownHall().containsEntity()) return false;
+		return true;
 	}
 
 	private void gameOver(Player winner) {
