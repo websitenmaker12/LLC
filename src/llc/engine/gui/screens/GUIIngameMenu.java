@@ -2,6 +2,7 @@ package llc.engine.gui.screens;
 
 import llc.LLC;
 import llc.engine.GUIRenderer;
+import llc.engine.gui.EnumAnchor;
 import llc.engine.gui.GUIButton;
 import llc.engine.gui.GUIText;
 import llc.loading.GameLoader;
@@ -28,7 +29,7 @@ public class GUIIngameMenu extends GUI{
 	public void onOpen() {
 		super.onOpen();
 		
-		this.elements.add(new GUIText(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2 - 230, 300, 40, "LLC - " + LLC.VERSION, Color.orange));
+		this.elements.add(new GUIText(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2 - 230, 300, 40, "LLC - " + LLC.VERSION, Color.orange, EnumAnchor.MIDDLE));
 		
 		this.elements.add(new GUIButton(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2 - 165, 300, 40, "Back to game") {
 			public void onClick(int x, int y) {
@@ -36,29 +37,28 @@ public class GUIIngameMenu extends GUI{
 			}
 		});
 		
-		this.elements.add(new GUIButton(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2 - 110, 300, 40, "Save") {
+		this.elements.add(new GUIButton(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2 - 110, 145, 40, "Save") {
 			public void onClick(int x, int y) {
 				gameLoader.saveToFile(logic.getGameState(), "save.dss");
 			}
 		});
 		
-		this.elements.add(new GUIButton(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2 - 55, 300, 40, "Load") {
+		this.elements.add(new GUIButton(this, Display.getWidth() / 2 + 5, Display.getHeight() / 2 - 110, 145, 40, "Load") {
 			public void onClick(int x, int y) {
 				try {
 					logic.setGameState(gameLoader.loadFromFile("save.dss"));
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		});
 		
-		this.elements.add(new GUIButton(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2, 300, 40, "Save & Exit") {
+		this.elements.add(new GUIButton(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2 - 55, 300, 40, "Options") {
 			public void onClick(int x, int y) {
-				gameLoader.saveToFile(logic.getGameState(), "save.dss");
-				LLC.getLLC().closeGame();
 			}
 		});
-		this.elements.add(new GUIButton(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2 + 55, 300, 40, "Exit without saving") {
+		
+		this.elements.add(new GUIButton(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2, 300, 40, "Exit") {
 			public void onClick(int x, int y) {
 				LLC.getLLC().closeGame();
 			}
