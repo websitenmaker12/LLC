@@ -51,13 +51,10 @@ public class GameLoader {
 		}
 		return new GameState(data, this);
 	}
-	public GameState createNewGame(String map) {
-		System.out.println(map);
-		return createNewGame(new File(map));
-	}
 	
-	public GameState createNewGame(File map) {
+	public GameState createNewGame(String mapLoc) {
 		GameState state = null;
+		File map = new File(mapLoc);
 		try {
 			BufferedImage img = ImageIO.read(map);
 			
