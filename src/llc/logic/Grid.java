@@ -6,7 +6,6 @@ import java.util.List;
 
 import llc.entity.Entity;
 import de.teamdna.databundle.DataBundle;
-import de.teamdna.databundle.ISavable;
 
 /**
  * Represents a loaded Grid
