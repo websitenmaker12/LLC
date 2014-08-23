@@ -38,14 +38,14 @@ public class GUIIngameMenu extends GUI{
 		
 		this.elements.add(new GUIButton(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2 - 110, 300, 40, "Save") {
 			public void onClick(int x, int y) {
-				gameLoader.saveToFile(logic.getGameState(), "save.llcsav");
+				gameLoader.saveToFile(logic.getGameState(), "save.dss");
 			}
 		});
 		
 		this.elements.add(new GUIButton(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2 - 55, 300, 40, "Load") {
 			public void onClick(int x, int y) {
 				try {
-					logic.setGameState(gameLoader.loadFromFile("save.llcsav"));
+					logic.setGameState(gameLoader.loadFromFile("save.dss"));
 				}
 				catch (Exception e) {
 				}
@@ -54,7 +54,7 @@ public class GUIIngameMenu extends GUI{
 		
 		this.elements.add(new GUIButton(this, Display.getWidth() / 2 - 150, Display.getHeight() / 2, 300, 40, "Save & Exit") {
 			public void onClick(int x, int y) {
-				gameLoader.saveToFile(logic.getGameState(), "save.llcsav");
+				gameLoader.saveToFile(logic.getGameState(), "save.dss");
 				LLC.getLLC().closeGame();
 			}
 		});
