@@ -1,24 +1,30 @@
 package llc.input;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.lwjgl.input.Keyboard;
 
+import de.teamdna.databundle.DataBundle;
+import de.teamdna.databundle.ISavable;
 import llc.LLC;
 import llc.logic.Cell;
-import llc.logic.Logic;
+import llc.logic.GameState;
 import llc.logic.Player;
+import llc.util.Location;
 
 /**
  * @author simolus3
  */
-public class HotkeyManager implements IKeybindingListener{
+public class HotkeyManager implements IKeybindingListener, ISavable{
+
+	private HashMap<Player, Location[]> bindings = new HashMap<Player, Location[]>();
 	
-	private Cell[] bindingsPlayer0 = new Cell[9];
-	private Cell[] bindingsPlayer1 = new Cell[9];
-	private Cell[] bindingsPlayer2 = new Cell[9];
+	private GameState state;
 	
-	public Logic l;
-	
-	public HotkeyManager(Logic l) {
+	public HotkeyManager(GameState state) {
 		LLC llc = LLC.getLLC();
 		KeyboardListener listener = llc.keyboardListener;
 		//Set up keys
@@ -33,6 +39,7 @@ public class HotkeyManager implements IKeybindingListener{
 		listener.registerKeyBinding(new KeyBinding("hotbar.9", Keyboard.KEY_9, false));
 		
 		listener.registerEventHandler(this);
+		this.state = state;
 	}
 	/**
 	 * <b>Important</b> Key 1 has index 0, key 2 index 1 and so on!
@@ -40,23 +47,31 @@ public class HotkeyManager implements IKeybindingListener{
 	 * @param c
 	 */
 	public void set(int index, Cell c, Player player) {
-		if (player == l.getGameState().getPlayer(0)) {
-			bindingsPlayer0[index] = c;
-		} else if (player == l.getGameState().getPlayer(1)) {
-			bindingsPlayer1[index] = c;
-		} else {
-			bindingsPlayer2[index] = c;
+		if (!bindings.containsKey(player)) {
+			bindings.put(player, new Location[9]);
 		}
+		
+		Location l = bindings.get(player)[index];
+		if (l == null) {
+			l = new Location(c.x, c.y);
+		} else {
+			l.setX(c.x);
+			l.setY(c.y);
+		}
+		
+		bindings.get(player)[index] = l;
+		System.out.println(l);
 	}
 	
 	public Cell get(int index, Player player) {
-		if (player == l.getGameState().getPlayer(0)) {
-			return bindingsPlayer0[index];
-		} else if (player == l.getGameState().getPlayer(1)) {
-			return bindingsPlayer1[index];
-		} else {
-			return bindingsPlayer2[index];
+		Location ls[] = bindings.get(player);
+		//Prevent Nullpointer Exception
+		if (ls == null || ls[index] == null) {
+			return null;
 		}
+		Location l = ls[index];
+		System.out.println(l);
+		return state.getGrid().getCellAt(l.getX(), l.getY());
 	}
 	@Override
 	public void onKeyBindingUpdate(KeyBinding keyBinding, boolean isPressed) {
@@ -68,16 +83,71 @@ public class HotkeyManager implements IKeybindingListener{
 			int i = Integer.parseInt(keyBinding.name.substring(7))-1;
 			if (shift) {
 				//Set
-				if (l.getGameState().hoveredCell != null) {
-					set(i, l.getGameState().hoveredCell, l.getGameState().activePlayer);
+				if (state.hoveredCell != null) {
+					set(i, state.hoveredCell, state.activePlayer);
 				}
 			} else {
 				//Get
-				Cell c = get(i, l.getGameState().activePlayer);
+				Cell c = get(i, state.activePlayer);
 				if (c != null) {
-					l.focusCell(c, true);
+					LLC.getLLC().getCamera().focusCell(c, true);
 				}
 			}
+		}
+	}
+	
+	//Saving and Loading:
+	//Every Player has an own bundle: That bundle contains 9 child-bundles which contain the location
+	
+	public HotkeyManager(DataBundle bundle, GameState gameState) {
+		state = gameState;
+
+		List<Player> players = state.getPlayers();
+		bindings = new HashMap<Player, Location[]>();
+		for (int i = 0; i < players.size(); i++) {
+			if (!bundle.hasTag("players_" + i)) {
+				//Player has never set a hotkey!
+				bindings.put(players.get(i), new Location[9]);
+				continue;
+			}
+			DataBundle pd = bundle.getBundle("players_" + i);
+			Location[] ls = new Location[9];
+			if (pd != null) {
+				for (int li = 0; li < ls.length; li++) {
+					if (!pd.hasTag("keys_" + li)) {
+						continue;
+					}
+					DataBundle keyB = pd.getBundle("keys_" + li);
+					if (keyB.hasTag("isNull")) {
+						continue;
+					}
+					ls[li] = new Location(keyB);
+				}
+			}
+			bindings.put(players.get(i), ls);
+		}
+	}
+	@Override
+	public void read(DataBundle arg0) {}
+	
+	@Override
+	public void save(DataBundle data) {
+		int pi = -1; //Not actually pi, player-index
+		for (Entry<Player, Location[]> entry : bindings.entrySet()) {
+			pi++;
+			DataBundle playerBundle = new DataBundle();
+			
+			for (int i = 0; i < entry.getValue().length; i++) {
+				DataBundle keyBundle = new DataBundle();
+				Location l = entry.getValue()[i];
+				if (l == null) {
+					keyBundle.setBoolean("isNull", true);
+				} else {
+					l.save(keyBundle);
+				}
+				playerBundle.setBundle("keys_" + i, keyBundle);
+			}
+			data.setBundle("players_" + pi, playerBundle);
 		}
 	}
 }

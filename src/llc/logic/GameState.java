@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import llc.LLC;
+import llc.input.HotkeyManager;
 import llc.loading.GameLoader;
 import de.teamdna.databundle.DataBundle;
 import de.teamdna.databundle.ISavable;
@@ -13,7 +14,8 @@ import de.teamdna.databundle.ISavable;
 public class GameState implements ISavable{
 
 	private Grid grid;
-
+	private HotkeyManager hotKeys;
+	
 	private List<Player> players = new ArrayList<Player>();
 	public Cell hoveredCell, selectedCell;
 
@@ -27,6 +29,7 @@ public class GameState implements ISavable{
 	public Player winner;
 
 	public GameState(Grid grid, File level, List<Cell> bases) {
+		hotKeys = new HotkeyManager(this);
 		this.grid = grid;
 		
 		for (int i = 0; i < bases.size(); i++) {
@@ -36,19 +39,20 @@ public class GameState implements ISavable{
 		setActivePlayer(getPlayer(0));
 		
 		this.levelName = level.getName();
-		this.levelPath = level.getPath();
+		this.levelPath = level.getParentFile().getAbsolutePath();
 	}
 
 	public GameState(DataBundle data, GameLoader gameLoader) {
 		this.levelName = data.getString("levelName");
 		this.levelPath = data.getString("levelPath");
 		this.moveCount = data.getInt("moveCount");
-		GameState newgs = gameLoader.createNewGame(levelPath + "/maps/areas/" + levelName);
+		GameState newgs = gameLoader.createNewGame(levelPath + "\\" + levelName);
 		this.grid = newgs.grid;
 		for (int i = 0; i < data.getInt("playersSize"); i++) {
 			this.players.add(new Player(data.getBundle("player" + i), newgs.getPlayer(i).getTownHall()));
 		}
 		setActivePlayer(getPlayer(data.getInt("activePlayerID")));
+		this.hotKeys = new HotkeyManager(data.getBundle("hotkeys"), this);
 		try {
 			this.grid.read(data.getBundle("grid"), players);
 		} catch (ClassNotFoundException | NoSuchMethodException
@@ -89,6 +93,9 @@ public class GameState implements ISavable{
 		}
 	}
 
+	public List<Player> getPlayers() {
+		return players;
+	}
 	@Override
 	public void save(DataBundle data) {
 		data.setInt("moveCount", moveCount);
@@ -107,6 +114,9 @@ public class GameState implements ISavable{
 		DataBundle d = new DataBundle();
 		grid.save(d);
 		data.setBundle("grid", d);
+		DataBundle hd = new DataBundle();
+		hotKeys.save(hd);
+		data.setBundle("hotkeys", hd);
 	}
 
 	public Player getPlayer(int i) {
