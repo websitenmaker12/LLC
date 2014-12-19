@@ -25,7 +25,13 @@ public class SoundEngine {
 		Sound sound = sounds.get(name);
 		if(sound != null) sound.play();
 	}
-	
+	/**
+	 * Pauses a sound without transformation
+	 */
+	public void pauseSound(String name) {
+		Sound sound = sounds.get(name);
+		if(sound != null) sound.pause();
+	}
 	/**
 	 * Initializes the SoundEngine
 	 */

@@ -71,14 +71,18 @@ public class SoundSource {
 	 * Plays the sound
 	 */
 	public void play() {
-		this.sound.play();
+		if(this.sound.isPaused()){
+			this.sound.play();
+		}
 	}
 	
 	/**
 	 * Pauses the sound
 	 */
 	public void pause() {
-		this.sound.pause();
+		if(!this.sound.isPaused()){
+			this.sound.pause();
+		}
 	}
 	
 	/**

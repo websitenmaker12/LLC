@@ -33,7 +33,7 @@ public class GameState implements ISavable{
 		this.grid = grid;
 		
 		for (int i = 0; i < bases.size(); i++) {
-			players.add(new Player("Player" + i, bases.get(i), i));
+			players.add(new Player("Player: " + i, bases.get(i), i));
 			grid.addEntity(bases.get(i).getEntity());
 		}
 		setActivePlayer(getPlayer(0));

@@ -12,12 +12,14 @@ public class Sound {
 	private int buffer;
 	private int source;
 	private boolean repeat;
+	private boolean paused;
 	
 	public final String path;
 	
 	public Sound(String path, boolean repeat) {
 		this.path = path;
 		this.repeat = repeat;
+		this.paused = true;
 	}
 	
 	/**
@@ -44,14 +46,16 @@ public class Sound {
 	 * Plays the sound
 	 */
 	public void play() {
-		AL10.alSourcePlay(this.source);
+		if(paused) AL10.alSourcePlay(this.source);
+		paused = false;
 	}
 	
 	/**
 	 * Pauses the sound
 	 */
 	public void pause() {
-		AL10.alSourcePause(this.source);
+		if(!paused) AL10.alSourcePause(this.source);
+		paused = true;
 	}
 	
 	/**
@@ -82,6 +86,12 @@ public class Sound {
 	 */
 	public int getSourceID() {
 		return this.source;
+	}
+	/**
+	 * Returns the state of playing
+	 */
+	public boolean isPaused(){
+		return paused;
 	}
 	
 	/**
