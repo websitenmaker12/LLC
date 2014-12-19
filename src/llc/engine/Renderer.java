@@ -287,7 +287,7 @@ public class Renderer {
 				+ camera.viewDir.x, camera.pos.y + camera.viewDir.y,
 				camera.pos.z + camera.viewDir.z, camera.up.x, camera.up.y,
 				camera.up.z);
-
+		
 		int width = gameState.getGrid().getWidth();
 		int height = gameState.getGrid().getHeigth();
 		

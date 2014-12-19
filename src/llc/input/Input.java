@@ -156,7 +156,6 @@ public class Input {
 	private Vector2f rayCast(int x, int y) {
 		Vector3f rayDirection = rayDirectionFromMousePos(x, y);
 
-		// Vector2f z0CellPos = rayCastZ0(rayDirection); // TODO: optimize: start triangle intersection at z0CellPos
 		int height = triangles.length;
 		int width = triangles[0].length;
 		for (int cellY = 0; cellY < height; cellY++)
