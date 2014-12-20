@@ -187,6 +187,12 @@ public class LLC implements IKeybindingListener {
 			// Audio
 			this.profiler.endStart("Audio updates");
 			this.soundEngine.update(delta);
+			if(this.isGamePaused){
+				this.soundEngine.pauseSound("music_1");
+			} else {
+				if(this.settings.getPlayBgSound()) this.soundEngine.playSound("music_1");
+			}
+			
 			
 			// Rendering
 			this.profiler.endStart("Render game");
